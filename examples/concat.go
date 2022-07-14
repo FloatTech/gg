@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	im1, err := gg.LoadPNG("examples/baboon.png")
+	im1, err := gg.LoadPNG("examples/james-webb.png")
 	if err != nil {
 		panic(err)
 	}

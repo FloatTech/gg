@@ -5,7 +5,6 @@ import (
 	"image"
 	"image/draw"
 	"image/jpeg"
-	_ "image/jpeg"
 	"image/png"
 	"io/ioutil"
 	"math"
@@ -105,7 +104,10 @@ func parseHexColor(x string) (r, g, b, a int) {
 }
 
 func fixp(x, y float64) fixed.Point26_6 {
-	return fixed.Point26_6{fix(x), fix(y)}
+	return fixed.Point26_6{
+		X: fix(x),
+		Y: fix(y),
+	}
 }
 
 func fix(x float64) fixed.Int26_6 {
