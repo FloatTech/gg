@@ -17,14 +17,17 @@ import (
 	"golang.org/x/image/math/fixed"
 )
 
+// 弧度
 func Radians(degrees float64) float64 {
 	return degrees * math.Pi / 180
 }
 
+// 角度
 func Degrees(radians float64) float64 {
 	return radians * 180 / math.Pi
 }
 
+// 加载指定路径的图像
 func LoadImage(path string) (image.Image, error) {
 	file, err := os.Open(path)
 	if err != nil {
@@ -35,6 +38,7 @@ func LoadImage(path string) (image.Image, error) {
 	return im, err
 }
 
+// 加载指定路径的 PNG 图像
 func LoadPNG(path string) (image.Image, error) {
 	file, err := os.Open(path)
 	if err != nil {
@@ -44,6 +48,7 @@ func LoadPNG(path string) (image.Image, error) {
 	return png.Decode(file)
 }
 
+// 保存 PNG 图像
 func SavePNG(path string, im image.Image) error {
 	file, err := os.Create(path)
 	if err != nil {
@@ -53,6 +58,7 @@ func SavePNG(path string, im image.Image) error {
 	return png.Encode(file, im)
 }
 
+// 加载指定路径的 JPG 图像
 func LoadJPG(path string) (image.Image, error) {
 	file, err := os.Open(path)
 	if err != nil {
@@ -62,6 +68,7 @@ func LoadJPG(path string) (image.Image, error) {
 	return jpeg.Decode(file)
 }
 
+// 保存 JPG 图像
 func SaveJPG(path string, im image.Image, quality int) error {
 	file, err := os.Create(path)
 	if err != nil {
@@ -131,6 +138,10 @@ func unfix(x fixed.Int26_6) float64 {
 // are not thread safe and cannot be used in parallel across goroutines.
 // You can usually just use the Context.LoadFontFace function instead of
 // this package-level function.
+//
+// LoadFontFace 是一个辅助函数，用于加载指定点大小的指定字体文件。
+// 请注意，返回的 `font.Face` 对象不是线程安全的，不能跨 goroutine 并行使用。
+// 您通常可以只使用 Context.LoadFontFace 函数而不是这个包级函数。
 func LoadFontFace(path string, points float64) (font.Face, error) {
 	fontBytes, err := ioutil.ReadFile(path)
 	if err != nil {
