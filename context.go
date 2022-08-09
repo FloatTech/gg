@@ -93,7 +93,7 @@ func NewContext(width, height int) *Context {
 // NewContextForImage copies the specified image into a new image.RGBA
 // and prepares a context for rendering onto that image.
 //
-// 将指定图像复制到一个新的image.RGBA
+// 将指定图像复制到一个新的 image.RGBA
 // 并准备渲染到该图像上的上下文。
 func NewContextForImage(im image.Image) *Context {
 	return NewContextForRGBA(imageToRGBA(im))
@@ -102,8 +102,7 @@ func NewContextForImage(im image.Image) *Context {
 // NewContextForRGBA prepares a context for rendering onto the specified image.
 // No copy is made.
 //
-// 准备渲染到指定图像的上下文。
-// 没有复制。
+// 准备渲染到指定图像的上下文。没有复制。
 func NewContextForRGBA(im *image.RGBA) *Context {
 	w := im.Bounds().Size().X
 	h := im.Bounds().Size().Y
@@ -125,11 +124,10 @@ func NewContextForRGBA(im *image.RGBA) *Context {
 
 // ScaleStyle determines the way image pixels are interpolated when scaled.
 // See
-// https://pkg.go.dev/golang.org/x/image/draw
+//   https://pkg.go.dev/golang.org/x/image/draw
 // for the corresponding interpolators.
 //
-// 确定缩放时图像像素的插值方式。
-// 请看
+// 确定缩放时图像像素的插值方式。 请看
 // https://pkg.go.dev/golang.org/x/image/draw
 // 对应的插值器。
 type ScaleStyle int
@@ -179,6 +177,7 @@ const (
 	CatmullRom
 )
 
+// 变压器
 func (s ScaleStyle) transformer() draw.Interpolator {
 	switch s {
 	case BiLinear:
@@ -193,22 +192,23 @@ func (s ScaleStyle) transformer() draw.Interpolator {
 	return draw.BiLinear // BiLinear by default. 默认情况下为双线性。
 }
 
+// 设置比缩放样式
 func (dc *Context) SetScaleStyle(s ScaleStyle) {
 	dc.scaleStyle = s
 }
-
+// 设置缩放双线性
 func (dc *Context) SetScaleBiLinear() {
 	dc.SetScaleStyle(BiLinear)
 }
-
+// 设置缩放近似双线性
 func (dc *Context) SetScaleApproxBiLinear() {
 	dc.SetScaleStyle(ApproxBiLinear)
 }
-
+// 设置最近邻的缩放
 func (dc *Context) SetScaleNearestNeighbor() {
 	dc.SetScaleStyle(NearestNeighbor)
 }
-
+// 设置缩放为 CatmullRom
 func (dc *Context) SetScaleCatmullRom() {
 	dc.SetScaleStyle(CatmullRom)
 }
@@ -234,14 +234,14 @@ func (dc *Context) Image() image.Image {
 
 // Width returns the width of the image in pixels.
 //
-// 返回图像的宽度（以像素为单位）。
+// 返回图像的宽度（以像素为单位）
 func (dc *Context) Width() int {
 	return dc.width
 }
 
 // Height returns the height of the image in pixels.
 //
-// 返回图像的高度（以像素为单位）。
+// 返回图像的高度（以像素为单位）
 func (dc *Context) Height() int {
 	return dc.height
 }
@@ -271,7 +271,7 @@ func (dc *Context) EncodePNG(w io.Writer) error {
 // in JPEG 4:2:0 baseline format with the given options.
 // Default parameters are used if a nil *jpeg.Options is passed.
 //
-// EncodeJPG将图像编码为JPG，并将其写入提供的 io.Writer
+// 将图像编码为JPG，并将其写入提供的 io.Writer
 // 在 JPEG 4:2:0 基线格式中，使用给定选项。
 // 如果为nil，则使用默认参数 *jpeg.Options 进行传递
 func (dc *Context) EncodeJPG(w io.Writer, o *jpeg.Options) error {
@@ -292,52 +292,52 @@ func (dc *Context) SetDash(dashes ...float64) {
 // SetDashOffset sets the initial offset into the dash pattern to use when
 // stroking dashed paths.
 //
-// 将初始偏移设置为要在以下情况下使用的短划线图案：
-// 抚摸着虚线的小路。
+// 将初始偏移量设置为虚线模式，以在描边虚线路径时使用。
 func (dc *Context) SetDashOffset(offset float64) {
 	dc.dashOffset = offset
 }
 
+// 设置线宽
 func (dc *Context) SetLineWidth(lineWidth float64) {
 	dc.lineWidth = lineWidth
 }
-
+// 设置线帽
 func (dc *Context) SetLineCap(lineCap LineCap) {
 	dc.lineCap = lineCap
 }
-
+// 设置线帽圆
 func (dc *Context) SetLineCapRound() {
 	dc.lineCap = LineCapRound
 }
-
+// 设置线帽对齐
 func (dc *Context) SetLineCapButt() {
 	dc.lineCap = LineCapButt
 }
-
+// 设置线帽正方形
 func (dc *Context) SetLineCapSquare() {
 	dc.lineCap = LineCapSquare
 }
-
+// 设置线帽连接
 func (dc *Context) SetLineJoin(lineJoin LineJoin) {
 	dc.lineJoin = lineJoin
 }
-
+// 设置线帽连接圆
 func (dc *Context) SetLineJoinRound() {
 	dc.lineJoin = LineJoinRound
 }
-
+/// 设置线帽连接斜面
 func (dc *Context) SetLineJoinBevel() {
 	dc.lineJoin = LineJoinBevel
 }
-
+// 设置填充规则
 func (dc *Context) SetFillRule(fillRule FillRule) {
 	dc.fillRule = fillRule
 }
-
+// 设置填充规则绕组
 func (dc *Context) SetFillRuleWinding() {
 	dc.fillRule = FillRuleWinding
 }
-
+// 设置填充规则偶数奇数
 func (dc *Context) SetFillRuleEvenOdd() {
 	dc.fillRule = FillRuleEvenOdd
 }
@@ -345,6 +345,7 @@ func (dc *Context) SetFillRuleEvenOdd() {
 // Color Setters
 // 颜色设定器
 
+// 设置填充和描边颜色
 func (dc *Context) setFillAndStrokeColor(c color.Color) {
 	dc.color = c
 	dc.fillPattern = NewSolidPattern(c)
@@ -388,8 +389,7 @@ func (dc *Context) SetHexColor(x string) {
 // SetRGBA255 sets the current color. r, g, b, a values should be between 0 and
 // 255, inclusive.
 //
-// 设置当前颜色。 r、g、b、a 值应介于 0 和
-// 255，包括在内。
+// 设置当前颜色。r、g、b、a 值应介于 0 和 255，包括在内。
 func (dc *Context) SetRGBA255(r, g, b, a int) {
 	dc.color = color.NRGBA{uint8(r), uint8(g), uint8(b), uint8(a)}
 	dc.setFillAndStrokeColor(dc.color)
@@ -398,8 +398,8 @@ func (dc *Context) SetRGBA255(r, g, b, a int) {
 // SetRGB255 sets the current color. r, g, b values should be between 0 and 255,
 // inclusive. Alpha will be set to 255 (fully opaque).
 //
-// 设置当前颜色。 r、g、b 值应介于 0 和 255 之间，
-// 包括的。 Alpha 将设置为 255（完全不透明）。
+// 设置当前颜色。 r、g、b 值应介于 0 和 255 之间，包括。
+// Alpha 将设置为 255（完全不透明）。
 func (dc *Context) SetRGB255(r, g, b int) {
 	dc.SetRGBA255(r, g, b, 255)
 }
@@ -423,7 +423,7 @@ func (dc *Context) SetRGBA(r, g, b, a float64) {
 // inclusive. Alpha will be set to 1 (fully opaque).
 //
 // SetRGB 设置当前颜色。 r、g、b 值应介于 0 和 1 之间，
-// 包括的。 Alpha 将设置为 1（完全不透明）。
+// 包括。 Alpha 将设置为 1（完全不透明）。
 func (dc *Context) SetRGB(r, g, b float64) {
 	dc.SetRGBA(r, g, b, 1)
 }
@@ -451,7 +451,8 @@ func (dc *Context) MoveTo(x, y float64) {
 // LineTo adds a line segment to the current path starting at the current
 // point. If there is no current point, it is equivalent to MoveTo(x, y)
 //
-// LineTo 从当前点开始向当前路径添加一条线段。 如果没有当前点，则等价于 MoveTo(x, y)
+// 从当前点开始向当前路径添加一条线段。 
+// 如果没有当前点，则等价于 MoveTo(x, y)
 func (dc *Context) LineTo(x, y float64) {
 	if !dc.hasCurrent {
 		dc.MoveTo(x, y)
@@ -468,8 +469,8 @@ func (dc *Context) LineTo(x, y float64) {
 // the current point. If there is no current point, it first performs
 // MoveTo(x1, y1)
 //
-// 将二次贝塞尔曲线添加到从当前点开始的当前路径。 如果没有当前点，则首先执行
-// MoveTo(x1, y1)
+// 将二次贝塞尔曲线添加到从当前点开始的当前路径。 
+// 如果没有当前点，则首先执行 MoveTo(x1, y1)
 func (dc *Context) QuadraticTo(x1, y1, x2, y2 float64) {
 	if !dc.hasCurrent {
 		dc.MoveTo(x1, y1)
@@ -518,8 +519,8 @@ func (dc *Context) CubicTo(x1, y1, x2, y2, x3, y3 float64) {
 // ClosePath adds a line segment from the current point to the beginning
 // of the current subpath. If there is no current point, this is a no-op.
 //
-// 添加从当前点到起点的线段
-// 当前子路径的。 如果没有当前点，这是一个空操作。
+// 添加从当前点到当前子路径开头的线段。 
+// 如果没有当前点，这是一个空操作。
 func (dc *Context) ClosePath() {
 	if dc.hasCurrent {
 		dc.strokePath.Add1(dc.start.Fixed())
@@ -550,7 +551,9 @@ func (dc *Context) NewSubPath() {
 }
 
 // Path Drawing
+// 路径绘制
 
+// 压缩
 func (dc *Context) capper() raster.Capper {
 	switch dc.lineCap {
 	case LineCapButt:
@@ -562,7 +565,7 @@ func (dc *Context) capper() raster.Capper {
 	}
 	return nil
 }
-
+// 木匠
 func (dc *Context) joiner() raster.Joiner {
 	switch dc.lineJoin {
 	case LineJoinBevel:
@@ -572,7 +575,7 @@ func (dc *Context) joiner() raster.Joiner {
 	}
 	return nil
 }
-
+// 打击
 func (dc *Context) stroke(painter raster.Painter) {
 	path := dc.strokePath
 	if len(dc.dashes) > 0 {
@@ -590,7 +593,7 @@ func (dc *Context) stroke(painter raster.Painter) {
 	r.AddStroke(path, fix(dc.lineWidth), dc.capper(), dc.joiner())
 	r.Rasterize(painter)
 }
-
+// 填充
 func (dc *Context) fill(painter raster.Painter) {
 	path := dc.fillPath
 	if dc.hasCurrent {
@@ -664,7 +667,8 @@ func (dc *Context) FillPreserve() {
 // Fill fills the current path with the current color. Open subpaths
 // are implicity closed. The path is cleared after this operation.
 //
-// Fill 用当前颜色填充当前路径。 打开的子路径是隐式关闭的。 此操作后路径被清除。
+// 用当前颜色填充当前路径。 
+// 打开的子路径是隐式关闭的。 此操作后路径被清除。
 func (dc *Context) Fill() {
 	dc.FillPreserve()
 	dc.ClearPath()
@@ -674,7 +678,7 @@ func (dc *Context) Fill() {
 // clipping region with the current path as it would be filled by dc.Fill().
 // The path is preserved after this operation.
 //
-// ClipPreserve 通过将当前剪辑区域与当前路径相交来更新剪辑区域，因为它将由 dc.Fill() 填充。
+// 通过将当前剪辑区域与当前路径相交来更新剪辑区域，因为它将由 dc.Fill() 填充。
 // 此操作后将保留路径。
 func (dc *Context) ClipPreserve() {
 	clip := image.NewAlpha(image.Rect(0, 0, dc.width, dc.height))
@@ -693,7 +697,7 @@ func (dc *Context) ClipPreserve() {
 // mask. It must be the same size as the context, else an error is returned
 // and the mask is unchanged.
 //
-// SetMask 允许您直接设置 *image.Alpha 用作剪贴蒙版。
+// 允许您直接设置 *image.Alpha 用作剪贴蒙版。
 // 它必须与上下文大小相同，否则返回错误并且掩码不变。
 func (dc *Context) SetMask(mask *image.Alpha) error {
 	if mask.Bounds().Size() != dc.im.Bounds().Size() {
@@ -779,11 +783,13 @@ func (dc *Context) DrawPoint(x, y, r float64) {
 	dc.Pop()
 }
 
+// 绘制一条线
 func (dc *Context) DrawLine(x1, y1, x2, y2 float64) {
 	dc.MoveTo(x1, y1)
 	dc.LineTo(x2, y2)
 }
 
+// 绘制矩形
 func (dc *Context) DrawRectangle(x, y, w, h float64) {
 	dc.NewSubPath()
 	dc.MoveTo(x, y)
@@ -793,6 +799,7 @@ func (dc *Context) DrawRectangle(x, y, w, h float64) {
 	dc.ClosePath()
 }
 
+// 绘制一个圆角矩形
 func (dc *Context) DrawRoundedRectangle(x, y, w, h, r float64) {
 	x0, x1, x2, x3 := x, x+r, x+w-r, x+w
 	y0, y1, y2, y3 := y, y+r, y+h-r, y+h
@@ -809,6 +816,7 @@ func (dc *Context) DrawRoundedRectangle(x, y, w, h, r float64) {
 	dc.ClosePath()
 }
 
+// 绘制椭圆弧
 func (dc *Context) DrawEllipticalArc(x, y, rx, ry, angle1, angle2 float64) {
 	const n = 16
 	for i := 0; i < n; i++ {
@@ -835,22 +843,26 @@ func (dc *Context) DrawEllipticalArc(x, y, rx, ry, angle1, angle2 float64) {
 	}
 }
 
+// 绘制椭圆
 func (dc *Context) DrawEllipse(x, y, rx, ry float64) {
 	dc.NewSubPath()
 	dc.DrawEllipticalArc(x, y, rx, ry, 0, 2*math.Pi)
 	dc.ClosePath()
 }
 
+// 绘制弧线
 func (dc *Context) DrawArc(x, y, r, angle1, angle2 float64) {
 	dc.DrawEllipticalArc(x, y, r, r, angle1, angle2)
 }
 
+// 绘制圆圈
 func (dc *Context) DrawCircle(x, y, r float64) {
 	dc.NewSubPath()
 	dc.DrawEllipticalArc(x, y, r, r, 0, 2*math.Pi)
 	dc.ClosePath()
 }
 
+// 绘制正多边形
 func (dc *Context) DrawRegularPolygon(n int, x, y, r, rotation float64) {
 	angle := 2 * math.Pi / float64(n)
 	rotation -= math.Pi / 2
@@ -900,7 +912,7 @@ func (dc *Context) DrawImageAnchored(im image.Image, x, y int, ax, ay float64) {
 // Text Functions
 // 文本函数
 
-// 设置字体
+// 设置字体面
 func (dc *Context) SetFontFace(fontFace font.Face) {
 	dc.fontFace = fontFace
 	dc.fontHeight = float64(fontFace.Metrics().Height) / 64
@@ -922,7 +934,7 @@ func (dc *Context) LoadFontFace(path string, points float64) error {
 func (dc *Context) FontHeight() float64 {
 	return dc.fontHeight
 }
-
+// 绘制文本
 func (dc *Context) drawString(im *image.RGBA, s string, x, y float64) {
 	d := &font.Drawer{
 		Dst:  im,
@@ -994,6 +1006,7 @@ func (dc *Context) DrawStringWrapped(s string, x, y, ax, ay, width, lineSpacing 
 	lines := dc.WordWrap(s, width)
 
 	// sync h formula with MeasureMultilineString
+	// 同步 h 公式与 度量多行字符串
 	h := float64(len(lines)) * dc.fontHeight * lineSpacing
 	h -= (lineSpacing - 1) * dc.fontHeight
 
@@ -1082,8 +1095,7 @@ func (dc *Context) Translate(x, y float64) {
 // Scale updates the current matrix with a scaling factor.
 // Scaling occurs about the origin.
 //
-// 使用缩放因子更新当前矩阵。
-// 缩放发生在原点附近。
+// 使用缩放因子更新当前矩阵。缩放发生在原点附近。
 func (dc *Context) Scale(x, y float64) {
 	dc.matrix = dc.matrix.Scale(x, y)
 }
@@ -1091,8 +1103,7 @@ func (dc *Context) Scale(x, y float64) {
 // ScaleAbout updates the current matrix with a scaling factor.
 // Scaling occurs about the specified point.
 //
-// 使用缩放因子更新当前矩阵。
-// 在指定点附近发生缩放。
+// 使用缩放因子更新当前矩阵。在指定点附近发生缩放。
 func (dc *Context) ScaleAbout(sx, sy, x, y float64) {
 	dc.Translate(x, y)
 	dc.Scale(sx, sy)
@@ -1102,8 +1113,7 @@ func (dc *Context) ScaleAbout(sx, sy, x, y float64) {
 // Rotate updates the current matrix with a anticlockwise rotation.
 // Rotation occurs about the origin. Angle is specified in radians.
 //
-// 逆时针旋转更新当前矩阵。
-// 围绕原点发生旋转。 角度以弧度指定。
+// 逆时针旋转更新当前矩阵。围绕原点发生旋转。 角度以弧度指定。
 func (dc *Context) Rotate(angle float64) {
 	dc.matrix = dc.matrix.Rotate(angle)
 }
@@ -1111,8 +1121,7 @@ func (dc *Context) Rotate(angle float64) {
 // RotateAbout updates the current matrix with a anticlockwise rotation.
 // Rotation occurs about the specified point. Angle is specified in radians.
 //
-// 逆时针旋转更新当前矩阵。
-// 围绕指定点进行旋转。 角度以弧度指定。
+// 逆时针旋转更新当前矩阵。围绕指定点进行旋转。 角度以弧度指定。
 func (dc *Context) RotateAbout(angle, x, y float64) {
 	dc.Translate(x, y)
 	dc.Rotate(angle)
@@ -1122,8 +1131,7 @@ func (dc *Context) RotateAbout(angle, x, y float64) {
 // Shear updates the current matrix with a shearing angle.
 // Shearing occurs about the origin.
 //
-// 用剪切角更新当前矩阵。
-// 剪切发生在原点附近。
+// 用剪切角更新当前矩阵。剪切发生在原点附近。
 func (dc *Context) Shear(x, y float64) {
 	dc.matrix = dc.matrix.Shear(x, y)
 }
@@ -1131,8 +1139,7 @@ func (dc *Context) Shear(x, y float64) {
 // ShearAbout updates the current matrix with a shearing angle.
 // Shearing occurs about the specified point.
 //
-// 用剪切角更新当前矩阵。
-// 剪切发生在指定点附近。
+// 用剪切角更新当前矩阵。剪切发生在指定点附近。
 func (dc *Context) ShearAbout(sx, sy, x, y float64) {
 	dc.Translate(x, y)
 	dc.Shear(sx, sy)
@@ -1142,8 +1149,7 @@ func (dc *Context) ShearAbout(sx, sy, x, y float64) {
 // TransformPoint multiplies the specified point by the current matrix,
 // returning a transformed position.
 //
-// 将指定点乘以当前矩阵，
-// 返回转换后的位置。
+// 将指定点乘以当前矩阵，返回转换后的位置。
 func (dc *Context) TransformPoint(x, y float64) (tx, ty float64) {
 	return dc.matrix.TransformPoint(x, y)
 }
@@ -1151,8 +1157,7 @@ func (dc *Context) TransformPoint(x, y float64) (tx, ty float64) {
 // InvertY flips the Y axis so that Y grows from bottom to top and Y=0 is at
 // the bottom of the image.
 //
-// 翻转Y轴，使Y从下往上增长，Y=0在
-//图像的底部。
+// 反转Y轴，使Y从下到上增长，Y=0 位于图像的底部。
 func (dc *Context) InvertY() {
 	dc.Translate(0, float64(dc.height))
 	dc.Scale(1, -1)
@@ -1176,7 +1181,7 @@ func (dc *Context) Push() {
 func (dc *Context) Pop() {
 	before := *dc
 	s := dc.stack
-	x, _ := s[len(s)-1], s[:len(s)-1]
+	x, s := s[len(s)-1], s[:len(s)-1]
 	*dc = *x
 	dc.mask = before.mask
 	dc.strokePath = before.strokePath

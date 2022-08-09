@@ -1,14 +1,18 @@
 package gg
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
 	"image"
+	"image/gif"
 	"image/draw"
 	"image/jpeg"
 	"image/png"
 	"io/ioutil"
 	"math"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/golang/freetype/truetype"
@@ -75,13 +79,17 @@ func SaveJPG(path string, im image.Image, quality int) error {
 		return err
 	}
 	defer file.Close()
-
 	var opt jpeg.Options
-	opt.Quality = quality
-
+	opt.Quality = quality // 质量数值
 	return jpeg.Encode(file, im, &opt)
 }
 
+// image.Image 转为 image.RGBA
+func ImageToRGBA(src image.Image) *image.RGBA {
+	return imageToRGBA(src)
+}
+
+// image.Image 转为 image.RGBA
 func imageToRGBA(src image.Image) *image.RGBA {
 	bounds := src.Bounds()
 	dst := image.NewRGBA(bounds)
@@ -89,6 +97,12 @@ func imageToRGBA(src image.Image) *image.RGBA {
 	return dst
 }
 
+// 解析十六进制颜色
+func ParseHexColor(x string) (r, g, b, a int) {
+	return parseHexColor(x)
+}
+
+// 解析十六进制颜色
 func parseHexColor(x string) (r, g, b, a int) {
 	x = strings.TrimPrefix(x, "#")
 	a = 255
@@ -157,3 +171,35 @@ func LoadFontFace(path string, points float64) (font.Face, error) {
 	})
 	return face, nil
 }
+
+//  解析图片的宽高信息
+func GetWH(path string) (float64, float64, error) {
+	b, err := ioutil.ReadFile(path)
+	if err !=nil {
+	return 0, 0, err
+	}
+	return GetImgWH(b, path)
+}
+
+//  解析图片的宽高信息
+func GetImgWH(imgBytes []byte, path string) (float64, float64, error) {
+	var (
+		imgConf image.Config
+		err     error
+	)
+	switch strings.ToLower(filepath.Ext(path)) {
+	case ".jpg", ".jpeg":
+		imgConf, err = jpeg.DecodeConfig(bytes.NewReader(imgBytes))
+	case ".png":
+		imgConf, err = png.DecodeConfig(bytes.NewReader(imgBytes))
+	case ".gif":
+		imgConf, err = gif.DecodeConfig(bytes.NewReader(imgBytes))
+	default:
+		return 0, 0, errors.New("错误的文件类型")
+	}
+	if err != nil {
+		return 0, 0, err
+	}
+	return float64(imgConf.Width), float64(imgConf.Height), nil
+}
+
