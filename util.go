@@ -1,11 +1,11 @@
 package gg
 
 import (
-	"bytes"
+	"bufio"
+	"encoding/binary"
 	"errors"
 	"fmt"
 	"image"
-	"image/gif"
 	"image/draw"
 	"image/jpeg"
 	"image/png"
@@ -38,8 +38,21 @@ func LoadImage(path string) (image.Image, error) {
 		return nil, err
 	}
 	defer file.Close()
-	im, _, err := image.Decode(file)
+	im, _, err := image.Decode(bufio.NewReader(file))
 	return im, err
+}
+
+// 加载指定路径的图像并返回宽高
+func LoadImageAndwh(path string) (image.Image, int, int, error) {
+	img, err := LoadImage(path)
+	if err != nil {
+		return nil, 0, 0, err
+	}
+	w, h, err := GetWH(path)
+	if err != nil {
+		return nil, 0, 0, err
+	}
+	return img, w, h, err
 }
 
 // 加载指定路径的 PNG 图像
@@ -49,7 +62,7 @@ func LoadPNG(path string) (image.Image, error) {
 		return nil, err
 	}
 	defer file.Close()
-	return png.Decode(file)
+	return png.Decode(bufio.NewReader(file))
 }
 
 // 保存 PNG 图像
@@ -69,7 +82,7 @@ func LoadJPG(path string) (image.Image, error) {
 		return nil, err
 	}
 	defer file.Close()
-	return jpeg.Decode(file)
+	return jpeg.Decode(bufio.NewReader(file))
 }
 
 // 保存 JPG 图像
@@ -173,33 +186,91 @@ func LoadFontFace(path string, points float64) (font.Face, error) {
 }
 
 //  解析图片的宽高信息
-func GetWH(path string) (float64, float64, error) {
+func GetWH(path string) (int, int, error) {
 	b, err := ioutil.ReadFile(path)
-	if err !=nil {
-	return 0, 0, err
+	if err != nil {
+		return 0, 0, err
 	}
 	return GetImgWH(b, path)
 }
 
 //  解析图片的宽高信息
-func GetImgWH(imgBytes []byte, path string) (float64, float64, error) {
+func GetImgWH(imgBytes []byte, path string) (int, int, error) {
 	var (
-		imgConf image.Config
-		err     error
+		//		imgConf image.Config
+		err  error
+		w, h int
+		//		b bool
 	)
-	switch strings.ToLower(filepath.Ext(path)) {
+	name := strings.ToLower(filepath.Ext(path))
+	switch name {
 	case ".jpg", ".jpeg":
-		imgConf, err = jpeg.DecodeConfig(bytes.NewReader(imgBytes))
+		//		imgConf, err = jpeg.DecodeConfig(bytes.NewReader(imgBytes))
+		w, h = GetJPGwh(imgBytes)
+		//		b = true
 	case ".png":
-		imgConf, err = png.DecodeConfig(bytes.NewReader(imgBytes))
+		//		imgConf, err = png.DecodeConfig(bytes.NewReader(imgBytes))
+		w, h = GetPNGwh(imgBytes)
+		//		b = true
 	case ".gif":
-		imgConf, err = gif.DecodeConfig(bytes.NewReader(imgBytes))
+		//		imgConf, err = gif.DecodeConfig(bytes.NewReader(imgBytes))
+		w, h = GetGIFwh(imgBytes)
 	default:
-		return 0, 0, errors.New("错误的文件类型")
+		return 0, 0, errors.New("错误的文件类型。")
 	}
 	if err != nil {
 		return 0, 0, err
 	}
-	return float64(imgConf.Width), float64(imgConf.Height), nil
+	//	if b {
+	return w, h, nil
+	//	}
+	//	return imgConf.Width, imgConf.Height, nil
 }
 
+// 获取 JPG 图片的宽高
+func GetJPGwh(img []byte) (int, int) {
+	var index int
+	iL := len(img)
+	for i := 0; i < iL-1; i++ {
+		if img[i] != 0xff {
+			continue
+		}
+		if img[i+1] == 0xC0 || img[i+1] == 0xC1 || img[i+1] == 0xC2 {
+			index = i
+			break
+		}
+	}
+	index += 5
+	if index >= iL {
+		return 0, 0
+	}
+	height := int(img[index])<<8 + int(img[index+1])
+	width := int(img[index+2])<<8 + int(img[index+3])
+	return width, height
+}
+
+// 获取 PNG 图片的宽高
+func GetPNGwh(imgBytes []byte) (int, int) {
+	pngHeader := "\x89PNG\r\n\x1a\n"
+	if string(imgBytes[:len(pngHeader)]) != pngHeader {
+		return 0, 0
+	}
+	index := 12
+	if string(imgBytes[index:index+4]) != "IHDR" {
+		return 0, 0
+	}
+	index += 4
+	width := int(binary.BigEndian.Uint32(imgBytes[index : index+4]))
+	height := int(binary.BigEndian.Uint32(imgBytes[index+4 : index+8]))
+	return width, height
+}
+
+func GetGIFwh(imgBytes []byte) (int, int) {
+	ver := string(imgBytes[:6])
+	if ver != "GIF87a" && ver != "GIF89a" {
+		return 0, 0
+	}
+	width := int(imgBytes[6]) + int(imgBytes[7])<<8
+	height := int(imgBytes[8]) + int(imgBytes[9])<<8
+	return width, height
+}

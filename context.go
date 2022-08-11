@@ -196,18 +196,22 @@ func (s ScaleStyle) transformer() draw.Interpolator {
 func (dc *Context) SetScaleStyle(s ScaleStyle) {
 	dc.scaleStyle = s
 }
+
 // 设置缩放双线性
 func (dc *Context) SetScaleBiLinear() {
 	dc.SetScaleStyle(BiLinear)
 }
+
 // 设置缩放近似双线性
 func (dc *Context) SetScaleApproxBiLinear() {
 	dc.SetScaleStyle(ApproxBiLinear)
 }
+
 // 设置最近邻的缩放
 func (dc *Context) SetScaleNearestNeighbor() {
 	dc.SetScaleStyle(NearestNeighbor)
 }
+
 // 设置缩放为 CatmullRom
 func (dc *Context) SetScaleCatmullRom() {
 	dc.SetScaleStyle(CatmullRom)
@@ -239,10 +243,20 @@ func (dc *Context) Width() int {
 	return dc.width
 }
 
+// 返回图像的宽度 (以像素为单位)
+func (dc *Context) W() int {
+	return dc.width
+}
+
 // Height returns the height of the image in pixels.
 //
 // 返回图像的高度（以像素为单位）
 func (dc *Context) Height() int {
+	return dc.height
+}
+
+// 返回图像的高度 (以像素为单位)
+func (dc *Context) H() int {
 	return dc.height
 }
 
@@ -301,42 +315,52 @@ func (dc *Context) SetDashOffset(offset float64) {
 func (dc *Context) SetLineWidth(lineWidth float64) {
 	dc.lineWidth = lineWidth
 }
+
 // 设置线帽
 func (dc *Context) SetLineCap(lineCap LineCap) {
 	dc.lineCap = lineCap
 }
+
 // 设置线帽圆
 func (dc *Context) SetLineCapRound() {
 	dc.lineCap = LineCapRound
 }
+
 // 设置线帽对齐
 func (dc *Context) SetLineCapButt() {
 	dc.lineCap = LineCapButt
 }
+
 // 设置线帽正方形
 func (dc *Context) SetLineCapSquare() {
 	dc.lineCap = LineCapSquare
 }
+
 // 设置线帽连接
 func (dc *Context) SetLineJoin(lineJoin LineJoin) {
 	dc.lineJoin = lineJoin
 }
+
 // 设置线帽连接圆
 func (dc *Context) SetLineJoinRound() {
 	dc.lineJoin = LineJoinRound
 }
+
 /// 设置线帽连接斜面
 func (dc *Context) SetLineJoinBevel() {
 	dc.lineJoin = LineJoinBevel
 }
+
 // 设置填充规则
 func (dc *Context) SetFillRule(fillRule FillRule) {
 	dc.fillRule = fillRule
 }
+
 // 设置填充规则绕组
 func (dc *Context) SetFillRuleWinding() {
 	dc.fillRule = FillRuleWinding
 }
+
 // 设置填充规则偶数奇数
 func (dc *Context) SetFillRuleEvenOdd() {
 	dc.fillRule = FillRuleEvenOdd
@@ -451,7 +475,7 @@ func (dc *Context) MoveTo(x, y float64) {
 // LineTo adds a line segment to the current path starting at the current
 // point. If there is no current point, it is equivalent to MoveTo(x, y)
 //
-// 从当前点开始向当前路径添加一条线段。 
+// 从当前点开始向当前路径添加一条线段。
 // 如果没有当前点，则等价于 MoveTo(x, y)
 func (dc *Context) LineTo(x, y float64) {
 	if !dc.hasCurrent {
@@ -469,7 +493,7 @@ func (dc *Context) LineTo(x, y float64) {
 // the current point. If there is no current point, it first performs
 // MoveTo(x1, y1)
 //
-// 将二次贝塞尔曲线添加到从当前点开始的当前路径。 
+// 将二次贝塞尔曲线添加到从当前点开始的当前路径。
 // 如果没有当前点，则首先执行 MoveTo(x1, y1)
 func (dc *Context) QuadraticTo(x1, y1, x2, y2 float64) {
 	if !dc.hasCurrent {
@@ -519,7 +543,7 @@ func (dc *Context) CubicTo(x1, y1, x2, y2, x3, y3 float64) {
 // ClosePath adds a line segment from the current point to the beginning
 // of the current subpath. If there is no current point, this is a no-op.
 //
-// 添加从当前点到当前子路径开头的线段。 
+// 添加从当前点到当前子路径开头的线段。
 // 如果没有当前点，这是一个空操作。
 func (dc *Context) ClosePath() {
 	if dc.hasCurrent {
@@ -565,6 +589,7 @@ func (dc *Context) capper() raster.Capper {
 	}
 	return nil
 }
+
 // 木匠
 func (dc *Context) joiner() raster.Joiner {
 	switch dc.lineJoin {
@@ -575,6 +600,7 @@ func (dc *Context) joiner() raster.Joiner {
 	}
 	return nil
 }
+
 // 打击
 func (dc *Context) stroke(painter raster.Painter) {
 	path := dc.strokePath
@@ -593,6 +619,7 @@ func (dc *Context) stroke(painter raster.Painter) {
 	r.AddStroke(path, fix(dc.lineWidth), dc.capper(), dc.joiner())
 	r.Rasterize(painter)
 }
+
 // 填充
 func (dc *Context) fill(painter raster.Painter) {
 	path := dc.fillPath
@@ -667,7 +694,7 @@ func (dc *Context) FillPreserve() {
 // Fill fills the current path with the current color. Open subpaths
 // are implicity closed. The path is cleared after this operation.
 //
-// 用当前颜色填充当前路径。 
+// 用当前颜色填充当前路径。
 // 打开的子路径是隐式关闭的。 此操作后路径被清除。
 func (dc *Context) Fill() {
 	dc.FillPreserve()
@@ -877,6 +904,16 @@ func (dc *Context) DrawRegularPolygon(n int, x, y, r, rotation float64) {
 	dc.ClosePath()
 }
 
+// 加载指定路径的图像并设定像素坐标
+func (dc *Context) LoadImage(path string, x, y int) error {
+	img, err := LoadImage(path) //添加图片
+	if err != nil {
+		return err
+	}
+	dc.DrawImage(img, x, y)
+	return nil
+}
+
 // DrawImage draws the specified image at the specified point.
 //
 // 在指定点绘制指定图像。
@@ -934,6 +971,7 @@ func (dc *Context) LoadFontFace(path string, points float64) error {
 func (dc *Context) FontHeight() float64 {
 	return dc.fontHeight
 }
+
 // 绘制文本
 func (dc *Context) drawString(im *image.RGBA, s string, x, y float64) {
 	d := &font.Drawer{
