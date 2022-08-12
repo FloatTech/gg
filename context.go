@@ -1,4 +1,5 @@
 // Package gg provides a simple API for rendering 2D graphics in pure Go.
+//
 // 包 gg 提供了一个简单的API，用于在纯Go中渲染二维图形。
 package gg
 
