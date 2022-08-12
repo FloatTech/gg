@@ -197,24 +197,24 @@ func GetWH(path string) (int, int, error) {
 //  解析图片的宽高信息
 func GetImgWH(imgBytes []byte, path string) (int, int, error) {
 	var (
-		//		imgConf image.Config
 		err  error
 		w, h int
-		//		b bool
+		//	imgConf image.Config
+		//	b bool
 	)
 	name := strings.ToLower(filepath.Ext(path))
 	switch name {
 	case ".jpg", ".jpeg":
-		//		imgConf, err = jpeg.DecodeConfig(bytes.NewReader(imgBytes))
 		w, h = GetJPGwh(imgBytes)
-		//		b = true
+		//	imgConf, err = jpeg.DecodeConfig(bytes.NewReader(imgBytes))
+		//	b = true
 	case ".png":
-		//		imgConf, err = png.DecodeConfig(bytes.NewReader(imgBytes))
 		w, h = GetPNGwh(imgBytes)
-		//		b = true
+		//	imgConf, err = png.DecodeConfig(bytes.NewReader(imgBytes))
+		//	b = true
 	case ".gif":
-		//		imgConf, err = gif.DecodeConfig(bytes.NewReader(imgBytes))
 		w, h = GetGIFwh(imgBytes)
+		//	imgConf, err = gif.DecodeConfig(bytes.NewReader(imgBytes))
 	default:
 		return 0, 0, errors.New("错误的文件类型。")
 	}
@@ -265,6 +265,7 @@ func GetPNGwh(imgBytes []byte) (int, int) {
 	return width, height
 }
 
+// 获取 GIF 图片的宽高
 func GetGIFwh(imgBytes []byte) (int, int) {
 	ver := string(imgBytes[:6])
 	if ver != "GIF87a" && ver != "GIF89a" {

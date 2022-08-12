@@ -193,27 +193,27 @@ func (s ScaleStyle) transformer() draw.Interpolator {
 	return draw.BiLinear // BiLinear by default. 默认情况下为双线性。
 }
 
-// 设置比缩放样式
+// 设置比例样式
 func (dc *Context) SetScaleStyle(s ScaleStyle) {
 	dc.scaleStyle = s
 }
 
-// 设置缩放双线性
+// 设置比例双线性
 func (dc *Context) SetScaleBiLinear() {
 	dc.SetScaleStyle(BiLinear)
 }
 
-// 设置缩放近似双线性
+// 设置比例近似双线性
 func (dc *Context) SetScaleApproxBiLinear() {
 	dc.SetScaleStyle(ApproxBiLinear)
 }
 
-// 设置最近邻的缩放
+// 设置最近邻的比例
 func (dc *Context) SetScaleNearestNeighbor() {
 	dc.SetScaleStyle(NearestNeighbor)
 }
 
-// 设置缩放为 CatmullRom
+// 设置比例为 CatmullRom
 func (dc *Context) SetScaleCatmullRom() {
 	dc.SetScaleStyle(CatmullRom)
 }
@@ -221,7 +221,7 @@ func (dc *Context) SetScaleCatmullRom() {
 // GetCurrentPoint will return the current point and if there is a current point.
 // The point will have been transformed by the context's transformation matrix.
 //
-//GetCurrentPoint将返回当前点，如果存在当前点。
+// 返回当前点，如果存在当前点。
 //该点将通过上下文的变换矩阵进行变换。
 func (dc *Context) GetCurrentPoint() (Point, bool) {
 	if dc.hasCurrent {
@@ -297,7 +297,7 @@ func (dc *Context) EncodeJPG(w io.Writer, o *jpeg.Options) error {
 // disable dashes. The values specify the lengths of each dash, with
 // alternating on and off lengths.
 //
-// SetDash设置要使用的当前破折号图案。使用零参数调用
+// 设置要使用的当前破折号图案。使用零参数调用
 // 禁用破折号。这些值指定每个破折号的长度，包括：
 // 交替开启和关闭长度。
 func (dc *Context) SetDash(dashes ...float64) {
@@ -378,6 +378,7 @@ func (dc *Context) setFillAndStrokeColor(c color.Color) {
 }
 
 // SetFillStyle sets current fill style
+//
 // 设置当前填充样式
 func (dc *Context) SetFillStyle(pattern Pattern) {
 	// if pattern is SolidPattern, also change dc.color(for dc.Clear, dc.drawString)
@@ -388,12 +389,14 @@ func (dc *Context) SetFillStyle(pattern Pattern) {
 }
 
 // SetStrokeStyle sets current stroke style
+//
 // 设置当前笔划样式
 func (dc *Context) SetStrokeStyle(pattern Pattern) {
 	dc.strokePattern = pattern
 }
 
 // SetColor sets the current color(for both fill and stroke).
+//
 // 设置当前颜色（用于填充和笔划）
 func (dc *Context) SetColor(c color.Color) {
 	dc.setFillAndStrokeColor(c)
@@ -447,7 +450,7 @@ func (dc *Context) SetRGBA(r, g, b, a float64) {
 // SetRGB sets the current color. r, g, b values should be between 0 and 1,
 // inclusive. Alpha will be set to 1 (fully opaque).
 //
-// SetRGB 设置当前颜色。 r、g、b 值应介于 0 和 1 之间，
+// 设置当前颜色。 r、g、b 值应介于 0 和 1 之间，
 // 包括。 Alpha 将设置为 1（完全不透明）。
 func (dc *Context) SetRGB(r, g, b float64) {
 	dc.SetRGBA(r, g, b, 1)
@@ -1011,7 +1014,7 @@ func (dc *Context) drawString(im *image.RGBA, s string, x, y float64) {
 
 // DrawString draws the specified text at the specified point.
 //
-// 绘制文本 x 为宽度的起点 y 为高度的终点
+// 在指定锚点绘制文本， x 为宽度的起点 y 为高度的终点
 func (dc *Context) DrawString(s string, x, y float64) {
 	dc.DrawStringAnchored(s, x, y, 0, 0)
 }
