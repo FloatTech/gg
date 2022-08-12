@@ -8,6 +8,7 @@ func main() {
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
 	dc.SetRGB(0, 0, 0)
+	// 字体路径
 	if err := dc.LoadFontFace("/Library/Fonts/Arial.ttf", 96); err != nil {
 		panic(err)
 	}
