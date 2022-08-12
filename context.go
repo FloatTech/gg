@@ -639,7 +639,7 @@ func (dc *Context) fill(painter raster.Painter) {
 // line cap, line join and dash settings. The path is preserved after this
 // operation.
 //
-// StrokePreserve 使用当前颜色、线宽、线帽、线连接和虚线设置描边当前路径。
+// 使用当前颜色、线宽、线帽、线连接和虚线设置描边当前路径。
 // 此操作后将保留路径。
 func (dc *Context) StrokePreserve() {
 	var painter raster.Painter
@@ -783,6 +783,7 @@ func (dc *Context) ResetClip() {
 // 方便的绘图功能
 
 // Clear fills the entire image with the current color.
+//
 // 用当前颜色填充整个图像。
 func (dc *Context) Clear() {
 	src := image.NewUniform(dc.color)
@@ -816,7 +817,7 @@ func (dc *Context) DrawLine(x1, y1, x2, y2 float64) {
 	dc.LineTo(x2, y2)
 }
 
-// 绘制矩形
+// 绘制一个矩形 以x, y 坐标为起点进行绘制
 func (dc *Context) DrawRectangle(x, y, w, h float64) {
 	dc.NewSubPath()
 	dc.MoveTo(x, y)
@@ -826,7 +827,7 @@ func (dc *Context) DrawRectangle(x, y, w, h float64) {
 	dc.ClosePath()
 }
 
-// 绘制一个圆角矩形
+// 绘制一个圆角矩形 以x, y 坐标为起点进行绘制
 func (dc *Context) DrawRoundedRectangle(x, y, w, h, r float64) {
 	x0, x1, x2, x3 := x, x+r, x+w-r, x+w
 	y0, y1, y2, y3 := y, y+r, y+h-r, y+h
@@ -972,7 +973,7 @@ func (dc *Context) FontHeight() float64 {
 	return dc.fontHeight
 }
 
-// 绘制文本
+// 绘制文本 x 为宽度的起点 y 为高度的终点
 func (dc *Context) drawString(im *image.RGBA, s string, x, y float64) {
 	d := &font.Drawer{
 		Dst:  im,
@@ -1009,7 +1010,7 @@ func (dc *Context) drawString(im *image.RGBA, s string, x, y float64) {
 
 // DrawString draws the specified text at the specified point.
 //
-// 在指定点绘制指定文本。
+// 绘制文本 x 为宽度的起点 y 为高度的终点
 func (dc *Context) DrawString(s string, x, y float64) {
 	dc.DrawStringAnchored(s, x, y, 0, 0)
 }
@@ -1112,7 +1113,7 @@ func (dc *Context) WordWrap(s string, w float64) []string {
 }
 
 // Transformation Matrix Operations
-//矩阵运算的变换
+// 矩阵运算的变换
 
 // Identity resets the current transformation matrix to the identity matrix.
 // This results in no translating, scaling, rotating, or shearing.
@@ -1219,7 +1220,7 @@ func (dc *Context) Push() {
 func (dc *Context) Pop() {
 	before := *dc
 	s := dc.stack
-	x, s := s[len(s)-1], s[:len(s)-1]
+	x, s := s[len(s)-1], s[:len(s)-1] //
 	*dc = *x
 	dc.mask = before.mask
 	dc.strokePath = before.strokePath
