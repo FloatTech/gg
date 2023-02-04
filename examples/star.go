@@ -3,7 +3,7 @@ package main
 import (
 	"math"
 
-	"github.com/Coloured-glaze/gg"
+	"github.com/FloatTech/gg"
 )
 
 type Point struct {

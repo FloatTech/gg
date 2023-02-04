@@ -121,7 +121,7 @@ func ImageToNRGBA64(src image.Image) *image.NRGBA64 {
 	return dst
 }
 
-//  解析图片的宽高信息
+// 解析图片的宽高信息
 func GetWH(path string) (int, int, error) {
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -130,7 +130,7 @@ func GetWH(path string) (int, int, error) {
 	return GetImgWH(b)
 }
 
-//  解析图片的宽高信息
+// 解析图片的宽高信息
 func GetImgWH(imgBytes []byte) (int, int, error) {
 	var width, height int
 	t := http.DetectContentType(imgBytes) // 获取文件类型
@@ -255,18 +255,27 @@ func unfix(x fixed.Int26_6) float64 {
 // LoadFontFace 是一个辅助函数，用于加载指定点大小的指定字体文件。
 // 请注意，返回的 `font.Face` 对象不是线程安全的，不能跨 goroutine 并行使用。
 // 您通常可以只使用 Context.LoadFontFace 函数而不是这个包级函数。
-func LoadFontFace(path string, points float64) (font.Face, error) {
-	fontBytes, err := ioutil.ReadFile(path)
-	if err != nil {
-		return nil, err
+func LoadFontFace(path any, points float64) (face font.Face, err error) {
+	var fontBytes []byte
+	switch path := path.(type) {
+	case string:
+		fontBytes, err = os.ReadFile(path)
+		if err != nil {
+			return
+		}
+	case []byte:
+		fontBytes = path
+	default:
+		err = errors.New("unsupport type")
+		return
 	}
 	f, err := truetype.Parse(fontBytes)
 	if err != nil {
-		return nil, err
+		return
 	}
-	face := truetype.NewFace(f, &truetype.Options{
+	face = truetype.NewFace(f, &truetype.Options{
 		Size: points,
 		// Hinting: font.HintingFull,
 	})
-	return face, nil
+	return
 }

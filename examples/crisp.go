@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Coloured-glaze/gg"
+	"github.com/FloatTech/gg"
 )
 
 func main() {

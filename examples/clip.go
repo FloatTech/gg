@@ -1,6 +1,6 @@
 package main
 
-import "github.com/Coloured-glaze/gg"
+import "github.com/FloatTech/gg"
 
 func main() {
 	dc := gg.NewContext(1000, 1000)

@@ -125,7 +125,9 @@ func NewContextForRGBA(im *image.RGBA) *Context {
 
 // ScaleStyle determines the way image pixels are interpolated when scaled.
 // See
-//   https://pkg.go.dev/golang.org/x/image/draw
+//
+//	https://pkg.go.dev/golang.org/x/image/draw
+//
 // for the corresponding interpolators.
 //
 // 确定缩放时图像像素的插值方式。 请看
@@ -222,7 +224,7 @@ func (dc *Context) SetScaleCatmullRom() {
 // The point will have been transformed by the context's transformation matrix.
 //
 // 返回当前点，如果存在当前点。
-//该点将通过上下文的变换矩阵进行变换。
+// 该点将通过上下文的变换矩阵进行变换。
 func (dc *Context) GetCurrentPoint() (Point, bool) {
 	if dc.hasCurrent {
 		return dc.current, true
@@ -347,7 +349,7 @@ func (dc *Context) SetLineJoinRound() {
 	dc.lineJoin = LineJoinRound
 }
 
-/// 设置线帽连接斜面
+// / 设置线帽连接斜面
 func (dc *Context) SetLineJoinBevel() {
 	dc.lineJoin = LineJoinBevel
 }
@@ -957,13 +959,13 @@ func (dc *Context) DrawImageAnchored(im image.Image, x, y int, ax, ay float64) {
 // 设置字体面
 func (dc *Context) SetFontFace(fontFace font.Face) {
 	dc.fontFace = fontFace
-	dc.fontHeight = float64(fontFace.Metrics().Height) / 64
+	dc.fontHeight = (float64(fontFace.Metrics().Height) / 64) * 72 / 96
 }
 
 // Load the font from the specified path
 //
 // 加载指定路径的字体
-func (dc *Context) LoadFontFace(path string, points float64) error {
+func (dc *Context) LoadFontFace(path any, points float64) error {
 	face, err := LoadFontFace(path, points)
 	if err == nil {
 		dc.fontFace = face

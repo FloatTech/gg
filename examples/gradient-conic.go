@@ -6,7 +6,7 @@ package main
 import (
 	"image/color"
 
-	"github.com/Coloured-glaze/gg"
+	"github.com/FloatTech/gg"
 )
 
 func main() {

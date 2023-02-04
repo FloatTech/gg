@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/Coloured-glaze/gg"
+	"github.com/FloatTech/gg"
 )
 
 // go test -benchmem -bench .

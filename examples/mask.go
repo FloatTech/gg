@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Coloured-glaze/gg"
+	"github.com/FloatTech/gg"
 )
 
 func main() {

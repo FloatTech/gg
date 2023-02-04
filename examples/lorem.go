@@ -1,6 +1,6 @@
 package main
 
-import "github.com/Coloured-glaze/gg"
+import "github.com/FloatTech/gg"
 
 var lines = []string{
 	"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
