@@ -204,18 +204,17 @@ func ParseHexColor(x string) (r, g, b, a int) {
 func parseHexColor(x string) (r, g, b, a int) {
 	x = strings.TrimPrefix(x, "#")
 	a = 255
-	if len(x) == 3 {
+	switch len(x) {
+	case 3:
 		format := "%1x%1x%1x"
 		fmt.Sscanf(x, format, &r, &g, &b)
 		r |= r << 4
 		g |= g << 4
 		b |= b << 4
-	}
-	if len(x) == 6 {
+	case 6:
 		format := "%02x%02x%02x"
 		fmt.Sscanf(x, format, &r, &g, &b)
-	}
-	if len(x) == 8 {
+	case 8:
 		format := "%02x%02x%02x%02x"
 		fmt.Sscanf(x, format, &r, &g, &b, &a)
 	}
@@ -254,21 +253,27 @@ func unfix(x fixed.Int26_6) float64 {
 // LoadFontFace 是一个辅助函数，用于加载指定点大小的指定字体文件。
 // 请注意，返回的 `font.Face` 对象不是线程安全的，不能跨 goroutine 并行使用。
 // 您通常可以只使用 Context.LoadFontFace 函数而不是这个包级函数。
-func LoadFontFace(path any, points float64) (face font.Face, err error) {
-	var fontBytes []byte
-	switch path := path.(type) {
-	case string:
-		fontBytes, err = os.ReadFile(path)
-		if err != nil {
-			return
-		}
-	case []byte:
-		fontBytes = path
-	default:
-		err = errors.New("unsupport type")
+func LoadFontFace(path string, points float64) (face font.Face, err error) {
+	fontBytes, err := os.ReadFile(path)
+	if err != nil {
 		return
 	}
 	f, err := truetype.Parse(fontBytes)
+	if err != nil {
+		return
+	}
+	face = truetype.NewFace(f, &truetype.Options{
+		Size: points,
+		// Hinting: font.HintingFull,
+	})
+	return
+}
+
+// ParseFontFace 是一个辅助函数，用于加载指定点大小的指定字体文件。
+// 请注意，返回的 `font.Face` 对象不是线程安全的，不能跨 goroutine 并行使用。
+// 您通常可以只使用 Context.LoadFontFace 函数而不是这个包级函数。
+func ParseFontFace(b []byte, points float64) (face font.Face, err error) {
+	f, err := truetype.Parse(b)
 	if err != nil {
 		return
 	}

@@ -4,6 +4,8 @@
 package gg
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"errors"
 	"image"
 	"image/color"
@@ -12,6 +14,7 @@ import (
 	"io"
 	"math"
 	"strings"
+	"unsafe"
 
 	"github.com/golang/freetype/raster"
 	"golang.org/x/image/draw"
@@ -180,7 +183,7 @@ const (
 	CatmullRom
 )
 
-// 变压器
+// 变换器
 func (s ScaleStyle) transformer() draw.Interpolator {
 	switch s {
 	case BiLinear:
@@ -246,7 +249,7 @@ func (dc *Context) Width() int {
 	return dc.width
 }
 
-// 返回图像的宽度 (以像素为单位)
+// W 返回图像的宽度 (以像素为单位)
 func (dc *Context) W() int {
 	return dc.width
 }
@@ -258,7 +261,7 @@ func (dc *Context) Height() int {
 	return dc.height
 }
 
-// 返回图像的高度 (以像素为单位)
+// H 返回图像的高度 (以像素为单位)
 func (dc *Context) H() int {
 	return dc.height
 }
@@ -412,8 +415,7 @@ func (dc *Context) SetColor(c color.Color) {
 // 符号（#）是可选的。支持3位数和6位数的变体。8位数字
 // 也可以提供设置 alpha 值。
 func (dc *Context) SetHexColor(x string) {
-	r, g, b, a := parseHexColor(x)
-	dc.SetRGBA255(r, g, b, a)
+	dc.SetRGBA255(parseHexColor(x))
 }
 
 // SetRGBA255 sets the current color. r, g, b, a values should be between 0 and
@@ -583,7 +585,6 @@ func (dc *Context) NewSubPath() {
 // Path Drawing
 // 路径绘制
 
-// 压缩
 func (dc *Context) capper() raster.Capper {
 	switch dc.lineCap {
 	case LineCapButt:
@@ -596,7 +597,6 @@ func (dc *Context) capper() raster.Capper {
 	return nil
 }
 
-// 木匠
 func (dc *Context) joiner() raster.Joiner {
 	switch dc.lineJoin {
 	case LineJoinBevel:
@@ -607,7 +607,6 @@ func (dc *Context) joiner() raster.Joiner {
 	return nil
 }
 
-// 打击
 func (dc *Context) stroke(painter raster.Painter) {
 	path := dc.strokePath
 	if len(dc.dashes) > 0 {
@@ -760,7 +759,16 @@ func (dc *Context) InvertMask() {
 	if dc.mask == nil {
 		dc.mask = image.NewAlpha(dc.im.Bounds())
 	} else {
-		for i, a := range dc.mask.Pix {
+		var u64s []uint64
+		raws := (*slice)(unsafe.Pointer(&dc.mask.Pix))
+		rawu64s := (*slice)(unsafe.Pointer(&u64s))
+		rawu64s.data = raws.data
+		rawu64s.len = raws.len / 8
+		rawu64s.cap = raws.cap / 8
+		for i, v := range u64s {
+			u64s[i] = 0xffffffff_ffffffff - v
+		}
+		for i, a := range dc.mask.Pix[len(dc.mask.Pix)/8*8:] {
 			dc.mask.Pix[i] = 255 - a
 		}
 	}
@@ -965,8 +973,20 @@ func (dc *Context) SetFontFace(fontFace font.Face) {
 // Load the font from the specified path
 //
 // 加载指定路径的字体
-func (dc *Context) LoadFontFace(path any, points float64) error {
+func (dc *Context) LoadFontFace(path string, points float64) error {
 	face, err := LoadFontFace(path, points)
+	if err == nil {
+		dc.fontFace = face
+		dc.fontHeight = points * 72 / 96
+	}
+	return err
+}
+
+// Load the font from bytes
+//
+// 加载 data 中的字体
+func (dc *Context) ParseFontFace(data []byte, points float64) error {
+	face, err := ParseFontFace(data, points)
 	if err == nil {
 		dc.fontFace = face
 		dc.fontHeight = points * 72 / 96
@@ -1234,4 +1254,26 @@ func (dc *Context) Pop() {
 	dc.start = before.start
 	dc.current = before.current
 	dc.hasCurrent = before.hasCurrent
+}
+
+// Hash 计算已绘制图片的md5
+func (dc *Context) Hash() [md5.Size]byte {
+	return md5.Sum(dc.im.Pix)
+}
+
+// String 以哈希形式打印已绘制图片的 md5, 形如 <gg.Context [md5]>
+func (dc *Context) String() string {
+	sb := strings.Builder{}
+	h := md5.New()
+	var buf [md5.Size]byte
+	_, err := h.Write(dc.im.Pix)
+	sb.WriteString("<gg.Context ")
+	if err == nil {
+		hex.NewEncoder(&sb).Write(h.Sum(buf[:0]))
+	} else {
+		sb.WriteString("error: ")
+		sb.WriteString(err.Error())
+	}
+	sb.WriteString(">")
+	return sb.String()
 }
