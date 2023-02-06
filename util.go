@@ -9,7 +9,6 @@ import (
 	"image/draw"
 	"image/jpeg"
 	"image/png"
-	"io/ioutil"
 	"math"
 	"net/http"
 	"os"
@@ -123,7 +122,7 @@ func ImageToNRGBA64(src image.Image) *image.NRGBA64 {
 
 // 解析图片的宽高信息
 func GetWH(path string) (int, int, error) {
-	b, err := ioutil.ReadFile(path)
+	b, err := os.ReadFile(path)
 	if err != nil {
 		return 0, 0, err
 	}
