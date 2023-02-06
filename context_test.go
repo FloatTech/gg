@@ -110,6 +110,27 @@ func TestQuadratic(t *testing.T) {
 	checkHash(t, dc, "87eec03808f687bd012a10752c61cdc8")
 }
 
+func BenchmarkQuadratic(b *testing.B) {
+	dc := NewContext(100, 100)
+	dc.SetRGB(0.25, 0.25, 0.25)
+	dc.Clear()
+	rnd := rand.New(rand.NewSource(99))
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		x1 := rnd.Float64() * 100
+		y1 := rnd.Float64() * 100
+		x2 := rnd.Float64() * 100
+		y2 := rnd.Float64() * 100
+		x3 := rnd.Float64() * 100
+		y3 := rnd.Float64() * 100
+		dc.MoveTo(x1, y1)
+		dc.QuadraticTo(x2, y2, x3, y3)
+		dc.SetLineWidth(rnd.Float64() * 3)
+		dc.SetRGB(rnd.Float64(), rnd.Float64(), rnd.Float64())
+		dc.Stroke()
+	}
+}
+
 func TestCubic(t *testing.T) {
 	dc := NewContext(100, 100)
 	dc.SetRGB(0.75, 0.75, 0.75)
@@ -132,6 +153,29 @@ func TestCubic(t *testing.T) {
 	}
 	saveImage(dc, "TestCubic")
 	checkHash(t, dc, "ff87a762b42863198c78c923b17033d8")
+}
+
+func BenchmarkCubic(b *testing.B) {
+	dc := NewContext(100, 100)
+	dc.SetRGB(0.75, 0.75, 0.75)
+	dc.Clear()
+	rnd := rand.New(rand.NewSource(99))
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		x1 := rnd.Float64() * 100
+		y1 := rnd.Float64() * 100
+		x2 := rnd.Float64() * 100
+		y2 := rnd.Float64() * 100
+		x3 := rnd.Float64() * 100
+		y3 := rnd.Float64() * 100
+		x4 := rnd.Float64() * 100
+		y4 := rnd.Float64() * 100
+		dc.MoveTo(x1, y1)
+		dc.CubicTo(x2, y2, x3, y3, x4, y4)
+		dc.SetLineWidth(rnd.Float64() * 3)
+		dc.SetRGB(rnd.Float64(), rnd.Float64(), rnd.Float64())
+		dc.Stroke()
+	}
 }
 
 func TestFill(t *testing.T) {

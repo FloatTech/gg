@@ -8,11 +8,8 @@ func QuadraticBezier(x0, y0, x1, y1, x2, y2 float64) []Point {
 	if n < 4 {
 		n = 4
 	}
-	d := float64(n) - 1
 	result := make([]Point, n)
-	for i := 0; i < n; i++ {
-		result[i].X, result[i].Y = quadratic(x0, y0, x1, y1, x2, y2, float64(i)/d)
-	}
+	quadratic(x0, y0, x1, y1, x2, y2, float64(n)-1, result)
 	return result
 }
 
@@ -22,10 +19,7 @@ func CubicBezier(x0, y0, x1, y1, x2, y2, x3, y3 float64) []Point {
 	if n < 4 {
 		n = 4
 	}
-	d := float64(n) - 1
 	result := make([]Point, n)
-	for i := 0; i < n; i++ {
-		result[i].X, result[i].Y = cubic(x0, y0, x1, y1, x2, y2, x3, y3, float64(i)/d)
-	}
+	cubic(x0, y0, x1, y1, x2, y2, x3, y3, float64(n)-1, result)
 	return result
 }
