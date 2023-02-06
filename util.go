@@ -2,18 +2,16 @@ package gg
 
 import (
 	"bufio"
-	"encoding/binary"
-	"errors"
 	"fmt"
 	"image"
 	"image/draw"
 	"image/jpeg"
 	"image/png"
 	"math"
-	"net/http"
 	"os"
 	"strings"
 
+	"github.com/fumiama/imgsz"
 	"github.com/golang/freetype/truetype"
 
 	"golang.org/x/image/font"
@@ -122,77 +120,13 @@ func ImageToNRGBA64(src image.Image) *image.NRGBA64 {
 
 // 解析图片的宽高信息
 func GetWH(path string) (int, int, error) {
-	b, err := os.ReadFile(path)
+	f, err := os.Open(path)
 	if err != nil {
 		return 0, 0, err
 	}
-	return GetImgWH(b)
-}
-
-// 解析图片的宽高信息
-func GetImgWH(imgBytes []byte) (int, int, error) {
-	var width, height int
-	t := http.DetectContentType(imgBytes) // 获取文件类型
-	switch t {
-	case "image/jpg", "image/jpeg":
-		width, height = GetJPGWH(imgBytes)
-	case "image/png":
-		width, height = GetPNGWH(imgBytes)
-	case "image/gif":
-		width, height = GetGIFWH(imgBytes)
-	default:
-		return 0, 0, errors.New("错误的文件类型")
-	}
-	return width, height, nil
-}
-
-// 获取 JPG 图片的宽高
-func GetJPGWH(img []byte) (int, int) {
-	var index int
-	iL := len(img)
-	for i := 0; i < iL-1; i++ {
-		if img[i] != 0xff {
-			continue
-		}
-		if img[i+1] == 0xC0 || img[i+1] == 0xC1 || img[i+1] == 0xC2 {
-			index = i
-			break
-		}
-	}
-	index += 5
-	if index >= iL {
-		return 0, 0
-	}
-	height := int(img[index])<<8 + int(img[index+1])
-	width := int(img[index+2])<<8 + int(img[index+3])
-	return width, height
-}
-
-// 获取 PNG 图片的宽高
-func GetPNGWH(imgBytes []byte) (int, int) {
-	pngHeader := "\x89PNG\r\n\x1a\n"
-	if string(imgBytes[:len(pngHeader)]) != pngHeader {
-		return 0, 0
-	}
-	index := 12
-	if string(imgBytes[index:index+4]) != "IHDR" {
-		return 0, 0
-	}
-	index += 4
-	width := int(binary.BigEndian.Uint32(imgBytes[index : index+4]))
-	height := int(binary.BigEndian.Uint32(imgBytes[index+4 : index+8]))
-	return width, height
-}
-
-// 获取 GIF 图片的宽高
-func GetGIFWH(imgBytes []byte) (int, int) {
-	ver := string(imgBytes[:6])
-	if ver != "GIF87a" && ver != "GIF89a" {
-		return 0, 0
-	}
-	width := int(imgBytes[6]) + int(imgBytes[7])<<8
-	height := int(imgBytes[8]) + int(imgBytes[9])<<8
-	return width, height
+	defer f.Close()
+	sz, _, err := imgsz.DecodeSize(f)
+	return sz.Width, sz.Height, err
 }
 
 // 解析十六进制颜色
