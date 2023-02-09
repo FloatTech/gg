@@ -9,60 +9,54 @@ DATA magic2<>+0x04(SB)/4, $0x40080000
 GLOBL magic2<>(SB), RODATA, $8
 
 // func quadratic(x0, y0, x1, y1, x2, y2, ds float64, p []Point)
-TEXT ·quadratic(SB), NOSPLIT, $0-72
-    MOVQ  ·x0+0(FP), AX
-    MOVQ  ·y0+8(FP), BX
-    MOVQ  ·x1+16(FP), DX
-    MOVQ  ·y1+24(FP), SI
-    MOVQ  ·x2+32(FP), R8
-    MOVQ  ·y2+40(FP), R9
-    MOVQ  ·ds+48(FP), R10
-    MOVQ  magic1<>(SB), R11
+TEXT ·quadratic(SB), NOSPLIT, $0-80
+    MOVQ  ·x0+0(FP), X0
+    MOVQ  ·y0+8(FP), X1
+    MOVQ  ·x1+16(FP), X2
+    MOVQ  ·y1+24(FP), X3
+    MOVQ  ·x2+32(FP), X4
+    MOVQ  ·y2+40(FP), X5
+    MOVQ  ·ds+48(FP), X6
     MOVQ  ·p+56(FP), DI
-    MOVQ  ·plen+64(FP), CX
-    XORQ  R12, R12
+    MOVQ  ·plen+64(FP), SI
 
+    UNPCKLPD  X3, X2
+    MOVAPD    X0, X3
+    UNPCKLPD  X5, X4
+    UNPCKLPD  X1, X3
+    TESTQ     SI, SI
+    JLE       return
+    MOVQ      magic1<>(SB), X5
+    XORQ      AX, AX
 lop:
-    MOVQ  AX, X0
-    MOVQ  BX, X1
-    MOVQ  DX, X2
-    MOVQ  SI, X3
-    MOVQ  R8, X4
-    MOVQ  R9, X5
-
-    CVTSQ2SD  R12, X6
-    MOVQ  R10, X8
-    DIVSD X8, X6
-
-    MOVQ  R11, X7
-
-    SUBSD  X6, X7
-    MOVAPD X7, X8
-    MULSD  X7, X8
-    ADDSD  X7, X7
-    MULSD  X6, X7
-    MULSD  X6, X6
-    MULSD  X8, X0
-    MULSD  X8, X1
-    MULSD  X7, X2
-    MULSD  X7, X3
-    MULSD  X6, X4
-    MULSD  X6, X5
-    ADDSD  X2, X0
-    ADDSD  X1, X3
-    ADDSD  X4, X0
-    ADDSD  X5, X3
-
-    MOVQ  X0, 0(DI*1)
-    MOVQ  X3, 8(DI*1)
-    ADDQ  $16, DI
-    INCQ  R12
-    DECQ  CX
-    JA    lop
+    PXOR      X1, X1
+    MOVAPD    X5, X0
+    ADDQ      $16, DI
+    CVTSQ2SD  AX, X1
+    ADDQ      $1, AX
+    DIVSD     X6, X1
+    SUBSD     X1, X0
+    MOVAPD    X0, X7
+    MULSD     X0, X7
+    ADDSD     X0, X0
+    MULSD     X1, X0
+    MULSD     X1, X1
+    UNPCKLPD  X7, X7
+    MULPD     X3, X7
+    UNPCKLPD  X0, X0
+    MULPD     X2, X0
+    UNPCKLPD  X1, X1
+    MULPD     X4, X1
+    ADDPD     X7, X0
+    ADDPD     X1, X0
+    MOVUPS    X0, -16(DI)
+    CMPQ      AX, SI
+    JNE       lop
+return:
     RET
 
 // func cubic(x0, y0, x1, y1, x2, y2, x3, y3, ds float64, p []Point)
-TEXT ·cubic(SB), NOSPLIT, $0-88
+TEXT ·cubic(SB), NOSPLIT, $0-96
     MOVQ  ·x0+0(FP), AX
     MOVQ  ·y0+8(FP), BX
     MOVQ  ·x1+16(FP), DX
