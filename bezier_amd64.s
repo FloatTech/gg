@@ -26,7 +26,7 @@ TEXT ·quadratic(SB), NOSPLIT, $0-80
     UNPCKLPD  X1, X3
     TESTQ     SI, SI
     JLE       return
-    MOVQ      magic1<>(SB), X5
+    MOVSD     magic1<>(SB), X5
     XORQ      AX, AX
 lop:
     PXOR      X1, X1
@@ -57,64 +57,64 @@ return:
 
 // func cubic(x0, y0, x1, y1, x2, y2, x3, y3, ds float64, p []Point)
 TEXT ·cubic(SB), NOSPLIT, $0-96
-    MOVQ  ·x0+0(FP), AX
-    MOVQ  ·y0+8(FP), BX
-    MOVQ  ·x1+16(FP), DX
-    MOVQ  ·y1+24(FP), SI
-    MOVQ  ·x2+32(FP), R8
-    MOVQ  ·y2+40(FP), R9
-    MOVQ  ·x3+48(FP), R10
-    MOVQ  ·y3+56(FP), R11
+    MOVQ  ·x0+0(FP), X0
+    MOVQ  ·y0+8(FP), X1
+    MOVQ  ·x1+16(FP), X2
+    MOVQ  ·y1+24(FP), X3
+    MOVQ  ·x2+32(FP), X4
+    MOVQ  ·y2+40(FP), X5
+    MOVQ  ·x3+48(FP), X6
+    MOVQ  ·y3+56(FP), X7
     MOVQ  ·p+72(FP), DI
-    MOVQ  ·plen+80(FP), CX
-    XORQ  R12, R12
+    MOVQ  ·plen+80(FP), SI
 
+    UNPCKLPD  X3, X2
+    MOVAPD    X0, X3
+    UNPCKLPD  X7, X6
+    MOVQ      SI, DX
+    MOVSD    ·ds+64(FP), X8
+    UNPCKLPD  X5, X4
+    UNPCKLPD  X1, X3
+    TESTQ     SI, SI
+    JLE       return
+    MOVSD     magic1<>(SB), X7
+    MOVSD     magic2<>(SB), X5
+    XORQ      AX, AX
 lop:
-    MOVQ  AX, X0
-    MOVQ  BX, X1
-    MOVQ  DX, X2
-    MOVQ  SI, X3
-    MOVQ  R8, X4
-    MOVQ  R9, X5
-    MOVQ  R10, X6
-    MOVQ  R11, X7
-    MOVQ  magic1<>(SB), X8
-    MOVQ  ·ds+64(FP), X9
-    MOVQ  magic2<>(SB), X10
-    CVTSQ2SD  R12, X11
-    DIVSD  X9, X11
-
-    SUBSD  X11, X8
-    MOVAPD X11, X12
-    MULSD  X11, X12
-    MULSD  X8, X10
-    MOVAPD X8, X9
-    MULSD  X8, X9
-    MULSD  X8, X9
-    MULSD  X10, X8
-    MULSD  X11, X10
-    MULSD  X9, X0
-    MULSD  X11, X8
-    MULSD  X11, X10
-    MULSD  X9, X1
-    MULSD  X12, X11
-    MULSD  X8, X2
-    MULSD  X8, X3
-    MULSD  X10, X4
-    MULSD  X10, X5
-    MULSD  X11, X6
-    ADDSD  X2, X0
-    MULSD  X11, X7
-    ADDSD  X3, X1
-    ADDSD  X4, X0
-    ADDSD  X5, X1
-    ADDSD  X6, X0
-    ADDSD  X7, X1
-
-    MOVQ  X0, 0(DI*1)
-    MOVQ  X1, 8(DI*1)
-    ADDQ  $16, DI
-    INCQ  R12
-    DECQ  CX
-    JA    lop
+    PXOR      X9, X9
+    MOVAPD    X7, X0
+    ADDQ      $16, DI
+    CVTSQ2SD  AX, X9
+    ADDQ      $1, AX
+    DIVSD     X8, X9
+    SUBSD     X9, X0
+    MOVAPD    X9, X10
+    MULSD     X9, X10
+    MOVAPD    X0, X11
+    MOVAPD    X0, X1
+    MULSD     X0, X11
+    MULSD     X5, X1
+    MULSD     X9, X10
+    MULSD     X0, X11
+    MULSD     X1, X0
+    MULSD     X9, X1
+    MULSD     X9, X0
+    MULSD     X9, X1
+    MOVAPD    X11, X9
+    UNPCKLPD  X9, X9
+    MULPD     X3, X9
+    UNPCKLPD  X0, X0
+    MULPD     X2, X0
+    UNPCKLPD  X1, X1
+    MULPD     X4, X1
+    ADDPD     X9, X0
+    ADDPD     X1, X0
+    MOVAPD    X10, X1
+    UNPCKLPD  X1, X1
+    MULPD     X6, X1
+    ADDPD     X1, X0
+    MOVUPS    X0, -16(DI)
+    CMPQ      AX, DX
+    JNE       lop
+return:
     RET
