@@ -1277,3 +1277,8 @@ func (dc *Context) String() string {
 	sb.WriteString(">")
 	return sb.String()
 }
+
+// Takecolor 实现基于k-means算法的图像取色算法
+func (dc *Context) TakeColor(k int) []color.RGBA {
+	return takecolor(dc.im, k)
+}

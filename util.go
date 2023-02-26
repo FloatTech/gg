@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"image"
+	"image/color"
 	"image/draw"
 	"image/jpeg"
 	"image/png"
@@ -216,4 +217,9 @@ func ParseFontFace(b []byte, points float64) (face font.Face, err error) {
 		// Hinting: font.HintingFull,
 	})
 	return
+}
+
+// Takecolor 实现基于k-means算法的图像取色算法
+func TakeColor(img image.Image, k int) []color.RGBA {
+	return takecolor(img, k)
 }
