@@ -5,17 +5,20 @@ import (
 	"testing"
 
 	"github.com/FloatTech/gg"
-	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font/gofont/goregular"
+	"golang.org/x/image/font/opentype"
 )
 
 func TestGoFont(t *testing.T) {
-	font, err := truetype.Parse(goregular.TTF)
+	font, err := opentype.Parse(goregular.TTF)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	face := truetype.NewFace(font, &truetype.Options{Size: 48})
+	face, err := opentype.NewFace(font, &opentype.FaceOptions{Size: 48})
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	dc := gg.NewContext(1024, 1024)
 	dc.SetFontFace(face)

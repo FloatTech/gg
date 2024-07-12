@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/FloatTech/gg"
-	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font/gofont/goregular"
+	"golang.org/x/image/font/opentype"
 )
 
 func TestRTXT(t *testing.T) {
@@ -14,13 +14,16 @@ func TestRTXT(t *testing.T) {
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
 	dc.SetRGB(0, 0, 0)
-	font, err := truetype.Parse(goregular.TTF)
+	font, err := opentype.Parse(goregular.TTF)
 	if err != nil {
-		panic("")
+		panic(err)
 	}
-	face := truetype.NewFace(font, &truetype.Options{
+	face, err := opentype.NewFace(font, &opentype.FaceOptions{
 		Size: 40,
 	})
+	if err != nil {
+		panic(err)
+	}
 	dc.SetFontFace(face)
 	text := "Hello, world!"
 	w, h := dc.MeasureString(text)

@@ -13,9 +13,9 @@ import (
 	"strings"
 
 	"github.com/fumiama/imgsz"
-	"github.com/golang/freetype/truetype"
 
 	"golang.org/x/image/font"
+	"golang.org/x/image/font/opentype"
 	"golang.org/x/image/math/fixed"
 )
 
@@ -193,12 +193,17 @@ func LoadFontFace(path string, points float64) (face font.Face, err error) {
 	if err != nil {
 		return
 	}
-	f, err := truetype.Parse(fontBytes)
+	f, err := opentype.ParseCollection(fontBytes)
 	if err != nil {
 		return
 	}
-	face = truetype.NewFace(f, &truetype.Options{
+	fnf, err := f.Font(0)
+	if err != nil {
+		return
+	}
+	face, err = opentype.NewFace(fnf, &opentype.FaceOptions{
 		Size: points,
+		DPI:  72,
 		// Hinting: font.HintingFull,
 	})
 	return
@@ -208,12 +213,17 @@ func LoadFontFace(path string, points float64) (face font.Face, err error) {
 // 请注意，返回的 `font.Face` 对象不是线程安全的，不能跨 goroutine 并行使用。
 // 您通常可以只使用 Context.LoadFontFace 函数而不是这个包级函数。
 func ParseFontFace(b []byte, points float64) (face font.Face, err error) {
-	f, err := truetype.Parse(b)
+	f, err := opentype.ParseCollection(b)
 	if err != nil {
 		return
 	}
-	face = truetype.NewFace(f, &truetype.Options{
+	fnf, err := f.Font(0)
+	if err != nil {
+		return
+	}
+	face, err = opentype.NewFace(fnf, &opentype.FaceOptions{
 		Size: points,
+		DPI:  72,
 		// Hinting: font.HintingFull,
 	})
 	return
