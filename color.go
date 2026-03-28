@@ -5,23 +5,16 @@ import (
 	"image/color"
 	"math"
 	"math/rand"
+	"unsafe"
 )
 
 // takecolor 实现基于k-means算法的图像取色算法
 func takecolor(img image.Image, k int) []color.RGBA {
-	// 获取图像的宽高
-	bounds := img.Bounds()
-	width := bounds.Max.X
-	height := bounds.Max.Y
-
-	// 获取图像的像素点
-	var pixels []color.RGBA
-	for x := 0; x < width; x++ {
-		for y := 0; y < height; y++ {
-			r, g, b, _ := img.At(x, y).RGBA()
-			pixels = append(pixels, color.RGBA{uint8(r >> 8), uint8(g >> 8), uint8(b >> 8), 255})
-		}
-	}
+	rgbaimg := imageToRGBA(img)
+	pixels := unsafe.Slice(
+		(*color.RGBA)(unsafe.Pointer(unsafe.SliceData(rgbaimg.Pix))),
+		uintptr(len(rgbaimg.Pix))/unsafe.Sizeof(color.RGBA{}),
+	)
 
 	// 初始化k个聚类中心
 	clusters := make([]color.RGBA, k)

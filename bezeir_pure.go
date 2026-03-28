@@ -1,10 +1,8 @@
-//go:build !amd64
-
 package gg
 
-func quadratic(x0, y0, x1, y1, x2, y2, ds float64, p []Point) {
+func quadraticBezierPure(x0, y0, x1, y1, x2, y2, ds float64, p []Point) {
 	var u, a, b, c, t float64
-	for i := 0; i < len(p); i++ {
+	for i := range p {
 		t = float64(i) / ds
 		u = 1 - t
 		a = u * u
@@ -14,9 +12,9 @@ func quadratic(x0, y0, x1, y1, x2, y2, ds float64, p []Point) {
 	}
 }
 
-func cubic(x0, y0, x1, y1, x2, y2, x3, y3, ds float64, p []Point) {
+func cubicBezierPure(x0, y0, x1, y1, x2, y2, x3, y3, ds float64, p []Point) {
 	var u, a, b, c, d, t float64
-	for i := 0; i < len(p); i++ {
+	for i := range p {
 		t = float64(i) / ds
 		u = 1 - t
 		a = u * u * u

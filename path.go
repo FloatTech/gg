@@ -34,8 +34,10 @@ func flattenPath(p raster.Path) [][]Point {
 			y1 := unfix(p[i+2])
 			x2 := unfix(p[i+3])
 			y2 := unfix(p[i+4])
-			points := QuadraticBezier(cx, cy, x1, y1, x2, y2)
-			path = append(path, points...)
+			n := quadraticBezierLen(cx, cy, x1, y1, x2, y2)
+			a := len(path)
+			path = append(path, make([]Point, n)...)
+			quadraticBezier(cx, cy, x1, y1, x2, y2, float64(n)-1, path[a:])
 			cx, cy = x2, y2
 			i += 6
 		case 3:
@@ -45,8 +47,10 @@ func flattenPath(p raster.Path) [][]Point {
 			y2 := unfix(p[i+4])
 			x3 := unfix(p[i+5])
 			y3 := unfix(p[i+6])
-			points := CubicBezier(cx, cy, x1, y1, x2, y2, x3, y3)
-			path = append(path, points...)
+			n := cubicBezierLen(cx, cy, x1, y1, x2, y2, x3, y3)
+			a := len(path)
+			path = append(path, make([]Point, n)...)
+			cubicBezier(cx, cy, x1, y1, x2, y2, x3, y3, float64(n)-1, path[a:])
 			cx, cy = x3, y3
 			i += 8
 		default:

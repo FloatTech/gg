@@ -8,8 +8,8 @@ DATA magic2<>+0x00(SB)/4, $0x0
 DATA magic2<>+0x04(SB)/4, $0x40080000
 GLOBL magic2<>(SB), RODATA, $8
 
-// func quadratic(x0, y0, x1, y1, x2, y2, ds float64, p []Point)
-TEXT ·quadratic(SB), NOSPLIT, $0-80
+// func quadraticBezierASM(x0, y0, x1, y1, x2, y2, ds float64, p []Point)
+TEXT ·quadraticBezierASM(SB), NOSPLIT, $0-80
     MOVQ  ·x0+0(FP), X0
     MOVQ  ·y0+8(FP), X1
     MOVQ  ·x1+16(FP), X2
@@ -55,8 +55,8 @@ lop:
 return:
     RET
 
-// func cubic(x0, y0, x1, y1, x2, y2, x3, y3, ds float64, p []Point)
-TEXT ·cubic(SB), NOSPLIT, $0-96
+// func cubicBezierASM(x0, y0, x1, y1, x2, y2, x3, y3, ds float64, p []Point)
+TEXT ·cubicBezierASM(SB), NOSPLIT, $0-96
     MOVQ  ·x0+0(FP), X0
     MOVQ  ·y0+8(FP), X1
     MOVQ  ·x1+16(FP), X2

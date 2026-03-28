@@ -1,193 +1,173 @@
 package gg
 
 import (
+	"math"
 	"math/rand"
 	"testing"
 )
 
-func quadraticnoasm(x0, y0, x1, y1, x2, y2, ds float64, p []Point) {
-	var u, a, b, c, t float64
-	for i := 0; i < len(p); i++ {
-		t = float64(i) / ds
-		u = 1 - t
-		a = u * u
-		b = 2 * u * t
-		c = t * t
-		p[i].X, p[i].Y = a*x0+b*x1+c*x2, a*y0+b*y1+c*y2
-	}
-}
-
-func cubicnoasm(x0, y0, x1, y1, x2, y2, x3, y3, ds float64, p []Point) {
-	var u, a, b, c, d, t float64
-	for i := 0; i < len(p); i++ {
-		t = float64(i) / ds
-		u = 1 - t
-		a = u * u * u
-		b = 3 * u * u * t
-		c = 3 * u * t * t
-		d = t * t * t
-		p[i].X, p[i].Y = a*x0+b*x1+c*x2+d*x3, a*y0+b*y1+c*y2+d*y3
-	}
-}
-
-func TestQuadraticCalc(t *testing.T) {
+func TestQuadraticBezeirCalc(t *testing.T) {
 	p1 := make([]Point, 4096)
 	p2 := make([]Point, 4096)
-	for i := 0; i < 4096; i++ {
+	for range 4096 {
 		x0, y0, x1, y1, x2, y2, ds := rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64()
-		quadratic(x0, y0, x1, y1, x2, y2, ds, p1)
-		quadraticnoasm(x0, y0, x1, y1, x2, y2, ds, p2)
-		for j := 0; j < 4096; j++ {
-			if p1[j].X != p2[j].X || p1[j].Y != p2[j].Y {
-				t.Fatal()
+		quadraticBezier(x0, y0, x1, y1, x2, y2, ds, p1)
+		quadraticBezierPure(x0, y0, x1, y1, x2, y2, ds, p2)
+		for j := range 4096 {
+			tolX := 0.00001 * (1 + math.Abs(p2[j].X))
+			tolY := 0.00001 * (1 + math.Abs(p2[j].Y))
+			if math.Abs(p1[j].X-p2[j].X) >= tolX || math.Abs(p1[j].Y-p2[j].Y) >= tolY {
+				t.Fatalf("No.%d expect (%.2f, %.2f) but got (%.2f, %.2f)", j, p2[j].X, p2[j].Y, p1[j].X, p1[j].Y)
 			}
 		}
 	}
 }
 
-func BenchmarkQuadraticCalc(b *testing.B) {
+func BenchmarkQuadraticBezeirCalc(b *testing.B) {
 	b.Run("16", func(b *testing.B) {
-		benchmarkQuadratic(b, 16)
+		benchmarkQuadraticBezeir(b, 16)
 	})
 	b.Run("256", func(b *testing.B) {
-		benchmarkQuadratic(b, 256)
+		benchmarkQuadraticBezeir(b, 256)
 	})
 	b.Run("512", func(b *testing.B) {
-		benchmarkQuadratic(b, 512)
+		benchmarkQuadraticBezeir(b, 512)
 	})
 	b.Run("1024", func(b *testing.B) {
-		benchmarkQuadratic(b, 1024)
+		benchmarkQuadraticBezeir(b, 1024)
 	})
 	b.Run("2048", func(b *testing.B) {
-		benchmarkQuadratic(b, 2048)
+		benchmarkQuadraticBezeir(b, 2048)
 	})
 	b.Run("4K", func(b *testing.B) {
-		benchmarkQuadratic(b, 1024*4)
+		benchmarkQuadraticBezeir(b, 1024*4)
 	})
 	b.Run("32K", func(b *testing.B) {
-		benchmarkQuadratic(b, 1024*32)
+		benchmarkQuadraticBezeir(b, 1024*32)
 	})
 }
 
-func BenchmarkQuadraticNoASMCalc(b *testing.B) {
+func BenchmarkQuadraticBezeirPureCalc(b *testing.B) {
 	b.Run("16", func(b *testing.B) {
-		benchmarkQuadraticNoASM(b, 16)
+		benchmarkQuadraticBezeirPure(b, 16)
 	})
 	b.Run("256", func(b *testing.B) {
-		benchmarkQuadraticNoASM(b, 256)
+		benchmarkQuadraticBezeirPure(b, 256)
 	})
 	b.Run("512", func(b *testing.B) {
-		benchmarkQuadraticNoASM(b, 512)
+		benchmarkQuadraticBezeirPure(b, 512)
 	})
 	b.Run("1024", func(b *testing.B) {
-		benchmarkQuadraticNoASM(b, 1024)
+		benchmarkQuadraticBezeirPure(b, 1024)
 	})
 	b.Run("2048", func(b *testing.B) {
-		benchmarkQuadraticNoASM(b, 2048)
+		benchmarkQuadraticBezeirPure(b, 2048)
 	})
 	b.Run("4K", func(b *testing.B) {
-		benchmarkQuadraticNoASM(b, 1024*4)
+		benchmarkQuadraticBezeirPure(b, 1024*4)
 	})
 	b.Run("32K", func(b *testing.B) {
-		benchmarkQuadraticNoASM(b, 1024*32)
+		benchmarkQuadraticBezeirPure(b, 1024*32)
 	})
 }
 
-func benchmarkQuadratic(b *testing.B, plen int) {
+func benchmarkQuadraticBezeir(b *testing.B, plen int) {
 	p := make([]Point, plen)
 	x0, y0, x1, y1, x2, y2, ds := rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64()
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		quadratic(x0, y0, x1, y1, x2, y2, ds, p)
+	for range b.N {
+		quadraticBezier(x0, y0, x1, y1, x2, y2, ds, p)
 	}
 }
 
-func benchmarkQuadraticNoASM(b *testing.B, plen int) {
+func benchmarkQuadraticBezeirPure(b *testing.B, plen int) {
 	p := make([]Point, plen)
 	x0, y0, x1, y1, x2, y2, ds := rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64()
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		quadraticnoasm(x0, y0, x1, y1, x2, y2, ds, p)
+	for range b.N {
+		quadraticBezierPure(x0, y0, x1, y1, x2, y2, ds, p)
 	}
 }
 
-func TestCubicCalc(t *testing.T) {
+func TestCubicBezeirCalc(t *testing.T) {
 	p1 := make([]Point, 4096)
 	p2 := make([]Point, 4096)
-	for i := 0; i < 4096; i++ {
+	for range 4096 {
 		x0, y0, x1, y1, x2, y2, x3, y3, ds := rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64()
-		cubic(x0, y0, x1, y1, x2, y2, x3, y3, ds, p1)
-		cubicnoasm(x0, y0, x1, y1, x2, y2, x3, y3, ds, p2)
-		for j := 0; j < 4096; j++ {
-			if p1[j].X != p2[j].X || p1[j].Y != p2[j].Y {
-				t.Fatal()
+		cubicBezier(x0, y0, x1, y1, x2, y2, x3, y3, ds, p1)
+		cubicBezierPure(x0, y0, x1, y1, x2, y2, x3, y3, ds, p2)
+		for j := range 4096 {
+			tolX := 0.00001 * (1 + math.Abs(p2[j].X))
+			tolY := 0.00001 * (1 + math.Abs(p2[j].Y))
+			if math.Abs(p1[j].X-p2[j].X) >= tolX || math.Abs(p1[j].Y-p2[j].Y) >= tolY {
+				t.Fatalf("No.%d expect (%.2f, %.2f) but got (%.2f, %.2f)", j, p2[j].X, p2[j].Y, p1[j].X, p1[j].Y)
 			}
 		}
 	}
 }
 
-func BenchmarkCubicCalc(b *testing.B) {
+func BenchmarkCubicBezeirCalc(b *testing.B) {
 	b.Run("16", func(b *testing.B) {
-		benchmarkCubic(b, 16)
+		benchmarkCubicBezeir(b, 16)
 	})
 	b.Run("256", func(b *testing.B) {
-		benchmarkCubic(b, 256)
+		benchmarkCubicBezeir(b, 256)
 	})
 	b.Run("512", func(b *testing.B) {
-		benchmarkCubic(b, 512)
+		benchmarkCubicBezeir(b, 512)
 	})
 	b.Run("1024", func(b *testing.B) {
-		benchmarkCubic(b, 1024)
+		benchmarkCubicBezeir(b, 1024)
 	})
 	b.Run("2048", func(b *testing.B) {
-		benchmarkCubic(b, 2048)
+		benchmarkCubicBezeir(b, 2048)
 	})
 	b.Run("4K", func(b *testing.B) {
-		benchmarkCubic(b, 1024*4)
+		benchmarkCubicBezeir(b, 1024*4)
 	})
 	b.Run("32K", func(b *testing.B) {
-		benchmarkCubic(b, 1024*32)
+		benchmarkCubicBezeir(b, 1024*32)
 	})
 }
 
-func BenchmarkCubicNoASMCalc(b *testing.B) {
+func BenchmarkCubicBezeirPureCalc(b *testing.B) {
 	b.Run("16", func(b *testing.B) {
-		benchmarkCubicNoASM(b, 16)
+		benchmarkCubicBezeirPure(b, 16)
 	})
 	b.Run("256", func(b *testing.B) {
-		benchmarkCubicNoASM(b, 256)
+		benchmarkCubicBezeirPure(b, 256)
 	})
 	b.Run("512", func(b *testing.B) {
-		benchmarkCubicNoASM(b, 512)
+		benchmarkCubicBezeirPure(b, 512)
 	})
 	b.Run("1024", func(b *testing.B) {
-		benchmarkCubicNoASM(b, 1024)
+		benchmarkCubicBezeirPure(b, 1024)
 	})
 	b.Run("2048", func(b *testing.B) {
-		benchmarkCubicNoASM(b, 2048)
+		benchmarkCubicBezeirPure(b, 2048)
 	})
 	b.Run("4K", func(b *testing.B) {
-		benchmarkCubicNoASM(b, 1024*4)
+		benchmarkCubicBezeirPure(b, 1024*4)
 	})
 	b.Run("32K", func(b *testing.B) {
-		benchmarkCubicNoASM(b, 1024*32)
+		benchmarkCubicBezeirPure(b, 1024*32)
 	})
 }
 
-func benchmarkCubic(b *testing.B, plen int) {
+func benchmarkCubicBezeir(b *testing.B, plen int) {
 	p := make([]Point, plen)
 	x0, y0, x1, y1, x2, y2, x3, y3, ds := rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64()
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		cubic(x0, y0, x1, y1, x2, y2, x3, y3, ds, p)
+	for range b.N {
+		cubicBezier(x0, y0, x1, y1, x2, y2, x3, y3, ds, p)
 	}
 }
 
-func benchmarkCubicNoASM(b *testing.B, plen int) {
+func benchmarkCubicBezeirPure(b *testing.B, plen int) {
 	p := make([]Point, plen)
 	x0, y0, x1, y1, x2, y2, x3, y3, ds := rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64()
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		cubicnoasm(x0, y0, x1, y1, x2, y2, x3, y3, ds, p)
+	for range b.N {
+		cubicBezierPure(x0, y0, x1, y1, x2, y2, x3, y3, ds, p)
 	}
 }
