@@ -1,4 +1,4 @@
-; ModuleID = 'device_bezier_kern.bc'
+; ModuleID = 'device_bezier_kern_0.bc'
 source_filename = "bezier_sycl.cpp"
 target datalayout = "e-i64:64-v16:16-v24:32-v32:32-v48:64-v96:128-v192:256-v256:256-v512:512-v1024:1024-n8:16:32:64-G1"
 target triple = "spirv64-unknown-unknown"
@@ -8,8 +8,8 @@ target triple = "spirv64-unknown-unknown"
 @__spirv_BuiltInGlobalInvocationId = external local_unnamed_addr addrspace(1) constant <3 x i64>, align 32
 
 ; Function Attrs: mustprogress nofree norecurse nosync nounwind willreturn memory(argmem: write, inaccessiblemem: write)
-define spir_kernel void @__sycl_kernel_quadratic(double noundef %0, double noundef %1, double noundef %2, double noundef %3, double noundef %4, double noundef %5, double noundef %6, ptr addrspace(1) noundef writeonly align 8 captures(none) %7) local_unnamed_addr #0 !kernel_arg_buffer_location !8 !sycl_used_aspects !9 !sycl_fixed_targets !11 !sycl_kernel_omit_args !12 {
-  %9 = load i64, ptr addrspace(1) @__spirv_BuiltInGlobalInvocationId, align 32, !noalias !13
+define spir_kernel void @__sycl_kernel_quadratic(double noundef %0, double noundef %1, double noundef %2, double noundef %3, double noundef %4, double noundef %5, double noundef %6, ptr addrspace(1) noundef writeonly align 8 captures(none) %7) local_unnamed_addr #0 !kernel_arg_buffer_location !9 !sycl_used_aspects !10 !sycl_fixed_targets !12 !sycl_kernel_omit_args !13 {
+  %9 = load i64, ptr addrspace(1) @__spirv_BuiltInGlobalInvocationId, align 32, !noalias !14
   %10 = icmp ult i64 %9, 2147483648
   tail call void @llvm.assume(i1 %10)
   %11 = uitofp nneg i64 %9 to double
@@ -33,21 +33,21 @@ define spir_kernel void @__sycl_kernel_quadratic(double noundef %0, double nound
 }
 
 ; Function Attrs: nocallback nofree nosync nounwind speculatable willreturn memory(none)
-declare !sycl_used_aspects !9 double @llvm.fmuladd.f64(double, double, double) #1
+declare !sycl_used_aspects !10 double @llvm.fmuladd.f64(double, double, double) #1
 
 ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(inaccessiblemem: write)
 declare void @llvm.assume(i1 noundef) #2
 
 ; Function Attrs: mustprogress norecurse nounwind
-define spir_kernel void @__sycl_kernel_cubic(double noundef %0, double noundef %1, double noundef %2, double noundef %3, double noundef %4, double noundef %5, double noundef %6, double noundef %7, double noundef %8, ptr addrspace(1) noundef align 8 %9) local_unnamed_addr #3 !kernel_arg_buffer_location !20 !sycl_used_aspects !9 !sycl_fixed_targets !11 !sycl_kernel_omit_args !21 {
+define spir_kernel void @__sycl_kernel_cubic(double noundef %0, double noundef %1, double noundef %2, double noundef %3, double noundef %4, double noundef %5, double noundef %6, double noundef %7, double noundef %8, ptr addrspace(1) noundef align 8 %9) local_unnamed_addr #3 !kernel_arg_buffer_location !21 !sycl_used_aspects !10 !sycl_fixed_targets !12 !sycl_kernel_omit_args !22 {
   %11 = addrspacecast ptr addrspace(1) %9 to ptr addrspace(4)
   tail call spir_func void @cubic(double noundef %0, double noundef %1, double noundef %2, double noundef %3, double noundef %4, double noundef %5, double noundef %6, double noundef %7, double noundef %8, ptr addrspace(4) noundef %11) #5
   ret void
 }
 
 ; Function Attrs: mustprogress norecurse nounwind
-define linkonce_odr spir_func void @cubic(double noundef %0, double noundef %1, double noundef %2, double noundef %3, double noundef %4, double noundef %5, double noundef %6, double noundef %7, double noundef %8, ptr addrspace(4) noundef %9) local_unnamed_addr #4 !sycl_used_aspects !9 {
-  %11 = load i64, ptr addrspace(1) @__spirv_BuiltInGlobalInvocationId, align 32, !noalias !22
+define internal spir_func void @cubic(double noundef %0, double noundef %1, double noundef %2, double noundef %3, double noundef %4, double noundef %5, double noundef %6, double noundef %7, double noundef %8, ptr addrspace(4) noundef %9) local_unnamed_addr #4 !sycl_used_aspects !10 {
+  %11 = load i64, ptr addrspace(1) @__spirv_BuiltInGlobalInvocationId, align 32, !noalias !23
   %12 = icmp ult i64 %11, 2147483648
   tail call void @llvm.assume(i1 %12)
   %13 = uitofp nneg i64 %11 to double
@@ -77,12 +77,10 @@ define linkonce_odr spir_func void @cubic(double noundef %0, double noundef %1, 
   ret void
 }
 
-declare dso_local spir_func i32 @_Z18__spirv_ocl_printfPU3AS2Kcz(ptr addrspace(2), ...)
-
-attributes #0 = { mustprogress nofree norecurse nosync nounwind willreturn memory(argmem: write, inaccessiblemem: write) "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "sycl-module-id"="bezier_sycl.cpp" "sycl-nd-range-kernel"="1" "sycl-optlevel"="2" "uniform-work-group-size"="true" }
+attributes #0 = { mustprogress nofree norecurse nosync nounwind willreturn memory(argmem: write, inaccessiblemem: write) "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "sycl-entry-point" "sycl-module-id"="bezier_sycl.cpp" "sycl-nd-range-kernel"="1" "sycl-optlevel"="2" "uniform-work-group-size"="true" }
 attributes #1 = { nocallback nofree nosync nounwind speculatable willreturn memory(none) }
 attributes #2 = { nocallback nofree nosync nounwind willreturn memory(inaccessiblemem: write) }
-attributes #3 = { mustprogress norecurse nounwind "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "sycl-module-id"="bezier_sycl.cpp" "sycl-nd-range-kernel"="1" "sycl-optlevel"="2" "uniform-work-group-size"="true" }
+attributes #3 = { mustprogress norecurse nounwind "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "sycl-entry-point" "sycl-module-id"="bezier_sycl.cpp" "sycl-nd-range-kernel"="1" "sycl-optlevel"="2" "uniform-work-group-size"="true" }
 attributes #4 = { mustprogress norecurse nounwind "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "sycl-nd-range-kernel"="1" "sycl-optlevel"="2" }
 attributes #5 = { nounwind }
 
@@ -91,6 +89,7 @@ attributes #5 = { nounwind }
 !opencl.spir.version = !{!5}
 !spirv.Source = !{!6}
 !llvm.ident = !{!7}
+!sycl-esimd-split-status = !{!8}
 
 !0 = !{!"-llibcpmt"}
 !1 = !{!"/alternatename:_Avx2WmemEnabled=_Avx2WmemEnabledWeakValue"}
@@ -100,24 +99,25 @@ attributes #5 = { nounwind }
 !5 = !{i32 1, i32 2}
 !6 = !{i32 4, i32 100000}
 !7 = !{!"clang version 21.0.0git (https://github.com/intel/llvm d5f649b706f63b5c74e1929bc95db8de91085560)"}
-!8 = !{i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1}
-!9 = !{!10}
-!10 = !{!"fp64", i32 6}
-!11 = !{}
-!12 = !{i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false}
-!13 = !{!14, !16, !18}
-!14 = distinct !{!14, !15, !"_ZN7__spirv29InitSizesSTGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEE8initSizeEv: argument 0"}
-!15 = distinct !{!15, !"_ZN7__spirv29InitSizesSTGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEE8initSizeEv"}
-!16 = distinct !{!16, !17, !"_ZN7__spirv22initGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEEET0_v: argument 0"}
-!17 = distinct !{!17, !"_ZN7__spirv22initGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEEET0_v"}
-!18 = distinct !{!18, !19, !"_ZNK4sycl3_V17nd_itemILi1EE13get_global_idEv: argument 0"}
-!19 = distinct !{!19, !"_ZNK4sycl3_V17nd_itemILi1EE13get_global_idEv"}
-!20 = !{i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1}
-!21 = !{i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false}
-!22 = !{!23, !25, !27}
-!23 = distinct !{!23, !24, !"_ZN7__spirv29InitSizesSTGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEE8initSizeEv: argument 0"}
-!24 = distinct !{!24, !"_ZN7__spirv29InitSizesSTGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEE8initSizeEv"}
-!25 = distinct !{!25, !26, !"_ZN7__spirv22initGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEEET0_v: argument 0"}
-!26 = distinct !{!26, !"_ZN7__spirv22initGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEEET0_v"}
-!27 = distinct !{!27, !28, !"_ZNK4sycl3_V17nd_itemILi1EE13get_global_idEv: argument 0"}
-!28 = distinct !{!28, !"_ZNK4sycl3_V17nd_itemILi1EE13get_global_idEv"}
+!8 = !{i8 0}
+!9 = !{i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1}
+!10 = !{!11}
+!11 = !{!"fp64", i32 6}
+!12 = !{}
+!13 = !{i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false}
+!14 = !{!15, !17, !19}
+!15 = distinct !{!15, !16, !"_ZN7__spirv29InitSizesSTGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEE8initSizeEv: argument 0"}
+!16 = distinct !{!16, !"_ZN7__spirv29InitSizesSTGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEE8initSizeEv"}
+!17 = distinct !{!17, !18, !"_ZN7__spirv22initGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEEET0_v: argument 0"}
+!18 = distinct !{!18, !"_ZN7__spirv22initGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEEET0_v"}
+!19 = distinct !{!19, !20, !"_ZNK4sycl3_V17nd_itemILi1EE13get_global_idEv: argument 0"}
+!20 = distinct !{!20, !"_ZNK4sycl3_V17nd_itemILi1EE13get_global_idEv"}
+!21 = !{i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1}
+!22 = !{i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false}
+!23 = !{!24, !26, !28}
+!24 = distinct !{!24, !25, !"_ZN7__spirv29InitSizesSTGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEE8initSizeEv: argument 0"}
+!25 = distinct !{!25, !"_ZN7__spirv29InitSizesSTGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEE8initSizeEv"}
+!26 = distinct !{!26, !27, !"_ZN7__spirv22initGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEEET0_v: argument 0"}
+!27 = distinct !{!27, !"_ZN7__spirv22initGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEEET0_v"}
+!28 = distinct !{!28, !29, !"_ZNK4sycl3_V17nd_itemILi1EE13get_global_idEv: argument 0"}
+!29 = distinct !{!29, !"_ZNK4sycl3_V17nd_itemILi1EE13get_global_idEv"}
