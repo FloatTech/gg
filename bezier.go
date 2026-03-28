@@ -11,7 +11,6 @@ func quadraticBezier(x0, y0, x1, y1, x2, y2, ds float64, p []Point) {
 			return
 		}
 		canUseBezierKernel = false
-		panic(err)
 	}
 	quadraticBezierPlatform(x0, y0, x1, y1, x2, y2, ds, p)
 }
@@ -23,7 +22,6 @@ func cubicBezier(x0, y0, x1, y1, x2, y2, x3, y3, ds float64, p []Point) {
 			return
 		}
 		canUseBezierKernel = false
-		panic(err)
 	}
 	cubicBezierPlatform(x0, y0, x1, y1, x2, y2, x3, y3, ds, p)
 }
