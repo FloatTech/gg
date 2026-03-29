@@ -63,10 +63,6 @@ jobs:
 
       - name: Run examples
         shell: bash
-        env:
-          # Activate the Level Zero null driver (ze_null) so the loader
-          # can enumerate a fake device on runners without real Intel GPU hardware.
-          ZE_ENABLE_NULL_DRIVER: "1"
         run: go test -v -count=1 ./...
 
   go-generate:
