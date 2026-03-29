@@ -7,7 +7,7 @@ import (
 	"github.com/FloatTech/gg/fio"
 )
 
-func TestRIM(t *testing.T) {
+func TestRIM(*testing.T) {
 	const W = 400
 	const H = 500
 	im, err := fio.LoadPNG("gopher.png")
@@ -35,5 +35,7 @@ func TestRIM(t *testing.T) {
 	dc.StrokePreserve()
 	dc.Clip()
 	dc.DrawImageAnchored(im, 100, 0, 0.0, 0.0)
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

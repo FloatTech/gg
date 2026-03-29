@@ -32,6 +32,10 @@ func quadraticBezierLen(x0, y0, x1, y1, x2, y2 float64) int {
 	return n
 }
 
+// QuadraticBezier computes points along a quadratic Bezier curve defined by
+// (x0, y0), (x1, y1), (x2, y2).
+//
+// QuadraticBezier 计算由 (x0, y0)、(x1, y1)、(x2, y2) 定义的二次贝塞尔曲线上的点。
 func QuadraticBezier(x0, y0, x1, y1, x2, y2 float64) []Point {
 	n := quadraticBezierLen(x0, y0, x1, y1, x2, y2)
 	result := make([]Point, n)
@@ -45,6 +49,10 @@ func cubicBezierLen(x0, y0, x1, y1, x2, y2, x3, y3 float64) int {
 	return n
 }
 
+// CubicBezier computes points along a cubic Bezier curve defined by
+// (x0, y0), (x1, y1), (x2, y2), (x3, y3).
+//
+// CubicBezier 计算由 (x0, y0)、(x1, y1)、(x2, y2)、(x3, y3) 定义的三次贝塞尔曲线上的点。
 func CubicBezier(x0, y0, x1, y1, x2, y2, x3, y3 float64) []Point {
 	n := cubicBezierLen(x0, y0, x1, y1, x2, y2, x3, y3)
 	result := make([]Point, n)

@@ -1,0 +1,191 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  vet_build_test:
+    name: Vet & Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Find and remove all .cpp files
+        run: |
+          find . -name "*.cpp" -type f -delete
+        shell: bash
+
+      - name: Run go vet
+        run: go vet ./...
+
+      - name: Build all packages
+        run: go build ./...
+
+      - name: Build cmd/gen
+        run: go build ./cmd/gen
+
+
+  run-test:
+    name: Run Test (${{ matrix.name }})
+    runs-on: ${{ matrix.os }}
+    needs: [vet_build_test]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            name: Linux
+            cmake_extra_args: -DCMAKE_INSTALL_PREFIX=/usr/local
+            install_cmd: >-
+              sudo cmake --install level-zero-build &&
+              sudo cp level-zero-build/lib/libze_null.so /usr/local/lib/ &&
+              sudo ldconfig
+          - os: windows-latest
+            name: Windows
+            cmake_extra_args: ""
+            install_cmd: >-
+              for dll in $(find level-zero-build -name "*.dll");
+                do cp "$dll" /c/Windows/System32/;
+              done
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Download Intel Level Zero Source Code
+        shell: bash
+        run: |
+          # The apt runtime package (libze1) does NOT ship libze_null, which is
+          # required for ZE_ENABLE_NULL_DRIVER=1. Build from source instead so the
+          # loader and the null driver are both present
+          RELEASE=$(curl -sf https://api.github.com/repos/oneapi-src/level-zero/releases/latest \
+            | jq -r '.tag_name')
+          git clone https://github.com/oneapi-src/level-zero.git --depth=1 \
+            --branch "$RELEASE" level-zero-src
+
+      - name: Build & Install Intel Level Zero
+        shell: bash
+        run: |
+          cmake -S level-zero-src -B level-zero-build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_TESTING=OFF \
+            ${{ matrix.cmake_extra_args }}
+          cmake --build level-zero-build --config Release --parallel $(nproc)
+          ${{ matrix.install_cmd }}
+
+      - name: Run examples
+        shell: bash
+        env:
+          # Activate the Level Zero null driver (ze_null) so the loader
+          # can enumerate a fake device on runners without real Intel GPU hardware.
+          ZE_ENABLE_NULL_DRIVER: "1"
+        run: go test -v -count=1 ./...
+
+  go-generate:
+    name: Run all Generates & Commit
+    runs-on: ubuntu-latest
+    needs: [vet_build_test]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Download SYCL Linux
+        run: |
+          wget -q -O /tmp/sycl_linux.tar.gz https://github.com/intel/llvm/releases/download/v6.3.0/sycl_linux.tar.gz
+          mkdir -p /tmp/sycl_linux
+          tar -xzf /tmp/sycl_linux.tar.gz -C /tmp/sycl_linux
+
+      - name: Add SYCL bin to PATH
+        run: |
+          ls -hl /tmp/sycl_linux
+          echo "/tmp/sycl_linux/bin" >> $GITHUB_PATH
+
+      - name: Install ocloc
+        run: |
+          wget -qO- https://repositories.intel.com/gpu/intel-graphics.key \
+            | sudo gpg --dearmor --output /usr/share/keyrings/intel-graphics.gpg
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/intel-graphics.gpg] https://repositories.intel.com/gpu/ubuntu $(. /etc/os-release && echo $VERSION_CODENAME) unified" \
+            | sudo tee /etc/apt/sources.list.d/intel-gpu.list
+          sudo apt-get update -q
+          sudo apt-get install -y intel-ocloc libigdfcl2 libigc2
+
+      - name: Run go generate
+        run: |
+          go generate ./...
+          gofmt -w .
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.11
+          args: --fix
+        env:
+          CGO_ENABLED: "0"
+
+      - name: Check for changes
+        id: diff
+        run: |
+          if [ -n "$(git diff --name-only)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push to PR branch
+        if: steps.diff.outputs.changed == 'true' && github.event_name == 'pull_request'
+        id: push_to_pr
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: run go generate"
+          git push
+
+      - name: Comment on PR if push failed
+        if: steps.diff.outputs.changed == 'true' && github.event_name == 'pull_request' && steps.push_to_pr.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '`go generate` produced file changes but could not be pushed automatically (likely a fork PR). Please run `go generate ./... && gofmt -w .` locally and push the changes.'
+            })
+
+      - name: Create Pull Request
+        if: steps.diff.outputs.changed == 'true' && github.event_name == 'push'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: run go generate"
+          title: "chore: run go generate"
+          body: |
+            Automated PR created by CI.
+
+            `go generate .` detected generated file differences and applied updates.
+          branch: auto/go-generate
+          delete-branch: true
+

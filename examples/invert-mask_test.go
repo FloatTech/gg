@@ -6,7 +6,7 @@ import (
 	"github.com/FloatTech/gg"
 )
 
-func TestIM(t *testing.T) {
+func TestIM(*testing.T) {
 	dc := gg.NewContext(1024, 1024)
 	dc.DrawCircle(512, 512, 384)
 	dc.Clip()
@@ -14,5 +14,7 @@ func TestIM(t *testing.T) {
 	dc.DrawRectangle(0, 0, 1024, 1024)
 	dc.SetRGB(0, 0, 0)
 	dc.Fill()
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

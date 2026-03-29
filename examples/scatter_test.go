@@ -17,7 +17,7 @@ func CreatePoints(n int) []gg.Point {
 	return points
 }
 
-func TestScatter(t *testing.T) {
+func TestScatter(*testing.T) {
 	const S = 1024
 	const P = 64
 	dc := gg.NewContext(S, S)
@@ -63,5 +63,7 @@ func TestScatter(t *testing.T) {
 		panic(err)
 	}
 	dc.DrawStringAnchored("X Axis Title", S/2, S-P/2, 0.5, 0.5)
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

@@ -1,0 +1,40 @@
+version: "2"
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+
+linters:
+  default: none
+  enable:
+    - errcheck
+    - staticcheck
+    - govet
+    - ineffassign
+    - unused
+    - misspell
+    - unconvert
+    - revive
+  exclusions:
+    rules:
+      - path: \.cpp$
+        linters:
+          - typecheck
+      - path: ^cmd/
+        linters:
+          - errcheck
+          - staticcheck
+          - govet
+          - ineffassign
+          - unused
+          - misspell
+          - unconvert
+          - revive
+      - linters:
+          - errcheck
+        source: "^\\s*defer "
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0

@@ -15,7 +15,7 @@ var lines = []string{
 	"non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
 }
 
-func TestLorem(t *testing.T) {
+func TestLorem(*testing.T) {
 	const W = 800
 	const H = 400
 	dc := gg.NewContext(W, H)
@@ -28,5 +28,7 @@ func TestLorem(t *testing.T) {
 		y := H/2 - h*len(lines)/2 + i*h
 		dc.DrawStringAnchored(line, 400, float64(y), 0.5, 0.5)
 	}
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

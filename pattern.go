@@ -7,15 +7,24 @@ import (
 	"github.com/golang/freetype/raster"
 )
 
+// RepeatOp defines how a surface pattern repeats.
+//
+// RepeatOp 定义表面图案的重复方式。
 type RepeatOp int
 
+// Pattern repeat modes.
+//
+// 图案重复模式。
 const (
-	RepeatBoth RepeatOp = iota
-	RepeatX
-	RepeatY
-	RepeatNone
+	RepeatBoth RepeatOp = iota // Repeat in both directions. 在两个方向上重复。
+	RepeatX                    // Repeat horizontally only. 仅水平重复。
+	RepeatY                    // Repeat vertically only. 仅垂直重复。
+	RepeatNone                 // No repeat. 不重复。
 )
 
+// Pattern defines an interface for generating colors at given coordinates.
+//
+// Pattern 定义了在给定坐标生成颜色的接口。
 type Pattern interface {
 	ColorAt(x, y int) color.Color
 }
@@ -25,10 +34,13 @@ type solidPattern struct {
 	color color.Color
 }
 
-func (p *solidPattern) ColorAt(x, y int) color.Color {
+func (p *solidPattern) ColorAt(_, _ int) color.Color {
 	return p.color
 }
 
+// NewSolidPattern creates a pattern that always returns the given color.
+//
+// NewSolidPattern 创建一个始终返回指定颜色的图案。
 func NewSolidPattern(color color.Color) Pattern {
 	return &solidPattern{color: color}
 }
@@ -60,6 +72,9 @@ func (p *surfacePattern) ColorAt(x, y int) color.Color {
 	return p.im.At(x, y)
 }
 
+// NewSurfacePattern creates a pattern from an image with the given repeat mode.
+//
+// NewSurfacePattern 使用指定重复模式从图像创建图案。
 func NewSurfacePattern(im image.Image, op RepeatOp) Pattern {
 	return &surfacePattern{im: im, op: op}
 }
@@ -71,7 +86,7 @@ type patternPainter struct {
 }
 
 // Paint satisfies the Painter interface.
-func (r *patternPainter) Paint(ss []raster.Span, done bool) {
+func (r *patternPainter) Paint(ss []raster.Span, _ bool) {
 	b := r.im.Bounds()
 	for _, s := range ss {
 		if s.Y < b.Min.Y {

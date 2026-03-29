@@ -7,7 +7,7 @@ import (
 	"github.com/FloatTech/gg/fio"
 )
 
-func TestTiling(t *testing.T) {
+func TestTiling(*testing.T) {
 	const NX = 4
 	const NY = 3
 	im, err := fio.LoadPNG("gopher.png")
@@ -22,5 +22,7 @@ func TestTiling(t *testing.T) {
 			dc.DrawImage(im, x*w, y*h)
 		}
 	}
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

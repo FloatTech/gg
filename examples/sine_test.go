@@ -7,7 +7,7 @@ import (
 	"github.com/FloatTech/gg"
 )
 
-func TestSine(t *testing.T) {
+func TestSine(*testing.T) {
 	const W = 1200
 	const H = 60
 	dc := gg.NewContext(W, H)
@@ -26,5 +26,7 @@ func TestSine(t *testing.T) {
 	dc.SetHexColor("#19344180")
 	dc.SetLineWidth(8)
 	dc.Stroke()
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

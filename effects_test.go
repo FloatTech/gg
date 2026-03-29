@@ -13,7 +13,9 @@ func TestBrightness(t *testing.T) {
 	}
 	dc := NewContextForImage(im)
 	dc.Brightness(-50)
-	saveImage(dc, "TestBrightness")
+	if err := saveImage(dc, "TestBrightness"); err != nil {
+		t.Fatal(err)
+	}
 	checkHash(t, dc, "<gg.Context 30e0b039be47de836a9fb4c8b9825ce8>")
 }
 
@@ -24,6 +26,8 @@ func TestContrast(t *testing.T) {
 	}
 	dc := NewContextForImage(im)
 	dc.Contrast(-50)
-	saveImage(dc, "TestContrast")
+	if err := saveImage(dc, "TestContrast"); err != nil {
+		t.Fatal(err)
+	}
 	checkHash(t, dc, "<gg.Context e6f161e094f0d95603aad891c51c0b6b>")
 }

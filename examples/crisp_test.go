@@ -6,7 +6,7 @@ import (
 	"github.com/FloatTech/gg"
 )
 
-func TestCrisp(t *testing.T) {
+func TestCrisp(*testing.T) {
 	const W = 1000
 	const H = 1000
 	const Minor = 10
@@ -42,5 +42,7 @@ func TestCrisp(t *testing.T) {
 	dc.SetRGBA(0, 0, 0, 0.5)
 	dc.Stroke()
 
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

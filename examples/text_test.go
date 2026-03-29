@@ -6,7 +6,7 @@ import (
 	"github.com/FloatTech/gg"
 )
 
-func TestText(t *testing.T) {
+func TestText(*testing.T) {
 	const S = 1024
 	dc := gg.NewContext(S, S)
 	dc.SetRGB(1, 1, 1)
@@ -17,5 +17,7 @@ func TestText(t *testing.T) {
 		panic(err)
 	}
 	dc.DrawStringAnchored("Hello, world!", S/2, S/2, 0.5, 0.5)
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

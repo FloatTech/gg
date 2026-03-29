@@ -6,7 +6,7 @@ import (
 	"github.com/FloatTech/gg"
 )
 
-func TestLW(t *testing.T) {
+func TestLW(*testing.T) {
 	dc := gg.NewContext(1000, 1000)
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
@@ -19,5 +19,7 @@ func TestLW(t *testing.T) {
 		dc.Stroke()
 		w += 0.1
 	}
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

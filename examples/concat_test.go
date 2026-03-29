@@ -8,7 +8,7 @@ import (
 	"github.com/FloatTech/gg/fio"
 )
 
-func TestConcat(t *testing.T) {
+func TestConcat(*testing.T) {
 	im1, err := fio.LoadPNG("james-webb.png")
 	if err != nil {
 		panic(err)
@@ -28,5 +28,7 @@ func TestConcat(t *testing.T) {
 	dc := gg.NewContext(width, height)
 	dc.DrawImage(im1, 0, 0)
 	dc.DrawImage(im2, 0, s1.Y)
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

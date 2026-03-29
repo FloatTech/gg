@@ -6,7 +6,7 @@ import (
 	"github.com/FloatTech/gg"
 )
 
-func TestQuadratic(t *testing.T) {
+func TestQuadratic(*testing.T) {
 	const S = 1000
 	dc := gg.NewContext(S, S)
 	dc.SetRGB(1, 1, 1)
@@ -50,9 +50,13 @@ func TestQuadratic(t *testing.T) {
 	dc.SetLineWidth(4)
 	dc.Stroke()
 
-	dc.LoadFontFace("/System/Library/Fonts/Supplemental/Arial.ttf", 200)
+	if err := dc.LoadFontFace("/System/Library/Fonts/Supplemental/Arial.ttf", 200); err != nil {
+		panic(err)
+	}
 	dc.DrawStringAnchored("g", -5, 5, 0.5, 0.5)
 	dc.DrawStringAnchored("G", 5, -5, 0.5, 0.5)
 
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

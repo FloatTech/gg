@@ -6,7 +6,7 @@ import (
 	"github.com/FloatTech/gg"
 )
 
-func TestCubic(t *testing.T) {
+func TestCubic(*testing.T) {
 	const S = 1000
 	dc := gg.NewContext(S, S)
 	dc.SetRGB(1, 1, 1)
@@ -38,5 +38,7 @@ func TestCubic(t *testing.T) {
 	dc.SetDash(4, 8, 1, 8)
 	dc.Stroke()
 
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

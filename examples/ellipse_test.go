@@ -7,7 +7,7 @@ import (
 	"github.com/FloatTech/gg/fio"
 )
 
-func TestEllipse(t *testing.T) {
+func TestEllipse(*testing.T) {
 	const S = 1024
 	dc := gg.NewContext(S, S)
 	dc.SetRGBA(0, 0, 0, 0.1)
@@ -21,5 +21,7 @@ func TestEllipse(t *testing.T) {
 	if im, err := fio.LoadImage("gopher.png"); err == nil {
 		dc.DrawImageAnchored(im, S/2, S/2, 0.5, 0.5)
 	}
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

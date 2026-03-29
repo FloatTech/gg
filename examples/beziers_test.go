@@ -72,7 +72,7 @@ func randomCubic(dc *gg.Context) {
 	drawPoints(dc)
 }
 
-func TestBeziers(t *testing.T) {
+func TestBeziers(*testing.T) {
 	const (
 		S = 256
 		W = 8
@@ -96,5 +96,7 @@ func TestBeziers(t *testing.T) {
 			dc.Pop()
 		}
 	}
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

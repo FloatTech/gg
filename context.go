@@ -24,34 +24,58 @@ import (
 	"golang.org/x/image/math/f64"
 )
 
+// LineCap defines the shape at the end of a stroked path.
+//
+// LineCap 定义描边路径末端的形状。
 type LineCap int
 
+// Line cap styles.
+//
+// 线帽样式。
 const (
-	LineCapRound LineCap = iota
-	LineCapButt
-	LineCapSquare
+	LineCapRound  LineCap = iota // Round cap. 圆形线帽。
+	LineCapButt                  // Butt cap. 平头线帽。
+	LineCapSquare                // Square cap. 方形线帽。
 )
 
+// LineJoin defines the shape at the junction of two stroked path segments.
+//
+// LineJoin 定义两条描边路径段交汇处的形状。
 type LineJoin int
 
+// Line join styles.
+//
+// 线段连接样式。
 const (
-	LineJoinRound LineJoin = iota
-	LineJoinBevel
+	LineJoinRound LineJoin = iota // Round join. 圆形连接。
+	LineJoinBevel                 // Bevel join. 斜切连接。
 )
 
+// FillRule defines the algorithm used to determine the interior of a shape.
+//
+// FillRule 定义用于确定形状内部区域的算法。
 type FillRule int
 
+// Fill rule constants.
+//
+// 填充规则常量。
 const (
-	FillRuleWinding FillRule = iota
-	FillRuleEvenOdd
+	FillRuleWinding FillRule = iota // Non-zero winding rule. 非零绕组规则。
+	FillRuleEvenOdd                 // Even-odd rule. 奇偶规则。
 )
 
+// Align defines horizontal text alignment.
+//
+// Align 定义水平文本对齐方式。
 type Align int
 
+// Text alignment constants.
+//
+// 文本对齐常量。
 const (
-	AlignLeft Align = iota
-	AlignCenter
-	AlignRight
+	AlignLeft   Align = iota // Left alignment. 左对齐。
+	AlignCenter              // Center alignment. 居中对齐。
+	AlignRight               // Right alignment. 右对齐。
 )
 
 var (
@@ -59,6 +83,10 @@ var (
 	defaultStrokeStyle = NewSolidPattern(color.Black)
 )
 
+// Context holds the state for the 2D drawing operations, including
+// transformation matrix, color, font, line style and clipping mask.
+//
+// Context 持有二维绘图操作的状态，包括变换矩阵、颜色、字体、线条样式和裁剪蒙版。
 type Context struct {
 	width         int
 	height        int
@@ -199,27 +227,37 @@ func (s ScaleStyle) transformer() draw.Interpolator {
 	return draw.BiLinear // BiLinear by default. 默认情况下为双线性。
 }
 
-// 设置比例样式
+// SetScaleStyle sets the image scaling interpolation style.
+//
+// SetScaleStyle 设置图像缩放的插值样式。
 func (dc *Context) SetScaleStyle(s ScaleStyle) {
 	dc.scaleStyle = s
 }
 
-// 设置比例双线性
+// SetScaleBiLinear sets the scaling style to bi-linear interpolation.
+//
+// SetScaleBiLinear 将缩放样式设置为双线性插值。
 func (dc *Context) SetScaleBiLinear() {
 	dc.SetScaleStyle(BiLinear)
 }
 
-// 设置比例近似双线性
+// SetScaleApproxBiLinear sets the scaling style to approximate bi-linear interpolation.
+//
+// SetScaleApproxBiLinear 将缩放样式设置为近似双线性插值。
 func (dc *Context) SetScaleApproxBiLinear() {
 	dc.SetScaleStyle(ApproxBiLinear)
 }
 
-// 设置最近邻的比例
+// SetScaleNearestNeighbor sets the scaling style to nearest neighbor interpolation.
+//
+// SetScaleNearestNeighbor 将缩放样式设置为最近邻插值。
 func (dc *Context) SetScaleNearestNeighbor() {
 	dc.SetScaleStyle(NearestNeighbor)
 }
 
-// 设置比例为 CatmullRom
+// SetScaleCatmullRom sets the scaling style to Catmull-Rom interpolation.
+//
+// SetScaleCatmullRom 将缩放样式设置为 Catmull-Rom 插值。
 func (dc *Context) SetScaleCatmullRom() {
 	dc.SetScaleStyle(CatmullRom)
 }
@@ -318,57 +356,79 @@ func (dc *Context) SetDashOffset(offset float64) {
 	dc.dashOffset = offset
 }
 
-// 设置线宽
+// SetLineWidth sets the line width for stroking paths.
+//
+// SetLineWidth 设置描边路径的线宽。
 func (dc *Context) SetLineWidth(lineWidth float64) {
 	dc.lineWidth = lineWidth
 }
 
-// 设置线帽
+// SetLineCap sets the line cap style.
+//
+// SetLineCap 设置线帽样式。
 func (dc *Context) SetLineCap(lineCap LineCap) {
 	dc.lineCap = lineCap
 }
 
-// 设置线帽圆
+// SetLineCapRound sets the line cap to round.
+//
+// SetLineCapRound 将线帽设置为圆形。
 func (dc *Context) SetLineCapRound() {
 	dc.lineCap = LineCapRound
 }
 
-// 设置线帽对齐
+// SetLineCapButt sets the line cap to butt.
+//
+// SetLineCapButt 将线帽设置为平头。
 func (dc *Context) SetLineCapButt() {
 	dc.lineCap = LineCapButt
 }
 
-// 设置线帽正方形
+// SetLineCapSquare sets the line cap to square.
+//
+// SetLineCapSquare 将线帽设置为方形。
 func (dc *Context) SetLineCapSquare() {
 	dc.lineCap = LineCapSquare
 }
 
-// 设置线帽连接
+// SetLineJoin sets the line join style.
+//
+// SetLineJoin 设置线段连接样式。
 func (dc *Context) SetLineJoin(lineJoin LineJoin) {
 	dc.lineJoin = lineJoin
 }
 
-// 设置线帽连接圆
+// SetLineJoinRound sets the line join style to round.
+//
+// SetLineJoinRound 将线段连接样式设置为圆形。
 func (dc *Context) SetLineJoinRound() {
 	dc.lineJoin = LineJoinRound
 }
 
-// / 设置线帽连接斜面
+// SetLineJoinBevel sets the line join style to bevel.
+//
+// SetLineJoinBevel 将线段连接样式设置为斜切。
 func (dc *Context) SetLineJoinBevel() {
 	dc.lineJoin = LineJoinBevel
 }
 
-// 设置填充规则
+// SetFillRule sets the fill rule used for determining shape interiors.
+//
+// SetFillRule 设置用于确定形状内部区域的填充规则。
 func (dc *Context) SetFillRule(fillRule FillRule) {
 	dc.fillRule = fillRule
 }
 
-// 设置填充规则绕组
+// SetFillRuleWinding sets the fill rule to non-zero winding.
+//
+// SetFillRuleWinding 将填充规则设置为非零绕组。
 func (dc *Context) SetFillRuleWinding() {
 	dc.fillRule = FillRuleWinding
 }
 
-// 设置填充规则偶数奇数
+// SetFillRuleEvenOdd sets the fill rule to even-odd.
+//
+// SetFillRuleEvenOdd 将填充规则设置为奇偶。
 func (dc *Context) SetFillRuleEvenOdd() {
 	dc.fillRule = FillRuleEvenOdd
 }
@@ -675,9 +735,9 @@ func (dc *Context) Stroke() {
 }
 
 // FillPreserve fills the current path with the current color. Open subpaths
-// are implicity closed. The path is preserved after this operation.
+// are implicitly closed. The path is preserved after this operation.
 //
-// 用当前颜色填充当前路径。 打开的子路径是隐式关闭的。 此操作后将保留路径。
+// FillPreserve 用当前颜色填充当前路径。 打开的子路径是隐式关闭的。 此操作后将保留路径。
 func (dc *Context) FillPreserve() {
 	var painter raster.Painter
 	if dc.mask == nil {
@@ -698,9 +758,9 @@ func (dc *Context) FillPreserve() {
 }
 
 // Fill fills the current path with the current color. Open subpaths
-// are implicity closed. The path is cleared after this operation.
+// are implicitly closed. The path is cleared after this operation.
 //
-// 用当前颜色填充当前路径。
+// Fill 用当前颜色填充当前路径。
 // 打开的子路径是隐式关闭的。 此操作后路径被清除。
 func (dc *Context) Fill() {
 	dc.FillPreserve()
@@ -826,13 +886,17 @@ func (dc *Context) DrawPoint(x, y, r float64) {
 	dc.Pop()
 }
 
-// 绘制一条线
+// DrawLine draws a line segment between two points.
+//
+// DrawLine 在两个点之间绘制一条线段。
 func (dc *Context) DrawLine(x1, y1, x2, y2 float64) {
 	dc.MoveTo(x1, y1)
 	dc.LineTo(x2, y2)
 }
 
-// 绘制一个矩形 以x, y 坐标为起点进行绘制
+// DrawRectangle draws a rectangle at the given position with the given size.
+//
+// DrawRectangle 在指定位置绘制指定大小的矩形。
 func (dc *Context) DrawRectangle(x, y, w, h float64) {
 	dc.NewSubPath()
 	dc.MoveTo(x, y)
@@ -842,7 +906,9 @@ func (dc *Context) DrawRectangle(x, y, w, h float64) {
 	dc.ClosePath()
 }
 
-// 绘制一个圆角矩形 以x, y 坐标为起点进行绘制
+// DrawRoundedRectangle draws a rounded rectangle at the given position.
+//
+// DrawRoundedRectangle 在指定位置绘制圆角矩形。
 func (dc *Context) DrawRoundedRectangle(x, y, w, h, r float64) {
 	x0, x1, x2, x3 := x, x+r, x+w-r, x+w
 	y0, y1, y2, y3 := y, y+r, y+h-r, y+h
@@ -859,7 +925,9 @@ func (dc *Context) DrawRoundedRectangle(x, y, w, h, r float64) {
 	dc.ClosePath()
 }
 
-// 绘制椭圆弧
+// DrawEllipticalArc draws an elliptical arc centered at (x, y).
+//
+// DrawEllipticalArc 绘制以 (x, y) 为中心的椭圆弧。
 func (dc *Context) DrawEllipticalArc(x, y, rx, ry, angle1, angle2 float64) {
 	const n = 16
 	for i := 0; i < n; i++ {
@@ -886,26 +954,34 @@ func (dc *Context) DrawEllipticalArc(x, y, rx, ry, angle1, angle2 float64) {
 	}
 }
 
-// 绘制椭圆
+// DrawEllipse draws an ellipse centered at (x, y).
+//
+// DrawEllipse 绘制以 (x, y) 为中心的椭圆。
 func (dc *Context) DrawEllipse(x, y, rx, ry float64) {
 	dc.NewSubPath()
 	dc.DrawEllipticalArc(x, y, rx, ry, 0, 2*math.Pi)
 	dc.ClosePath()
 }
 
-// 绘制弧线
+// DrawArc draws a circular arc centered at (x, y).
+//
+// DrawArc 绘制以 (x, y) 为中心的圆弧。
 func (dc *Context) DrawArc(x, y, r, angle1, angle2 float64) {
 	dc.DrawEllipticalArc(x, y, r, r, angle1, angle2)
 }
 
-// 绘制圆圈
+// DrawCircle draws a circle centered at (x, y) with radius r.
+//
+// DrawCircle 绘制以 (x, y) 为中心、半径为 r 的圆。
 func (dc *Context) DrawCircle(x, y, r float64) {
 	dc.NewSubPath()
 	dc.DrawEllipticalArc(x, y, r, r, 0, 2*math.Pi)
 	dc.ClosePath()
 }
 
-// 绘制正多边形
+// DrawRegularPolygon draws a regular polygon with n sides centered at (x, y).
+//
+// DrawRegularPolygon 绘制以 (x, y) 为中心的 n 边正多边形。
 func (dc *Context) DrawRegularPolygon(n int, x, y, r, rotation float64) {
 	angle := 2 * math.Pi / float64(n)
 	rotation -= math.Pi / 2
@@ -920,7 +996,9 @@ func (dc *Context) DrawRegularPolygon(n int, x, y, r, rotation float64) {
 	dc.ClosePath()
 }
 
-// 加载指定路径的图像并设定像素坐标
+// LoadImage loads an image from the given path and draws it at (x, y).
+//
+// LoadImage 从指定路径加载图像并绘制到 (x, y) 坐标。
 func (dc *Context) LoadImage(path string, x, y int) error {
 	img, err := fio.LoadImage(path) //添加图片
 	if err != nil {
@@ -965,15 +1043,17 @@ func (dc *Context) DrawImageAnchored(im image.Image, x, y int, ax, ay float64) {
 // Text Functions
 // 文本函数
 
-// 设置字体面
+// SetFontFace sets the current font face for text rendering.
+//
+// SetFontFace 设置用于文本渲染的当前字体。
 func (dc *Context) SetFontFace(fontFace font.Face) {
 	dc.fontFace = fontFace
 	dc.fontHeight = (float64(fontFace.Metrics().Height) / 64) * 72 / 96
 }
 
-// Load the font from the specified path
+// LoadFontFace loads a font from the specified path with the given point size.
 //
-// 加载指定路径的字体
+// LoadFontFace 从指定路径加载指定字号的字体。
 func (dc *Context) LoadFontFace(path string, points float64) error {
 	face, err := LoadFontFace(path, points)
 	if err == nil {
@@ -983,9 +1063,9 @@ func (dc *Context) LoadFontFace(path string, points float64) error {
 	return err
 }
 
-// Load the font from bytes
+// ParseFontFace loads a font from byte data with the given point size.
 //
-// 加载 data 中的字体
+// ParseFontFace 从字节数据加载指定字号的字体。
 func (dc *Context) ParseFontFace(data []byte, points float64) error {
 	face, err := ParseFontFace(data, points)
 	if err == nil {
@@ -995,7 +1075,9 @@ func (dc *Context) ParseFontFace(data []byte, points float64) error {
 	return err
 }
 
-// 返回字体高度
+// FontHeight returns the current font height in points.
+//
+// FontHeight 返回当前字体高度（磅值）。
 func (dc *Context) FontHeight() float64 {
 	return dc.fontHeight
 }
@@ -1095,7 +1177,10 @@ func (dc *Context) DrawStringWrapped(s string, x, y, ax, ay, width, lineSpacing 
 	}
 }
 
-// 具有度量多行字符串的公式
+// MeasureMultilineString measures the rendered width and height of a
+// multi-line string with the given line spacing.
+//
+// MeasureMultilineString 测量多行字符串在指定行距下的渲染宽度和高度。
 func (dc *Context) MeasureMultilineString(s string, lineSpacing float64) (width, height float64) {
 	lines := strings.Split(s, "\n")
 
@@ -1270,7 +1355,7 @@ func (dc *Context) String() string {
 	_, err := h.Write(dc.im.Pix)
 	sb.WriteString("<gg.Context ")
 	if err == nil {
-		hex.NewEncoder(&sb).Write(h.Sum(buf[:0]))
+		_, _ = hex.NewEncoder(&sb).Write(h.Sum(buf[:0]))
 	} else {
 		sb.WriteString("error: ")
 		sb.WriteString(err.Error())
@@ -1279,7 +1364,9 @@ func (dc *Context) String() string {
 	return sb.String()
 }
 
-// Takecolor 实现基于k-means算法的图像取色算法
+// TakeColor extracts the k dominant colors from the drawn image using k-means.
+//
+// TakeColor 使用 k-means 算法从已绘制图像中提取 k 个主色。
 func (dc *Context) TakeColor(k int) []color.RGBA {
 	return takecolor(dc.im, k)
 }

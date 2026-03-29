@@ -17,7 +17,7 @@ func Polygon(n int) []gg.Point {
 	return result
 }
 
-func TestStars(t *testing.T) {
+func TestStars(*testing.T) {
 	const W = 1200
 	const H = 120
 	const S = 100
@@ -44,5 +44,7 @@ func TestStars(t *testing.T) {
 		dc.Fill()
 		dc.Pop()
 	}
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

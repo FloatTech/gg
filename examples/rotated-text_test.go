@@ -8,7 +8,7 @@ import (
 	"golang.org/x/image/font/opentype"
 )
 
-func TestRTXT(t *testing.T) {
+func TestRTXT(*testing.T) {
 	const S = 400
 	dc := gg.NewContext(S, S)
 	dc.SetRGB(1, 1, 1)
@@ -31,5 +31,7 @@ func TestRTXT(t *testing.T) {
 	dc.DrawRectangle(100, 180, w, h)
 	dc.Stroke()
 	dc.DrawStringAnchored(text, 100, 180, 0.0, 0.0)
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

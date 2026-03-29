@@ -7,7 +7,7 @@ import (
 	"github.com/FloatTech/gg"
 )
 
-func TestSpiral(t *testing.T) {
+func TestSpiral(*testing.T) {
 	const S = 1024
 	const N = 2048
 	dc := gg.NewContext(S, S)
@@ -24,5 +24,7 @@ func TestSpiral(t *testing.T) {
 		dc.DrawCircle(x, y, r)
 	}
 	dc.Fill()
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

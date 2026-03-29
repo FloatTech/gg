@@ -6,7 +6,7 @@ import (
 	"github.com/FloatTech/gg"
 )
 
-func TestUnicode(t *testing.T) {
+func TestUnicode(*testing.T) {
 	const S = 4096 * 2
 	const T = 16 * 2
 	const F = 28
@@ -25,5 +25,7 @@ func TestUnicode(t *testing.T) {
 			dc.DrawStringAnchored(string(rune(i)), x, y, 0.5, 0.5)
 		}
 	}
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

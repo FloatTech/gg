@@ -6,7 +6,7 @@ import (
 	"github.com/FloatTech/gg"
 )
 
-func TestMeme(t *testing.T) {
+func TestMeme(*testing.T) {
 	const S = 1024
 	dc := gg.NewContext(S, S)
 	dc.SetRGB(1, 1, 1)
@@ -30,5 +30,7 @@ func TestMeme(t *testing.T) {
 	}
 	dc.SetRGB(1, 1, 1)
 	dc.DrawStringAnchored(s, S/2, S/2, 0.5, 0.5)
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

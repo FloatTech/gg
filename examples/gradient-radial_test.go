@@ -7,7 +7,7 @@ import (
 	"github.com/FloatTech/gg"
 )
 
-func TestGR(t *testing.T) {
+func TestGR(*testing.T) {
 	dc := gg.NewContext(400, 200)
 
 	grad := gg.NewRadialGradient(100, 100, 10, 100, 120, 80)
@@ -24,5 +24,7 @@ func TestGR(t *testing.T) {
 	dc.DrawCircle(100, 120, 80)
 	dc.Stroke()
 
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

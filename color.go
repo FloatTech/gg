@@ -8,6 +8,9 @@ import (
 	"unsafe"
 )
 
+// Predefined colors.
+//
+// 预定义颜色。
 var (
 	White   = color.RGBA{255, 255, 255, 255}
 	Black   = color.RGBA{0, 0, 0, 255}

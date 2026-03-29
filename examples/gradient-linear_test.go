@@ -7,7 +7,7 @@ import (
 	"github.com/FloatTech/gg"
 )
 
-func TestGL(t *testing.T) {
+func TestGL(*testing.T) {
 	dc := gg.NewContext(500, 400)
 
 	grad := gg.NewLinearGradient(20, 320, 400, 20)
@@ -36,5 +36,7 @@ func TestGL(t *testing.T) {
 	dc.ClosePath()
 	dc.Fill()
 
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

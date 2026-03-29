@@ -7,7 +7,7 @@ import (
 	"github.com/FloatTech/gg"
 )
 
-func TestLines(t *testing.T) {
+func TestLines(*testing.T) {
 	const W = 1024
 	const H = 1024
 	dc := gg.NewContext(W, H)
@@ -28,5 +28,7 @@ func TestLines(t *testing.T) {
 		dc.DrawLine(x1, y1, x2, y2)
 		dc.Stroke()
 	}
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

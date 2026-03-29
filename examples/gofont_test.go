@@ -9,7 +9,7 @@ import (
 	"golang.org/x/image/font/opentype"
 )
 
-func TestGoFont(t *testing.T) {
+func TestGoFont(*testing.T) {
 	font, err := opentype.Parse(goregular.TTF)
 	if err != nil {
 		log.Fatal(err)
@@ -26,5 +26,7 @@ func TestGoFont(t *testing.T) {
 	dc.Clear()
 	dc.SetRGB(0, 0, 0)
 	dc.DrawStringAnchored("Hello, world!", 512, 512, 0.5, 0.5)
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

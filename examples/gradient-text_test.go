@@ -11,12 +11,14 @@ const (
 	H = 512
 )
 
-func TestGT(t *testing.T) {
+func TestGT(*testing.T) {
 	dc := gg.NewContext(W, H)
 
 	// draw text
 	dc.SetRGB(0, 0, 0)
-	dc.LoadFontFace("/System/Library/Fonts/Supplemental/Impact.ttf", 128)
+	if err := dc.LoadFontFace("/System/Library/Fonts/Supplemental/Impact.ttf", 128); err != nil {
+		panic(err)
+	}
 	dc.DrawStringAnchored("Gradient Text", W/2, H/2, 0.5, 0.5)
 
 	// get the context as an alpha mask
@@ -33,9 +35,13 @@ func TestGT(t *testing.T) {
 	dc.SetFillStyle(g)
 
 	// using the mask, fill the context with the gradient
-	dc.SetMask(mask)
+	if err := dc.SetMask(mask); err != nil {
+		panic(err)
+	}
 	dc.DrawRectangle(0, 0, W, H)
 	dc.Fill()
 
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

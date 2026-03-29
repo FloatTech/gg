@@ -8,7 +8,7 @@ import (
 	"github.com/FloatTech/gg"
 )
 
-func TestOpenfill(t *testing.T) {
+func TestOpenfill(*testing.T) {
 	dc := gg.NewContext(1000, 1000)
 	for j := 0; j < 10; j++ {
 		for i := 0; i < 10; i++ {
@@ -28,5 +28,7 @@ func TestOpenfill(t *testing.T) {
 	dc.SetRGB(1, 0, 0)
 	dc.SetLineWidth(4)
 	dc.StrokePreserve()
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

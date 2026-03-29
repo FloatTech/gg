@@ -7,7 +7,7 @@ import (
 	"github.com/FloatTech/gg/fio"
 )
 
-func TestPF(t *testing.T) {
+func TestPF(*testing.T) {
 	im, err := fio.LoadPNG("james-webb.png")
 	if err != nil {
 		panic(err)
@@ -21,5 +21,7 @@ func TestPF(t *testing.T) {
 	dc.ClosePath()
 	dc.SetFillStyle(pattern)
 	dc.Fill()
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

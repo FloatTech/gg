@@ -1,4 +1,6 @@
-// package factory 图片操作工具库
+// Package factory provides image manipulation utilities built on top of gg.
+//
+// factory 包提供基于 gg 的图像操作工具库。
 package factory
 
 import (
@@ -38,7 +40,9 @@ func Parse(r io.Reader) (img image.Image, err error) {
 	return
 }
 
-// NewFactory 设置底图
+// NewFactoryBG creates a new Factory with a solid background color.
+//
+// NewFactoryBG 创建一个具有纯色背景的新 Factory。
 func NewFactoryBG(w, h int, fillColor color.Color) *Factory {
 	c := color.NRGBAModel.Convert(fillColor).(color.NRGBA)
 	if (c == color.NRGBA{0, 0, 0, 0}) {

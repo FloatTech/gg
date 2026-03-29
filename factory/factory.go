@@ -14,18 +14,30 @@ type Factory struct {
 	im *image.NRGBA
 }
 
+// NewFactory creates a Factory from an existing *image.NRGBA.
+//
+// NewFactory 从已有的 *image.NRGBA 创建 Factory。
 func NewFactory(im *image.NRGBA) *Factory {
 	return &Factory{im: im}
 }
 
+// W returns the width of the image in pixels.
+//
+// W 返回图像的宽度（像素）。
 func (dst *Factory) W() int {
 	return dst.im.Bounds().Size().X
 }
 
+// H returns the height of the image in pixels.
+//
+// H 返回图像的高度（像素）。
 func (dst *Factory) H() int {
 	return dst.im.Bounds().Size().Y
 }
 
+// Image returns the underlying *image.NRGBA.
+//
+// Image 返回底层的 *image.NRGBA。
 func (dst *Factory) Image() *image.NRGBA {
 	return dst.im
 }

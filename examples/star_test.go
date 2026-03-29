@@ -16,7 +16,7 @@ func Polygon4(n int, x, y, r float64) []gg.Point {
 	return result
 }
 
-func TestStar(t *testing.T) {
+func TestStar(*testing.T) {
 	n := 5
 	points := Polygon4(n, 512, 512, 400)
 	dc := gg.NewContext(1024, 1024)
@@ -33,5 +33,7 @@ func TestStar(t *testing.T) {
 	dc.SetRGBA(0, 1, 0, 0.5)
 	dc.SetLineWidth(16)
 	dc.Stroke()
-	dc.SavePNG(GetFileName() + ".png")
+	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
+		panic(err)
+	}
 }

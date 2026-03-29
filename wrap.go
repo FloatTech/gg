@@ -40,10 +40,9 @@ func wordWrap(m measureStringer, s string, width float64) []string {
 					result = append(result, fields[i])
 					x = ""
 					continue
-				} else {
-					result = append(result, x)
-					x = ""
 				}
+				result = append(result, x)
+				x = ""
 			}
 			x += fields[i] + fields[i+1]
 		}

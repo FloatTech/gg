@@ -88,7 +88,7 @@ func gpuCreateModWithKernels(spv []byte, names ...string) (ze.ModuleHandle, erro
 	for _, name := range names {
 		krn, err := mod.KernelCreate(name)
 		if err != nil {
-			mod.Destroy()
+			_ = mod.Destroy()
 			return 0, err
 		}
 		_ = krn.Destroy()

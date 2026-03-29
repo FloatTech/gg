@@ -7,7 +7,7 @@ import (
 	"github.com/FloatTech/gg"
 )
 
-func TestGC(t *testing.T) {
+func TestGC(*testing.T) {
 	dc := gg.NewContext(400, 400)
 
 	grad1 := gg.NewConicGradient(200, 200, 0)
@@ -33,5 +33,7 @@ func TestGC(t *testing.T) {
 	dc.DrawCircle(200, 200, 150)
 	dc.Fill()
 
-	dc.SavePNG("gradient-conic.png")
+	if err := dc.SavePNG("gradient-conic.png"); err != nil {
+		panic(err)
+	}
 }

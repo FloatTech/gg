@@ -28,6 +28,9 @@ func (s stops) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
 }
 
+// Gradient represents a color gradient that can be used as a fill or stroke pattern.
+//
+// Gradient 表示可用作填充或描边图案的颜色渐变。
 type Gradient interface {
 	Pattern
 	AddColorStop(offset float64, color color.Color)
@@ -76,6 +79,9 @@ func (g *linearGradient) AddColorStop(offset float64, color color.Color) {
 	sort.Sort(g.stops)
 }
 
+// NewLinearGradient creates a linear gradient between (x0, y0) and (x1, y1).
+//
+// NewLinearGradient 创建从 (x0, y0) 到 (x1, y1) 的线性渐变。
 func NewLinearGradient(x0, y0, x1, y1 float64) Gradient {
 	g := &linearGradient{
 		x0: x0, y0: y0,
@@ -143,6 +149,9 @@ func (g *radialGradient) AddColorStop(offset float64, color color.Color) {
 	sort.Sort(g.stops)
 }
 
+// NewRadialGradient creates a radial gradient between two circles.
+//
+// NewRadialGradient 创建两个圆之间的径向渐变。
 func NewRadialGradient(x0, y0, r0, x1, y1, r1 float64) Gradient {
 	c0 := circle{x0, y0, r0}
 	c1 := circle{x1, y1, r1}
@@ -178,7 +187,7 @@ func (g *conicGradient) ColorAt(x, y int) color.Color {
 	a := math.Atan2(float64(y)-g.cy, float64(x)-g.cx)
 	t := norm(a, -math.Pi, math.Pi) - g.rotation
 	if t < 0 {
-		t += 1
+		t++
 	}
 	return getColor(t, g.stops)
 }
@@ -188,6 +197,9 @@ func (g *conicGradient) AddColorStop(offset float64, color color.Color) {
 	sort.Sort(g.stops)
 }
 
+// NewConicGradient creates a conic gradient centered at (cx, cy) with the given rotation in degrees.
+//
+// NewConicGradient 创建以 (cx, cy) 为中心、指定旋转角度（度）的锥形渐变。
 func NewConicGradient(cx, cy, deg float64) Gradient {
 	g := &conicGradient{
 		cx:       cx,
