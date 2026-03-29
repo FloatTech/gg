@@ -1,6 +1,6 @@
 package gg
 
-func limitper(per int) int {
+func gateN100P100(per int) int {
 	if per > 100 {
 		per = 100
 	}
@@ -10,7 +10,7 @@ func limitper(per int) int {
 	return per
 }
 
-func limit2uint8(n int) int {
+func gate0P255(n int) int {
 	if n < 0 {
 		n = 0
 	}
@@ -25,13 +25,13 @@ func (dc *Context) Brightness(per int) {
 	if per == 0 {
 		return
 	}
-	per = limitper(per)
+	per = gateN100P100(per)
 	gain := 255 * per / 100
 	for i, v := range dc.im.Pix {
 		if i%4 == 3 { // alpha
 			continue
 		}
-		dc.im.Pix[i] = uint8(limit2uint8(int(v) + gain))
+		dc.im.Pix[i] = uint8(gate0P255(int(v) + gain))
 	}
 }
 
@@ -40,25 +40,25 @@ func (dc *Context) Contrast(per int) {
 	if per == 0 {
 		return
 	}
-	per = limitper(per) + 100
+	per = gateN100P100(per) + 100
 	switch {
-	case 0 <= per && per <= 100: // 损益
+	case 0 <= per && per < 100: // 损益
 		gain := per
 		for i, v := range dc.im.Pix {
 			if i%4 == 3 { // alpha
 				continue
 			}
-			dc.im.Pix[i] = uint8(limit2uint8(int(v) * gain / 100))
+			dc.im.Pix[i] = uint8(gate0P255(int(v) * gain / 100))
 		}
-	case 1 < per && per < 2: // 增益
+	case 100 < per && per <= 200: // 增益
 		gain := 200 - per
 		for i, v := range dc.im.Pix {
 			if i%4 == 3 { // alpha
 				continue
 			}
-			dc.im.Pix[i] = uint8(limit2uint8(int(v) * 100 / gain))
+			dc.im.Pix[i] = uint8(gate0P255(int(v) * 100 / gain))
 		}
 	default:
-		return
+		panic("unreachable")
 	}
 }
