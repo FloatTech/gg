@@ -17,8 +17,8 @@ func TestTiling(*testing.T) {
 	w := im.Bounds().Size().X
 	h := im.Bounds().Size().Y
 	dc := gg.NewContext(w*NX, h*NY)
-	for y := 0; y < NY; y++ {
-		for x := 0; x < NX; x++ {
+	for y := range NY {
+		for x := range NX {
 			dc.DrawImage(im, x*w, y*h)
 		}
 	}

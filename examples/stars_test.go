@@ -10,7 +10,7 @@ import (
 
 func Polygon(n int) []gg.Point {
 	result := make([]gg.Point, n)
-	for i := 0; i < n; i++ {
+	for i := range n {
 		a := float64(i)*2*math.Pi/float64(n) - math.Pi/2
 		result[i] = gg.Point{X: math.Cos(a), Y: math.Sin(a)}
 	}
@@ -32,7 +32,7 @@ func TestStars(*testing.T) {
 		dc.Translate(float64(x), H/2)
 		dc.Rotate(rand.Float64() * 2 * math.Pi)
 		dc.Scale(s, s)
-		for i := 0; i < n+1; i++ {
+		for i := range n + 1 {
 			index := (i * 2) % n
 			p := points[index]
 			dc.LineTo(p.X, p.Y)

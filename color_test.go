@@ -13,8 +13,8 @@ import (
 // solidImage 创建一个全部填充为指定颜色的 image.Image
 func solidImage(w, h int, c color.RGBA) image.Image {
 	img := image.NewRGBA(image.Rect(0, 0, w, h))
-	for y := 0; y < h; y++ {
-		for x := 0; x < w; x++ {
+	for y := range h {
+		for x := range w {
 			img.SetRGBA(x, y, c)
 		}
 	}
@@ -24,8 +24,8 @@ func solidImage(w, h int, c color.RGBA) image.Image {
 // twoColorImage 创建左半部分为 c1、右半部分为 c2 的图像
 func twoColorImage(w, h int, c1, c2 color.RGBA) image.Image {
 	img := image.NewRGBA(image.Rect(0, 0, w, h))
-	for y := 0; y < h; y++ {
-		for x := 0; x < w; x++ {
+	for y := range h {
+		for x := range w {
 			if x < w/2 {
 				img.SetRGBA(x, y, c1)
 			} else {
@@ -135,7 +135,7 @@ func TestDistance_Symmetry(t *testing.T) {
 
 func TestDistance_NonNegative(t *testing.T) {
 	rng := rand.New(rand.NewSource(42))
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		a := color.RGBA{uint8(rng.Intn(256)), uint8(rng.Intn(256)), uint8(rng.Intn(256)), 255}
 		b := color.RGBA{uint8(rng.Intn(256)), uint8(rng.Intn(256)), uint8(rng.Intn(256)), 255}
 		got := distance(a, b)
@@ -263,7 +263,7 @@ func TestTakecolor_TwoDistinctColors(t *testing.T) {
 	// 多次运行，验证算法至少能在 30 次尝试中有一次正确分离两种颜色。
 	img := twoColorImage(20, 20, Red, Blue)
 	const maxAttempts = 30
-	for attempt := 0; attempt < maxAttempts; attempt++ {
+	for range maxAttempts {
 		result := takecolor(img, 2)
 		if len(result) == 2 && colorInSlice(Red, result, 5) && colorInSlice(Blue, result, 5) {
 			return // 成功分离，测试通过
@@ -286,8 +286,8 @@ func TestTakecolor_Deterministic_SolidImage(t *testing.T) {
 func TestTakecolor_AllClustersHaveValidRGB(t *testing.T) {
 	rng := rand.New(rand.NewSource(99))
 	img := image.NewRGBA(image.Rect(0, 0, 16, 16))
-	for y := 0; y < 16; y++ {
-		for x := 0; x < 16; x++ {
+	for y := range 16 {
+		for x := range 16 {
 			img.SetRGBA(x, y, color.RGBA{
 				uint8(rng.Intn(256)),
 				uint8(rng.Intn(256)),
@@ -310,7 +310,7 @@ func TestTakecolor_AllClustersHaveValidRGB(t *testing.T) {
 // ---- Benchmark ----
 
 func BenchmarkSq(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		sq(float64(i))
 	}
 }
@@ -319,7 +319,7 @@ func BenchmarkDistance(b *testing.B) {
 	a := color.RGBA{100, 150, 200, 255}
 	c := color.RGBA{50, 80, 30, 255}
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		distance(a, c)
 	}
 }
@@ -328,7 +328,7 @@ func BenchmarkClustersEqual_Equal(b *testing.B) {
 	a := []color.RGBA{{255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {128, 128, 128, 255}}
 	c := []color.RGBA{{255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {128, 128, 128, 255}}
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		clustersEqual(a, c)
 	}
 }
@@ -337,7 +337,7 @@ func BenchmarkClustersEqual_NotEqual(b *testing.B) {
 	a := []color.RGBA{{255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {128, 128, 128, 255}}
 	c := []color.RGBA{{255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {200, 200, 200, 255}}
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		clustersEqual(a, c)
 	}
 }
@@ -345,13 +345,13 @@ func BenchmarkClustersEqual_NotEqual(b *testing.B) {
 func BenchmarkTakecolor_16x16_K3(b *testing.B) {
 	rng := rand.New(rand.NewSource(42))
 	img := image.NewRGBA(image.Rect(0, 0, 16, 16))
-	for y := 0; y < 16; y++ {
-		for x := 0; x < 16; x++ {
+	for y := range 16 {
+		for x := range 16 {
 			img.SetRGBA(x, y, color.RGBA{uint8(rng.Intn(256)), uint8(rng.Intn(256)), uint8(rng.Intn(256)), 255})
 		}
 	}
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		takecolor(img, 3)
 	}
 }
@@ -359,13 +359,13 @@ func BenchmarkTakecolor_16x16_K3(b *testing.B) {
 func BenchmarkTakecolor_64x64_K4(b *testing.B) {
 	rng := rand.New(rand.NewSource(42))
 	img := image.NewRGBA(image.Rect(0, 0, 64, 64))
-	for y := 0; y < 64; y++ {
-		for x := 0; x < 64; x++ {
+	for y := range 64 {
+		for x := range 64 {
 			img.SetRGBA(x, y, color.RGBA{uint8(rng.Intn(256)), uint8(rng.Intn(256)), uint8(rng.Intn(256)), 255})
 		}
 	}
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		takecolor(img, 4)
 	}
 }
@@ -373,13 +373,13 @@ func BenchmarkTakecolor_64x64_K4(b *testing.B) {
 func BenchmarkTakecolor_128x128_K8(b *testing.B) {
 	rng := rand.New(rand.NewSource(42))
 	img := image.NewRGBA(image.Rect(0, 0, 128, 128))
-	for y := 0; y < 128; y++ {
-		for x := 0; x < 128; x++ {
+	for y := range 128 {
+		for x := range 128 {
 			img.SetRGBA(x, y, color.RGBA{uint8(rng.Intn(256)), uint8(rng.Intn(256)), uint8(rng.Intn(256)), 255})
 		}
 	}
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		takecolor(img, 8)
 	}
 }
@@ -387,7 +387,7 @@ func BenchmarkTakecolor_128x128_K8(b *testing.B) {
 func BenchmarkTakecolor_SolidColor_K5(b *testing.B) {
 	img := solidImage(64, 64, color.RGBA{200, 100, 50, 255})
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		takecolor(img, 5)
 	}
 }

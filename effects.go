@@ -41,10 +41,9 @@ func (dc *Context) Contrast(per int) {
 		return
 	}
 	per = limitper(per) + 100
-	gain := 0
 	switch {
 	case 0 <= per && per <= 100: // 损益
-		gain = per
+		gain := per
 		for i, v := range dc.im.Pix {
 			if i%4 == 3 { // alpha
 				continue
@@ -52,7 +51,7 @@ func (dc *Context) Contrast(per int) {
 			dc.im.Pix[i] = uint8(limit2uint8(int(v) * gain / 100))
 		}
 	case 1 < per && per < 2: // 增益
-		gain = 200 - per
+		gain := 200 - per
 		for i, v := range dc.im.Pix {
 			if i%4 == 3 { // alpha
 				continue

@@ -10,8 +10,8 @@ import (
 
 func TestOpenfill(*testing.T) {
 	dc := gg.NewContext(1000, 1000)
-	for j := 0; j < 10; j++ {
-		for i := 0; i < 10; i++ {
+	for j := range 10 {
+		for i := range 10 {
 			x := float64(i)*100 + 50
 			y := float64(j)*100 + 50
 			a1 := rand.Float64() * 2 * math.Pi

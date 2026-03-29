@@ -8,19 +8,97 @@ formatters:
 linters:
   default: none
   enable:
-    - errcheck
-    - staticcheck
-    - govet
-    - ineffassign
-    - unused
-    - misspell
-    - unconvert
-    - revive
+    # --- Bug & correctness ---
+    - errcheck       # unchecked error returns
+    - govet          # go vet suspicious constructs
+    - staticcheck    # comprehensive static analysis
+    - nilerr         # returning nil where error is expected
+    - bodyclose      # unclosed HTTP response bodies (factory/img.go)
+
+    # --- Code quality ---
+    - ineffassign    # useless assignments
+    - unused         # unused code
+    - unconvert      # unnecessary type conversions
+    - wastedassign   # overwritten-before-read assignments
+    - copyloopvar    # loop variable capture issues
+
+    # --- Performance ---
+    - prealloc       # slice pre-allocation hints
+    - mirror         # bytes/strings mirror-function suggestions
+    - perfsprint     # faster fmt.Sprintf alternatives
+
+    # --- Style & consistency ---
+    - revive         # superset of golint
+    - misspell       # common English misspellings
+    - dupword        # duplicate words in comments / strings
+    - whitespace     # unnecessary leading/trailing blank lines
+    - goprintffuncname # printf-like functions end with 'f'
+    - gocritic       # opinionated but high-signal checks
+    - asciicheck     # non-ASCII identifiers
+    - bidichk        # dangerous bidi unicode sequences
+
+    # --- Security ---
+    - gosec          # security-oriented checks
+
+    # --- Modernization ---
+    - intrange       # for i := 0; i < n; i++ → for i := range n
+    - usestdlibvars  # prefer stdlib constants (http.StatusOK, etc.)
+    - modernize      # suggest modern Go idioms
+
+  settings:
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - performance
+      disabled-checks:
+        - hugeParam          # graphics functions pass large structs by value on purpose
+        - rangeValCopy       # same reason
+        - whyNoLint          # not using nolint directives
+        - commentedOutCode   # example/test files legitimately keep commented-out alternatives
+
+    gosec:
+      excludes:
+        - G103  # unsafe.Pointer — intentional for pixel manipulation and GPU interop
+        - G107  # HTTP request with variable URL — expected for image loading from URLs
+        - G115  # integer overflow conversion — deliberate in pixel/color math
+        - G304  # file path from variable — this IS an image-loading library
+        - G306  # poor file permissions — not applicable
+        - G401  # weak crypto (md5) — used only for display hashing, not security
+        - G404  # weak RNG — used for k-means color quantization, not security
+        - G501  # blocklisted import crypto/md5 — same as G401
+
+    revive:
+      rules:
+        - name: blank-imports
+        - name: context-as-argument
+        - name: dot-imports
+        - name: error-return
+        - name: error-strings
+        - name: error-naming
+        - name: exported
+        - name: increment-decrement
+        - name: indent-error-flow
+        - name: package-comments
+        - name: range
+        - name: receiver-naming
+        - name: time-naming
+        - name: unexported-return
+        - name: unreachable-code
+        - name: unused-parameter
+        - name: superfluous-else
+
+    prealloc:
+      simple: true
+      for-loops: false  # avoid false positives in complex rendering loops
+
   exclusions:
     rules:
+      # Exclude non-Go sources from typecheck
       - path: \.cpp$
         linters:
           - typecheck
+
+      # cmd/ is not part of the library API — relax everything
       - path: ^cmd/
         linters:
           - errcheck
@@ -31,9 +109,18 @@ linters:
           - misspell
           - unconvert
           - revive
+
+      # Deferred close errors are almost never actionable
       - linters:
           - errcheck
         source: "^\\s*defer "
+
+      # Test files: relax security, pre-alloc, and HTTP body checks
+      - path: _test\.go$
+        linters:
+          - gosec
+          - prealloc
+          - bodyclose
 
 issues:
   max-issues-per-linter: 0

@@ -930,7 +930,7 @@ func (dc *Context) DrawRoundedRectangle(x, y, w, h, r float64) {
 // DrawEllipticalArc 绘制以 (x, y) 为中心的椭圆弧。
 func (dc *Context) DrawEllipticalArc(x, y, rx, ry, angle1, angle2 float64) {
 	const n = 16
-	for i := 0; i < n; i++ {
+	for i := range n {
 		p1 := float64(i+0) / n
 		p2 := float64(i+1) / n
 		a1 := angle1 + (angle2-angle1)*p1
@@ -989,7 +989,7 @@ func (dc *Context) DrawRegularPolygon(n int, x, y, r, rotation float64) {
 		rotation += angle / 2
 	}
 	dc.NewSubPath()
-	for i := 0; i < n; i++ {
+	for i := range n {
 		a := rotation + angle*float64(i)
 		dc.LineTo(x+r*math.Cos(a), y+r*math.Sin(a))
 	}
@@ -1000,7 +1000,7 @@ func (dc *Context) DrawRegularPolygon(n int, x, y, r, rotation float64) {
 //
 // LoadImage 从指定路径加载图像并绘制到 (x, y) 坐标。
 func (dc *Context) LoadImage(path string, x, y int) error {
-	img, err := fio.LoadImage(path) //添加图片
+	img, err := fio.LoadImage(path) // 添加图片
 	if err != nil {
 		return err
 	}

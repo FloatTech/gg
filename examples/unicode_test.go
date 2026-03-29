@@ -17,8 +17,8 @@ func TestUnicode(*testing.T) {
 	if err := dc.LoadFontFace("/System/Library/Fonts/Supplemental/Impact.ttf", F); err != nil {
 		panic(err)
 	}
-	for r := 0; r < 256; r++ {
-		for c := 0; c < 256; c++ {
+	for r := range 256 {
+		for c := range 256 {
 			i := r*256 + c
 			x := float64(c*T) + T/2
 			y := float64(r*T) + T/2

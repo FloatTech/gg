@@ -36,7 +36,7 @@ func takecolor(img image.Image, k int) []color.RGBA {
 
 	// 初始化k个聚类中心
 	clusters := make([]color.RGBA, k)
-	for i := 0; i < k; i++ {
+	for i := range k {
 		clusters[i] = pixels[rand.Intn(len(pixels))]
 	}
 
@@ -57,7 +57,7 @@ func takecolor(img image.Image, k int) []color.RGBA {
 
 		// 计算每个聚类的新中心
 		newClusters := make([]color.RGBA, k)
-		for i := 0; i < k; i++ {
+		for i := range k {
 			var r, g, b uint32
 			n := 0
 			for j, cluster := range clusterAssignments {
@@ -99,7 +99,7 @@ func clustersEqual(a, b []color.RGBA) bool {
 	if len(a) != len(b) {
 		return false
 	}
-	for i := 0; i < len(a); i++ {
+	for i := range a {
 		if a[i] != b[i] {
 			return false
 		}

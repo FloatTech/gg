@@ -9,7 +9,7 @@ import (
 
 func Polygon4(n int, x, y, r float64) []gg.Point {
 	result := make([]gg.Point, n)
-	for i := 0; i < n; i++ {
+	for i := range n {
 		a := float64(i)*2*math.Pi/float64(n) - math.Pi/2
 		result[i] = gg.Point{X: x + r*math.Cos(a), Y: y + r*math.Sin(a)}
 	}
@@ -22,7 +22,7 @@ func TestStar(*testing.T) {
 	dc := gg.NewContext(1024, 1024)
 	dc.SetHexColor("fff")
 	dc.Clear()
-	for i := 0; i < n+1; i++ {
+	for i := range n + 1 {
 		index := (i * 2) % n
 		p := points[index]
 		dc.LineTo(p.X, p.Y)

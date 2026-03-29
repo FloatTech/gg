@@ -48,7 +48,7 @@ func TestLines(t *testing.T) {
 	dc.SetRGB(0.5, 0.5, 0.5)
 	dc.Clear()
 	rnd := rand.New(rand.NewSource(99))
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		x1 := rnd.Float64() * 100
 		y1 := rnd.Float64() * 100
 		x2 := rnd.Float64() * 100
@@ -69,7 +69,7 @@ func TestCircles(t *testing.T) {
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
 	rnd := rand.New(rand.NewSource(99))
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		x := rnd.Float64() * 100
 		y := rnd.Float64() * 100
 		r := rnd.Float64()*10 + 5
@@ -91,7 +91,7 @@ func TestQuadratic(t *testing.T) {
 	dc.SetRGB(0.25, 0.25, 0.25)
 	dc.Clear()
 	rnd := rand.New(rand.NewSource(99))
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		x1 := rnd.Float64() * 100
 		y1 := rnd.Float64() * 100
 		x2 := rnd.Float64() * 100
@@ -116,7 +116,7 @@ func BenchmarkQuadratic(b *testing.B) {
 	dc.Clear()
 	rnd := rand.New(rand.NewSource(99))
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		x1 := rnd.Float64() * 100
 		y1 := rnd.Float64() * 100
 		x2 := rnd.Float64() * 100
@@ -136,7 +136,7 @@ func TestCubic(t *testing.T) {
 	dc.SetRGB(0.75, 0.75, 0.75)
 	dc.Clear()
 	rnd := rand.New(rand.NewSource(99))
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		x1 := rnd.Float64() * 100
 		y1 := rnd.Float64() * 100
 		x2 := rnd.Float64() * 100
@@ -163,7 +163,7 @@ func BenchmarkCubic(b *testing.B) {
 	dc.Clear()
 	rnd := rand.New(rand.NewSource(99))
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		x1 := rnd.Float64() * 100
 		y1 := rnd.Float64() * 100
 		x2 := rnd.Float64() * 100
@@ -185,9 +185,9 @@ func TestFill(t *testing.T) {
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
 	rnd := rand.New(rand.NewSource(99))
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		dc.NewSubPath()
-		for j := 0; j < 10; j++ {
+		for range 10 {
 			x := rnd.Float64() * 100
 			y := rnd.Float64() * 100
 			dc.LineTo(x, y)
@@ -209,7 +209,7 @@ func TestClip(t *testing.T) {
 	dc.DrawCircle(50, 50, 40)
 	dc.Clip()
 	rnd := rand.New(rand.NewSource(99))
-	for i := 0; i < 1000; i++ {
+	for range 1000 {
 		x := rnd.Float64() * 100
 		y := rnd.Float64() * 100
 		r := rnd.Float64()*10 + 5
@@ -280,8 +280,8 @@ func TestSetPixel(t *testing.T) {
 	dc.Clear()
 	dc.SetRGB(0, 1, 0)
 	i := 0
-	for y := 0; y < 100; y++ {
-		for x := 0; x < 100; x++ {
+	for y := range 100 {
+		for x := range 100 {
 			if i%31 == 0 {
 				dc.SetPixel(x, y)
 			}
@@ -300,8 +300,8 @@ func TestDrawPoint(t *testing.T) {
 	dc.Clear()
 	dc.SetRGB(0, 1, 0)
 	dc.Scale(10, 10)
-	for y := 0; y <= 10; y++ {
-		for x := 0; x <= 10; x++ {
+	for y := range 11 {
+		for x := range 11 {
 			dc.DrawPoint(float64(x), float64(y), 3)
 			dc.Fill()
 		}
@@ -347,7 +347,7 @@ func TestDashes(t *testing.T) {
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
 	rnd := rand.New(rand.NewSource(99))
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		x1 := rnd.Float64() * 100
 		y1 := rnd.Float64() * 100
 		x2 := rnd.Float64() * 100
@@ -369,7 +369,7 @@ func BenchmarkCircles(b *testing.B) {
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
 	rnd := rand.New(rand.NewSource(99))
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		x := rnd.Float64() * 1000
 		y := rnd.Float64() * 1000
 		dc.DrawCircle(x, y, 10)

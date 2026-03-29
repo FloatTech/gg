@@ -37,7 +37,7 @@ func ToBase64(img image.Image) (base64Bytes []byte, err error) {
 	encoder := base64.NewEncoder(base64.StdEncoding, buffer)
 	var opt jpeg.Options
 	opt.Quality = 70
-	if err = jpeg.Encode(encoder, img, &opt); err != nil {
+	if err := jpeg.Encode(encoder, img, &opt); err != nil {
 		return nil, err
 	}
 	_ = encoder.Close()

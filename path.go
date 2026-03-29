@@ -114,7 +114,7 @@ func dashPath(paths [][]Point, dashes []float64, offset float64) [][]Point {
 				if dashIndex%2 == 0 && len(segment) > 1 {
 					result = append(result, segment)
 				}
-				segment = nil
+				segment = make([]Point, 0, 1)
 				segment = append(segment, p)
 				segmentLength = 0
 				previous = p

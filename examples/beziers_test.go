@@ -81,8 +81,8 @@ func TestBeziers(*testing.T) {
 	dc := gg.NewContext(S*W, S*H)
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
-	for j := 0; j < H; j++ {
-		for i := 0; i < W; i++ {
+	for j := range H {
+		for i := range W {
 			x := float64(i)*S + S/2
 			y := float64(j)*S + S/2
 			dc.Push()

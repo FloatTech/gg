@@ -13,7 +13,7 @@ func TestLines(*testing.T) {
 	dc := gg.NewContext(W, H)
 	dc.SetRGB(0, 0, 0)
 	dc.Clear()
-	for i := 0; i < 1000; i++ {
+	for range 1000 {
 		x1 := rand.Float64() * W
 		y1 := rand.Float64() * H
 		x2 := rand.Float64() * W
