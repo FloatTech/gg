@@ -8,8 +8,8 @@ import (
 )
 
 func flattenPath(p raster.Path) [][]Point {
-	var result [][]Point
-	var path []Point
+	var result = make([][]Point, len(p)*2)
+	var path = make([]Point, 0, len(p)*2)
 	var cx, cy float64
 	for i := 0; i < len(p); {
 		switch p[i] {
@@ -64,13 +64,13 @@ func flattenPath(p raster.Path) [][]Point {
 }
 
 func dashPath(paths [][]Point, dashes []float64, offset float64) [][]Point {
-	var result [][]Point
 	if len(dashes) == 0 {
 		return paths
 	}
 	if len(dashes) == 1 {
 		dashes = append(dashes, dashes[0])
 	}
+	var result = make([][]Point, 0, len(paths)*2)
 	for _, path := range paths {
 		if len(path) < 2 {
 			continue
@@ -100,7 +100,7 @@ func dashPath(paths [][]Point, dashes []float64, offset float64) [][]Point {
 			}
 		}
 
-		var segment []Point
+		var segment = make([]Point, 0, (len(path)-pathIndex)*2)
 		segment = append(segment, previous)
 		for pathIndex < len(path) {
 			dashLength := dashes[dashIndex]
@@ -114,7 +114,7 @@ func dashPath(paths [][]Point, dashes []float64, offset float64) [][]Point {
 				if dashIndex%2 == 0 && len(segment) > 1 {
 					result = append(result, segment)
 				}
-				segment = make([]Point, 0, 1)
+				segment = make([]Point, 0, (len(path)-pathIndex)*2)
 				segment = append(segment, p)
 				segmentLength = 0
 				previous = p
@@ -134,7 +134,7 @@ func dashPath(paths [][]Point, dashes []float64, offset float64) [][]Point {
 }
 
 func rasterPath(paths [][]Point) raster.Path {
-	var result raster.Path
+	var result = make(raster.Path, 0, len(paths))
 	for _, path := range paths {
 		var previous fixed.Point26_6
 		for i, point := range path {

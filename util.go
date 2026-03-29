@@ -34,11 +34,6 @@ func Degrees(radians float64) float64 {
 //
 // ImageToRGBA 将 image.Image 转换为 *image.RGBA。
 func ImageToRGBA(src image.Image) *image.RGBA {
-	return imageToRGBA(src)
-}
-
-// image.Image 转为 image.RGBA
-func imageToRGBA(src image.Image) *image.RGBA {
 	bounds := src.Bounds()
 	dst := image.NewRGBA(bounds)
 	draw.Draw(dst, bounds, src, bounds.Min, draw.Src)
@@ -186,9 +181,9 @@ func ParseFontFace(b []byte, points float64) (face font.Face, err error) {
 	return
 }
 
-// TakeColor extracts the k dominant colors from an image using k-means.
+// TakeThemeColorsKMeans extracts the k dominant colors from an image using k-means.
 //
-// TakeColor 使用 k-means 算法从图像中提取 k 个主色。
-func TakeColor(img image.Image, k int) []color.RGBA {
-	return takecolor(img, k)
+// TakeThemeColorsKMeans 使用 k-means 算法从图像中提取 k 个主色。
+func TakeThemeColorsKMeans(img image.Image, k int) []color.RGBA {
+	return takeThemeColorsKMeans(img, k)
 }

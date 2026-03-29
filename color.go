@@ -26,9 +26,9 @@ var (
 	Opaque  = color.RGBA{0, 0, 0, 0}
 )
 
-// takecolor 实现基于k-means算法的图像取色算法
-func takecolor(img image.Image, k int) []color.RGBA {
-	rgbaimg := imageToRGBA(img)
+// takeThemeColorsKMeans 实现基于k-means算法的图像取色算法
+func takeThemeColorsKMeans(img image.Image, k int) []color.RGBA {
+	rgbaimg := ImageToRGBA(img)
 	pixels := unsafe.Slice(
 		(*color.RGBA)(unsafe.Pointer(unsafe.SliceData(rgbaimg.Pix))),
 		uintptr(len(rgbaimg.Pix))/unsafe.Sizeof(color.RGBA{}),

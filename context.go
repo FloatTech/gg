@@ -129,7 +129,7 @@ func NewContext(width, height int) *Context {
 // 将指定图像复制到一个新的 image.RGBA
 // 并准备渲染到该图像上的上下文。
 func NewContextForImage(im image.Image) *Context {
-	return NewContextForRGBA(imageToRGBA(im))
+	return NewContextForRGBA(ImageToRGBA(im))
 }
 
 // NewContextForRGBA prepares a context for rendering onto the specified image.
@@ -820,12 +820,10 @@ func (dc *Context) InvertMask() {
 	if dc.mask == nil {
 		dc.mask = image.NewAlpha(dc.im.Bounds())
 	} else {
-		var u64s []uint64
-		raws := (*slice)(unsafe.Pointer(&dc.mask.Pix))
-		rawu64s := (*slice)(unsafe.Pointer(&u64s))
-		rawu64s.data = raws.data
-		rawu64s.len = raws.len / 8
-		rawu64s.cap = raws.cap / 8
+		u64s := unsafe.Slice((*uint64)(
+			unsafe.Pointer(unsafe.SliceData(dc.mask.Pix))),
+			len(dc.mask.Pix)/8,
+		)
 		for i, v := range u64s {
 			u64s[i] = 0xffffffff_ffffffff - v
 		}
@@ -1364,9 +1362,9 @@ func (dc *Context) String() string {
 	return sb.String()
 }
 
-// TakeColor extracts the k dominant colors from the drawn image using k-means.
+// TakeThemeColorsKMeans extracts the k dominant colors from the drawn image using k-means.
 //
-// TakeColor 使用 k-means 算法从已绘制图像中提取 k 个主色。
-func (dc *Context) TakeColor(k int) []color.RGBA {
-	return takecolor(dc.im, k)
+// TakeThemeColorsKMeans 使用 k-means 算法从已绘制图像中提取 k 个主色。
+func (dc *Context) TakeThemeColorsKMeans(k int) []color.RGBA {
+	return takeThemeColorsKMeans(dc.im, k)
 }
