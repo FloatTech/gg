@@ -415,7 +415,7 @@ func (dc *Context) SetColor(c color.Color) {
 // 符号（#）是可选的。支持3位数和6位数的变体。8位数字
 // 也可以提供设置 alpha 值。
 func (dc *Context) SetHexColor(x string) {
-	dc.SetRGBA255(parseHexColor(x))
+	dc.SetRGBA255(ParseHexColor(x))
 }
 
 // SetRGBA255 sets the current color. r, g, b, a values should be between 0 and

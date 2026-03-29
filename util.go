@@ -120,7 +120,7 @@ func ImageToNRGBA64(src image.Image) *image.NRGBA64 {
 }
 
 // 解析图片的宽高信息
-func GetWH(path string) (int, int, error) {
+func GetImageWxH(path string) (int, int, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return 0, 0, err
@@ -132,11 +132,6 @@ func GetWH(path string) (int, int, error) {
 
 // 解析十六进制颜色
 func ParseHexColor(x string) (r, g, b, a int) {
-	return parseHexColor(x)
-}
-
-// 解析十六进制颜色
-func parseHexColor(x string) (r, g, b, a int) {
 	x = strings.TrimPrefix(x, "#")
 	a = 255
 	switch len(x) {

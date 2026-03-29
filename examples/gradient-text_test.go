@@ -1,7 +1,6 @@
 package main
 
 import (
-	"image/color"
 	"testing"
 
 	"github.com/FloatTech/gg"
@@ -29,8 +28,8 @@ func TestGT(t *testing.T) {
 
 	// set a gradient
 	g := gg.NewLinearGradient(0, 0, W, H)
-	g.AddColorStop(0, color.RGBA{255, 0, 0, 255})
-	g.AddColorStop(1, color.RGBA{0, 0, 255, 255})
+	g.AddColorStop(0, gg.Red)
+	g.AddColorStop(1, gg.Blue)
 	dc.SetFillStyle(g)
 
 	// using the mask, fill the context with the gradient

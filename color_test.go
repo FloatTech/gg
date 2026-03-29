@@ -106,18 +106,16 @@ func TestDistance_SameColor(t *testing.T) {
 }
 
 func TestDistance_BlackAndWhite(t *testing.T) {
-	black := color.RGBA{0, 0, 0, 255}
-	white := color.RGBA{255, 255, 255, 255}
 	// sqrt(255^2 * 3) = 255 * sqrt(3)
 	want := 255 * math.Sqrt(3)
-	got := distance(black, white)
+	got := distance(Black, White)
 	if math.Abs(got-want) > 1e-9 {
 		t.Errorf("distance(black, white) = %v, want %v", got, want)
 	}
 }
 
 func TestDistance_SingleChannel(t *testing.T) {
-	a := color.RGBA{0, 0, 0, 255}
+	a := Black
 	b := color.RGBA{3, 4, 0, 255}
 	// sqrt(9 + 16) = 5
 	want := 5.0
@@ -263,13 +261,11 @@ func TestTakecolor_SolidColorKGreaterThan1(t *testing.T) {
 func TestTakecolor_TwoDistinctColors(t *testing.T) {
 	// k-means 的初始中心随机选取，可能两次都落到同一颜色区域导致不收敛。
 	// 多次运行，验证算法至少能在 30 次尝试中有一次正确分离两种颜色。
-	red := color.RGBA{255, 0, 0, 255}
-	blue := color.RGBA{0, 0, 255, 255}
-	img := twoColorImage(20, 20, red, blue)
+	img := twoColorImage(20, 20, Red, Blue)
 	const maxAttempts = 30
 	for attempt := 0; attempt < maxAttempts; attempt++ {
 		result := takecolor(img, 2)
-		if len(result) == 2 && colorInSlice(red, result, 5) && colorInSlice(blue, result, 5) {
+		if len(result) == 2 && colorInSlice(Red, result, 5) && colorInSlice(Blue, result, 5) {
 			return // 成功分离，测试通过
 		}
 	}

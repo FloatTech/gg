@@ -11,9 +11,9 @@ func TestGL(t *testing.T) {
 	dc := gg.NewContext(500, 400)
 
 	grad := gg.NewLinearGradient(20, 320, 400, 20)
-	grad.AddColorStop(0, color.RGBA{0, 255, 0, 255})
-	grad.AddColorStop(1, color.RGBA{0, 0, 255, 255})
-	grad.AddColorStop(0.5, color.RGBA{255, 0, 0, 255})
+	grad.AddColorStop(0, gg.Green)
+	grad.AddColorStop(1, gg.Blue)
+	grad.AddColorStop(0.5, gg.Red)
 
 	dc.SetColor(color.White)
 	dc.DrawRectangle(20, 20, 400-20, 300)

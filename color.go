@@ -8,6 +8,21 @@ import (
 	"unsafe"
 )
 
+var (
+	White   = color.RGBA{255, 255, 255, 255}
+	Black   = color.RGBA{0, 0, 0, 255}
+	Red     = color.RGBA{255, 0, 0, 255}
+	Green   = color.RGBA{0, 255, 0, 255}
+	Blue    = color.RGBA{0, 0, 255, 255}
+	Yellow  = color.RGBA{255, 255, 0, 255}
+	Cyan    = color.RGBA{0, 255, 255, 255}
+	Magenta = color.RGBA{255, 0, 255, 255}
+	Grey    = color.RGBA{190, 190, 190, 255}
+	Pink    = color.RGBA{255, 181, 197, 255}
+	Orange  = color.RGBA{255, 165, 0, 255}
+	Opaque  = color.RGBA{0, 0, 0, 0}
+)
+
 // takecolor 实现基于k-means算法的图像取色算法
 func takecolor(img image.Image, k int) []color.RGBA {
 	rgbaimg := imageToRGBA(img)
