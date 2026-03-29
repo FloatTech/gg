@@ -16,7 +16,7 @@ func TestGT(*testing.T) {
 
 	// draw text
 	dc.SetRGB(0, 0, 0)
-	if err := dc.LoadFontFace("/System/Library/Fonts/Supplemental/Impact.ttf", 128); err != nil {
+	if err := dc.LoadFontFace(fontPath("Impact"), 128); err != nil {
 		panic(err)
 	}
 	dc.DrawStringAnchored("Gradient Text", W/2, H/2, 0.5, 0.5)

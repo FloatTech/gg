@@ -13,7 +13,7 @@ func TestText(*testing.T) {
 	dc.Clear()
 	dc.SetRGB(0, 0, 0)
 	// 字体路径
-	if err := dc.LoadFontFace("/System/Library/Fonts/Supplemental/Arial.ttf", 96); err != nil {
+	if err := dc.LoadFontFace(fontPath("Arial"), 96); err != nil {
 		panic(err)
 	}
 	dc.DrawStringAnchored("Hello, world!", S/2, S/2, 0.5, 0.5)

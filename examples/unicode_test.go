@@ -14,7 +14,7 @@ func TestUnicode(*testing.T) {
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
 	dc.SetRGB(0, 0, 0)
-	if err := dc.LoadFontFace("/System/Library/Fonts/Supplemental/Impact.ttf", F); err != nil {
+	if err := dc.LoadFontFace(fontPath("Impact"), F); err != nil {
 		panic(err)
 	}
 	for r := range 256 {

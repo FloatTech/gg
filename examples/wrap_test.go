@@ -22,7 +22,7 @@ func TestWrap(*testing.T) {
 	dc.SetLineWidth(3)
 	dc.Stroke()
 	dc.SetRGB(0, 0, 0)
-	if err := dc.LoadFontFace("/System/Library/Fonts/Supplemental/Arial Bold.ttf", 18); err != nil {
+	if err := dc.LoadFontFace(fontPath("Arial Bold"), 18); err != nil {
 		panic(err)
 	}
 	dc.DrawStringWrapped("UPPER LEFT", P, P, 0, 0, 0, 1.5, gg.AlignLeft)
@@ -33,7 +33,7 @@ func TestWrap(*testing.T) {
 	dc.DrawStringWrapped("LOWER MIDDLE", W/2, H-P, 0.5, 1, 0, 1.5, gg.AlignCenter)
 	dc.DrawStringWrapped("LEFT MIDDLE", P, H/2, 0, 0.5, 0, 1.5, gg.AlignLeft)
 	dc.DrawStringWrapped("RIGHT MIDDLE", W-P, H/2, 1, 0.5, 0, 1.5, gg.AlignRight)
-	if err := dc.LoadFontFace("/System/Library/Fonts/Supplemental/Arial.ttf", 12); err != nil {
+	if err := dc.LoadFontFace(fontPath("Arial"), 12); err != nil {
 		panic(err)
 	}
 	dc.DrawStringWrapped(TEXT, W/2-P, H/2-P, 1, 1, W/3, 1.75, gg.AlignLeft)

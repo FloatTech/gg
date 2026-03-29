@@ -50,7 +50,7 @@ func TestQuadratic(*testing.T) {
 	dc.SetLineWidth(4)
 	dc.Stroke()
 
-	if err := dc.LoadFontFace("/System/Library/Fonts/Supplemental/Arial.ttf", 200); err != nil {
+	if err := dc.LoadFontFace(fontPath("Arial"), 200); err != nil {
 		panic(err)
 	}
 	dc.DrawStringAnchored("g", -5, 5, 0.5, 0.5)

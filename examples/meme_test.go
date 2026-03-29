@@ -11,7 +11,7 @@ func TestMeme(*testing.T) {
 	dc := gg.NewContext(S, S)
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
-	if err := dc.LoadFontFace("/System/Library/Fonts/Supplemental/Impact.ttf", 96); err != nil {
+	if err := dc.LoadFontFace(fontPath("Impact"), 96); err != nil {
 		panic(err)
 	}
 	dc.SetRGB(0, 0, 0)

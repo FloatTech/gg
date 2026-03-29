@@ -61,6 +61,13 @@ jobs:
           find . -name "*.cpp" -type f -delete
         shell: bash
 
+      - name: Install Microsoft core fonts
+        if: runner.os == 'Linux'
+        run: |
+          echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
+          sudo apt-get update -q
+          sudo apt-get install -y ttf-mscorefonts-installer
+
       - name: Run examples
         shell: bash
         run: go test -v -count=1 ./...

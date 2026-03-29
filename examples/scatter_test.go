@@ -55,11 +55,11 @@ func TestScatter(*testing.T) {
 	// draw text
 	dc.Identity()
 	dc.SetRGB(0, 0, 0)
-	if err := dc.LoadFontFace("/System/Library/Fonts/Supplemental/Arial Bold.ttf", 24); err != nil {
+	if err := dc.LoadFontFace(fontPath("Arial Bold"), 24); err != nil {
 		panic(err)
 	}
 	dc.DrawStringAnchored("Chart Title", S/2, P/2, 0.5, 0.5)
-	if err := dc.LoadFontFace("/System/Library/Fonts/Supplemental/Arial.ttf", 18); err != nil {
+	if err := dc.LoadFontFace(fontPath("Arial"), 18); err != nil {
 		panic(err)
 	}
 	dc.DrawStringAnchored("X Axis Title", S/2, S-P/2, 0.5, 0.5)
