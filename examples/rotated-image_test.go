@@ -4,12 +4,13 @@ import (
 	"testing"
 
 	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/fio"
 )
 
 func TestRIM(t *testing.T) {
 	const W = 400
 	const H = 500
-	im, err := gg.LoadPNG("gopher.png")
+	im, err := fio.LoadPNG("gopher.png")
 	if err != nil {
 		panic(err)
 	}

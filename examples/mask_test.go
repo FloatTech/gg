@@ -5,10 +5,11 @@ import (
 	"testing"
 
 	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/fio"
 )
 
 func TestMask(t *testing.T) {
-	im, err := gg.LoadImage("james-webb.png")
+	im, err := fio.LoadImage("james-webb.png")
 	if err != nil {
 		log.Fatal(err)
 	}

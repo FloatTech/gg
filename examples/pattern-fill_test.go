@@ -4,10 +4,11 @@ import (
 	"testing"
 
 	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/fio"
 )
 
 func TestPF(t *testing.T) {
-	im, err := gg.LoadPNG("james-webb.png")
+	im, err := fio.LoadPNG("james-webb.png")
 	if err != nil {
 		panic(err)
 	}

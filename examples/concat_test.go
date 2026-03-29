@@ -5,15 +5,16 @@ import (
 	"testing"
 
 	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/fio"
 )
 
 func TestConcat(t *testing.T) {
-	im1, err := gg.LoadPNG("james-webb.png")
+	im1, err := fio.LoadPNG("james-webb.png")
 	if err != nil {
 		panic(err)
 	}
 
-	im2, err := gg.LoadPNG("gopher.png")
+	im2, err := fio.LoadPNG("gopher.png")
 	if err != nil {
 		panic(err)
 	}

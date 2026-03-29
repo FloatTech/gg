@@ -16,6 +16,7 @@ import (
 	"strings"
 	"unsafe"
 
+	"github.com/FloatTech/gg/fio"
 	"github.com/golang/freetype/raster"
 	"golang.org/x/image/draw"
 	"golang.org/x/image/font"
@@ -270,14 +271,14 @@ func (dc *Context) H() int {
 //
 // 将图像编码为 PNG 并将其写入磁盘。
 func (dc *Context) SavePNG(path string) error {
-	return SavePNG(path, dc.im)
+	return fio.SavePNG(path, dc.im)
 }
 
 // SaveJPG encodes the image as a JPG and writes it to disk.
 //
 // 将图像编码为 JPG 并将其写入磁盘。
 func (dc *Context) SaveJPG(path string, quality int) error {
-	return SaveJPG(path, dc.im, quality)
+	return fio.SaveJPG(path, dc.im, quality)
 }
 
 // EncodePNG encodes the image as a PNG and writes it to the provided io.Writer.
@@ -921,7 +922,7 @@ func (dc *Context) DrawRegularPolygon(n int, x, y, r, rotation float64) {
 
 // 加载指定路径的图像并设定像素坐标
 func (dc *Context) LoadImage(path string, x, y int) error {
-	img, err := LoadImage(path) //添加图片
+	img, err := fio.LoadImage(path) //添加图片
 	if err != nil {
 		return err
 	}

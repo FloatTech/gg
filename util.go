@@ -1,13 +1,10 @@
 package gg
 
 import (
-	"bufio"
 	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
-	"image/jpeg"
-	"image/png"
 	"math"
 	"os"
 	"strings"
@@ -27,59 +24,6 @@ func Radians(degrees float64) float64 {
 // 角度
 func Degrees(radians float64) float64 {
 	return radians * 180 / math.Pi
-}
-
-// 加载指定路径的图像
-func LoadImage(path string) (image.Image, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-	im, _, err := image.Decode(bufio.NewReader(file))
-	return im, err
-}
-
-// 加载指定路径的 JPG 图像
-func LoadJPG(path string) (image.Image, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-	return jpeg.Decode(bufio.NewReader(file))
-}
-
-// 保存 JPG 图像
-func SaveJPG(path string, im image.Image, quality int) error {
-	file, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	return jpeg.Encode(file, im, &jpeg.Options{
-		Quality: quality, // 质量百分比
-	})
-}
-
-// 加载指定路径的 PNG 图像
-func LoadPNG(path string) (image.Image, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-	return png.Decode(bufio.NewReader(file))
-}
-
-// 保存 PNG 图像
-func SavePNG(path string, im image.Image) error {
-	file, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	return png.Encode(file, im)
 }
 
 // image.Image 转为 image.RGBA

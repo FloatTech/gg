@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/fio"
 )
 
 func TestEllipse(t *testing.T) {
@@ -17,7 +18,7 @@ func TestEllipse(t *testing.T) {
 		dc.Fill()
 		dc.Pop()
 	}
-	if im, err := gg.LoadImage("gopher.png"); err == nil {
+	if im, err := fio.LoadImage("gopher.png"); err == nil {
 		dc.DrawImageAnchored(im, S/2, S/2, 0.5, 0.5)
 	}
 	dc.SavePNG(GetFileName() + ".png")

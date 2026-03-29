@@ -4,12 +4,13 @@ import (
 	"testing"
 
 	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/fio"
 )
 
 func TestTiling(t *testing.T) {
 	const NX = 4
 	const NY = 3
-	im, err := gg.LoadPNG("gopher.png")
+	im, err := fio.LoadPNG("gopher.png")
 	if err != nil {
 		panic(err)
 	}

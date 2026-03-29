@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/fio"
 	"github.com/disintegration/imaging"
 )
 
@@ -28,7 +29,7 @@ func Load(path string) (img image.Image, err error) {
 		_ = res.Body.Close()
 		return
 	}
-	return gg.LoadImage(path)
+	return fio.LoadImage(path)
 }
 
 // Parse 解析图片数据流

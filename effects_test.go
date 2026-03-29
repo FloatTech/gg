@@ -1,9 +1,13 @@
 package gg
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/FloatTech/gg/fio"
+)
 
 func TestBrightness(t *testing.T) {
-	im, err := LoadPNG("examples/gopher.png")
+	im, err := fio.LoadPNG("examples/gopher.png")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -14,7 +18,7 @@ func TestBrightness(t *testing.T) {
 }
 
 func TestContrast(t *testing.T) {
-	im, err := LoadPNG("examples/gopher.png")
+	im, err := fio.LoadPNG("examples/gopher.png")
 	if err != nil {
 		t.Fatal(err)
 	}

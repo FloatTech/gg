@@ -3,6 +3,8 @@ package gg
 import (
 	"math/rand"
 	"testing"
+
+	"github.com/FloatTech/gg/fio"
 )
 
 func checkHash(t *testing.T, dc *Context, expected string) {
@@ -13,7 +15,7 @@ func checkHash(t *testing.T, dc *Context, expected string) {
 }
 
 func saveImage(dc *Context, name string) error {
-	return SavePNG(name+".png", dc.Image())
+	return fio.SavePNG(name+".png", dc.Image())
 }
 
 func TestBlank(t *testing.T) {
