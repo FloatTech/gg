@@ -18,7 +18,7 @@ TEXT ·quadraticBezierASM(SB), NOSPLIT, $0-80
     MOVQ  ·y2+40(FP), X5
     MOVQ  ·ds+48(FP), X6
     MOVQ  ·p+56(FP), DI
-    MOVQ  ·plen+64(FP), SI
+    MOVQ  ·p_len+64(FP), SI
 
     UNPCKLPD  X3, X2
     MOVAPD    X0, X3
@@ -66,7 +66,7 @@ TEXT ·cubicBezierASM(SB), NOSPLIT, $0-96
     MOVQ  ·x3+48(FP), X6
     MOVQ  ·y3+56(FP), X7
     MOVQ  ·p+72(FP), DI
-    MOVQ  ·plen+80(FP), SI
+    MOVQ  ·p_len+80(FP), SI
 
     UNPCKLPD  X3, X2
     MOVAPD    X0, X3
