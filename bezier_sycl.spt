@@ -1,0 +1,199 @@
+119734787 66560 393230 135 0 
+2 Capability Addresses 
+2 Capability Linkage 
+2 Capability Kernel 
+2 Capability Float64 
+2 Capability Int64 
+2 Capability GenericPointer 
+2 Capability Int8 
+5 ExtInstImport 1 "OpenCL.std" 
+3 MemoryModel 2 2 
+10 EntryPoint 6 111 "__sycl_kernel_quadratic" 5 
+9 EntryPoint 6 122 "__sycl_kernel_cubic" 5 
+3 ExecutionMode 111 31 
+3 ExecutionMode 122 31 
+3 Source 4 100000 
+11 Name 5 "__spirv_BuiltInGlobalInvocationId" 
+6 Name 8 "struct.point" 
+8 Name 11 "__sycl_kernel_quadratic" 
+7 Name 52 "__sycl_kernel_cubic" 
+4 Name 67 "cubic" 
+
+13 Decorate 5 LinkageAttributes "__spirv_BuiltInGlobalInvocationId" Import 
+3 Decorate 5 Constant 
+4 Decorate 5 BuiltIn 28 
+4 Decorate 5 Alignment 32 
+10 Decorate 11 LinkageAttributes "__sycl_kernel_quadratic" Export 
+4 Decorate 19 FuncParamAttr 5 
+4 Decorate 19 Alignment 8 
+9 Decorate 52 LinkageAttributes "__sycl_kernel_cubic" Export 
+4 Decorate 62 Alignment 8 
+4 Decorate 119 FuncParamAttr 5 
+4 Decorate 119 Alignment 8 
+4 Decorate 132 Alignment 8 
+4 TypeInt 2 64 0 
+4 TypeInt 45 8 0 
+5 Constant 2 24 2147483648 0 
+5 Constant 2 48 8 0 
+4 TypeVector 3 2 3 
+4 TypePointer 4 5 3 
+2 TypeVoid 6 
+3 TypeFloat 7 64 
+4 TypeStruct 8 7 7 
+
+4 TypePointer 9 5 8 
+11 TypeFunction 10 6 7 7 7 7 7 7 7 9 
+4 TypePointer 21 5 2 
+2 TypeBool 25 
+4 TypePointer 40 5 7 
+4 TypePointer 46 5 45 
+13 TypeFunction 51 6 7 7 7 7 7 7 7 7 7 9 
+4 TypePointer 64 8 8 
+13 TypeFunction 66 6 7 7 7 7 7 7 7 7 7 64 
+4 TypePointer 101 8 7 
+4 TypePointer 107 8 45 
+4 Variable 4 5 5 
+5 Constant 7 29 0 1072693248 
+5 Constant 7 32 0 1073741824 
+5 Constant 7 88 0 1074266112 
+
+
+
+5 Function 6 11 0 10 
+3 FunctionParameter 7 12 
+3 FunctionParameter 7 13 
+3 FunctionParameter 7 14 
+3 FunctionParameter 7 15 
+3 FunctionParameter 7 16 
+3 FunctionParameter 7 17 
+3 FunctionParameter 7 18 
+3 FunctionParameter 9 19 
+
+2 Label 20 
+4 Bitcast 21 22 5 
+6 Load 2 23 22 2 32 
+5 ULessThan 25 26 23 24 
+4 ConvertUToF 7 27 23 
+5 FDiv 7 28 27 18 
+5 FSub 7 30 29 28 
+5 FMul 7 31 30 30 
+5 FMul 7 33 30 32 
+5 FMul 7 34 33 28 
+5 FMul 7 35 28 28 
+5 FMul 7 36 34 14 
+8 ExtInst 7 37 1 mad 31 12 36 
+8 ExtInst 7 38 1 mad 35 16 37 
+5 InBoundsPtrAccessChain 9 39 19 23 
+4 Bitcast 40 41 39 
+5 Store 41 38 2 8 
+5 FMul 7 42 34 15 
+8 ExtInst 7 43 1 mad 31 13 42 
+8 ExtInst 7 44 1 mad 35 17 43 
+4 Bitcast 46 47 39 
+5 InBoundsPtrAccessChain 46 49 47 48 
+4 Bitcast 40 50 49 
+5 Store 50 44 2 8 
+1 Return 
+
+1 FunctionEnd 
+
+5 Function 6 52 0 51 
+3 FunctionParameter 7 53 
+3 FunctionParameter 7 54 
+3 FunctionParameter 7 55 
+3 FunctionParameter 7 56 
+3 FunctionParameter 7 57 
+3 FunctionParameter 7 58 
+3 FunctionParameter 7 59 
+3 FunctionParameter 7 60 
+3 FunctionParameter 7 61 
+3 FunctionParameter 9 62 
+
+2 Label 63 
+4 PtrCastToGeneric 64 65 62 
+14 FunctionCall 6 78 67 53 54 55 56 57 58 59 60 61 65 
+1 Return 
+
+1 FunctionEnd 
+
+5 Function 6 67 0 66 
+3 FunctionParameter 7 68 
+3 FunctionParameter 7 69 
+3 FunctionParameter 7 70 
+3 FunctionParameter 7 71 
+3 FunctionParameter 7 72 
+3 FunctionParameter 7 73 
+3 FunctionParameter 7 74 
+3 FunctionParameter 7 75 
+3 FunctionParameter 7 76 
+3 FunctionParameter 64 77 
+
+2 Label 79 
+4 Bitcast 21 80 5 
+6 Load 2 81 80 2 32 
+5 ULessThan 25 82 81 24 
+4 ConvertUToF 7 83 81 
+5 FDiv 7 84 83 76 
+5 FSub 7 85 29 84 
+5 FMul 7 86 85 85 
+5 FMul 7 87 86 85 
+5 FMul 7 89 85 88 
+5 FMul 7 90 89 85 
+5 FMul 7 91 90 84 
+5 FMul 7 92 89 84 
+5 FMul 7 93 92 84 
+5 FMul 7 94 84 84 
+5 FMul 7 95 94 84 
+5 FMul 7 96 91 70 
+8 ExtInst 7 97 1 mad 87 68 96 
+8 ExtInst 7 98 1 mad 93 72 97 
+8 ExtInst 7 99 1 mad 95 74 98 
+5 InBoundsPtrAccessChain 64 100 77 81 
+4 Bitcast 101 102 100 
+5 Store 102 99 2 8 
+5 FMul 7 103 91 71 
+8 ExtInst 7 104 1 mad 87 69 103 
+8 ExtInst 7 105 1 mad 93 73 104 
+8 ExtInst 7 106 1 mad 95 75 105 
+4 Bitcast 107 108 100 
+5 InBoundsPtrAccessChain 107 109 108 48 
+4 Bitcast 101 110 109 
+5 Store 110 106 2 8 
+1 Return 
+
+1 FunctionEnd 
+
+5 Function 6 111 0 10 
+3 FunctionParameter 7 112 
+3 FunctionParameter 7 113 
+3 FunctionParameter 7 114 
+3 FunctionParameter 7 115 
+3 FunctionParameter 7 116 
+3 FunctionParameter 7 117 
+3 FunctionParameter 7 118 
+3 FunctionParameter 9 119 
+
+2 Label 120 
+12 FunctionCall 6 121 11 112 113 114 115 116 117 118 119 
+1 Return 
+
+1 FunctionEnd 
+
+5 Function 6 122 0 51 
+3 FunctionParameter 7 123 
+3 FunctionParameter 7 124 
+3 FunctionParameter 7 125 
+3 FunctionParameter 7 126 
+3 FunctionParameter 7 127 
+3 FunctionParameter 7 128 
+3 FunctionParameter 7 129 
+3 FunctionParameter 7 130 
+3 FunctionParameter 7 131 
+3 FunctionParameter 9 132 
+
+2 Label 133 
+14 FunctionCall 6 134 52 123 124 125 126 127 128 129 130 131 132 
+1 Return 
+
+1 FunctionEnd 
+

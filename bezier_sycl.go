@@ -6,10 +6,11 @@ import (
 	"github.com/fumiama/gozel/ze"
 )
 
-//go:generate clang++ -fsycl -fsycl-device-only -fsycl-targets=spirv64 -Xclang -emit-llvm-bc bezier_sycl.cpp -o device_bezier_kern.bc
-//go:generate sycl-post-link -symbols -split=auto -o device_bezier_kern.table device_bezier_kern.bc
-//go:generate llvm-spirv -o bezier_sycl.spv device_bezier_kern_0.bc
-//go:generate clang++ -target spirv64-unknown-unknown -S -emit-llvm -x ir device_bezier_kern_0.bc -o bezier_sycl.ll
+//go:generate clang++ -fsycl -fsycl-device-only -fno-sycl-instrument-device-code -fsycl-targets=spirv64 -Xclang -emit-llvm-bc bezier_sycl.cpp -o device_bezier_kern.bc
+//go:generate sycl-post-link -symbols -split=auto -emit-param-info -properties -o device_bezier_kern.table device_bezier_kern.bc
+//go:generate llvm-spirv --sycl-opt -o bezier_sycl.spv device_bezier_kern_0.bc
+//go:generate clang++ -target spirv64-unknown-unknown -S -emit-llvm -x ir device_bezier_kern_0.bc -o main.ll
+//go:generate llvm-spirv -to-text bezier_sycl.spv -o bezier_sycl.spt
 
 //go:embed bezier_sycl.spv
 var bezierspv []byte
