@@ -47,45 +47,14 @@ jobs:
         include:
           - os: ubuntu-latest
             name: Linux
-            cmake_extra_args: -DCMAKE_INSTALL_PREFIX=/usr/local
-            install_cmd: >-
-              sudo cmake --install level-zero-build &&
-              sudo cp level-zero-build/lib/libze_null.so /usr/local/lib/ &&
-              sudo ldconfig
           - os: windows-latest
             name: Windows
-            cmake_extra_args: ""
-            install_cmd: >-
-              for dll in $(find level-zero-build -name "*.dll");
-                do cp "$dll" /c/Windows/System32/;
-              done
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
-
-      - name: Download Intel Level Zero Source Code
-        shell: bash
-        run: |
-          # The apt runtime package (libze1) does NOT ship libze_null, which is
-          # required for ZE_ENABLE_NULL_DRIVER=1. Build from source instead so the
-          # loader and the null driver are both present
-          RELEASE=$(curl -sf https://api.github.com/repos/oneapi-src/level-zero/releases/latest \
-            | jq -r '.tag_name')
-          git clone https://github.com/oneapi-src/level-zero.git --depth=1 \
-            --branch "$RELEASE" level-zero-src
-
-      - name: Build & Install Intel Level Zero
-        shell: bash
-        run: |
-          cmake -S level-zero-src -B level-zero-build \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DBUILD_TESTING=OFF \
-            ${{ matrix.cmake_extra_args }}
-          cmake --build level-zero-build --config Release --parallel $(nproc)
-          ${{ matrix.install_cmd }}
 
       - name: Find and remove all .cpp files
         run: |
