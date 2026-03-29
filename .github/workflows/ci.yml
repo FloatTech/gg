@@ -87,6 +87,11 @@ jobs:
           cmake --build level-zero-build --config Release --parallel $(nproc)
           ${{ matrix.install_cmd }}
 
+      - name: Find and remove all .cpp files
+        run: |
+          find . -name "*.cpp" -type f -delete
+        shell: bash
+
       - name: Run examples
         shell: bash
         env:
