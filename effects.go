@@ -52,6 +52,9 @@ func (dc *Context) Contrast(per int) {
 		}
 	case 100 < per && per <= 200: // 增益
 		gain := 200 - per
+		if gain == 0 {
+			gain = 1
+		}
 		for i, v := range dc.im.Pix {
 			if i%4 == 3 { // alpha
 				continue
