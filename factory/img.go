@@ -89,6 +89,9 @@ func LoadAllFrames(path string, w, h int) ([]*Factory, error) {
 		}
 	} else {
 		im, err = fio.LoadGIF(path)
+		if err != nil {
+			return nil, err
+		}
 	}
 	img, err := Load(path)
 	if err != nil {
@@ -119,6 +122,9 @@ func LoadAllTrueFrames(path string, w, h int) ([]*Factory, error) {
 		}
 	} else {
 		im, err = fio.LoadGIF(path)
+		if err != nil {
+			return nil, err
+		}
 	}
 	imgWidth, imgHeight := getGifDimensions(im)
 	overpaintImage := image.NewRGBA(image.Rect(0, 0, imgWidth, imgHeight))
