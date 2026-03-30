@@ -25,11 +25,6 @@ jobs:
         with:
           go-version-file: go.mod
 
-      - name: Find and remove all .cpp files
-        run: |
-          find . -name "*.cpp" -type f -delete
-        shell: bash
-
       - name: Run go vet
         run: go vet ./...
 
@@ -55,11 +50,6 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
-
-      - name: Find and remove all .cpp files
-        run: |
-          find . -name "*.cpp" -type f -delete
-        shell: bash
 
       - name: Install Microsoft core fonts
         if: runner.os == 'Linux'
