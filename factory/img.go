@@ -11,7 +11,6 @@ import (
 	"image/gif"
 	"io"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/FloatTech/gg"
@@ -89,15 +88,7 @@ func LoadAllFrames(path string, w, h int) ([]*Factory, error) {
 			return nil, err
 		}
 	} else {
-		file, err := os.Open(path)
-		if err != nil {
-			return nil, err
-		}
-		im, err = gif.DecodeAll(file)
-		_ = file.Close()
-		if err != nil {
-			return nil, err
-		}
+		im, err = fio.LoadGIF(path)
 	}
 	img, err := Load(path)
 	if err != nil {
@@ -127,15 +118,7 @@ func LoadAllTrueFrames(path string, w, h int) ([]*Factory, error) {
 			return nil, err
 		}
 	} else {
-		file, err := os.Open(path)
-		if err != nil {
-			return nil, err
-		}
-		im, err = gif.DecodeAll(file)
-		_ = file.Close()
-		if err != nil {
-			return nil, err
-		}
+		im, err = fio.LoadGIF(path)
 	}
 	imgWidth, imgHeight := getGifDimensions(im)
 	overpaintImage := image.NewRGBA(image.Rect(0, 0, imgWidth, imgHeight))

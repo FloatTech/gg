@@ -39,7 +39,7 @@ func twoColorImage(w, h int, c1, c2 color.RGBA) image.Image {
 // colorInSlice 判断给定颜色是否在切片中（允许 tolerance 误差）
 func colorInSlice(c color.RGBA, slice []color.RGBA, tolerance float64) bool {
 	for _, s := range slice {
-		if distance(c, s) <= tolerance {
+		if distanceRGBAsq(c, s) <= tolerance {
 			return true
 		}
 	}
@@ -100,7 +100,7 @@ func TestSq_LargeValue(t *testing.T) {
 
 func TestDistance_SameColor(t *testing.T) {
 	c := color.RGBA{100, 150, 200, 255}
-	if got := distance(c, c); got != 0 {
+	if got := distanceRGBAsq(c, c); got != 0 {
 		t.Errorf("distance(same, same) = %v, want 0", got)
 	}
 }
@@ -108,7 +108,7 @@ func TestDistance_SameColor(t *testing.T) {
 func TestDistance_BlackAndWhite(t *testing.T) {
 	// sqrt(255^2 * 3) = 255 * sqrt(3)
 	want := 255 * math.Sqrt(3)
-	got := distance(Black, White)
+	got := math.Sqrt(distanceRGBAsq(Black, White))
 	if math.Abs(got-want) > 1e-9 {
 		t.Errorf("distance(black, white) = %v, want %v", got, want)
 	}
@@ -119,7 +119,7 @@ func TestDistance_SingleChannel(t *testing.T) {
 	b := color.RGBA{3, 4, 0, 255}
 	// sqrt(9 + 16) = 5
 	want := 5.0
-	got := distance(a, b)
+	got := math.Sqrt(distanceRGBAsq(a, b))
 	if math.Abs(got-want) > 1e-9 {
 		t.Errorf("distance(%v, %v) = %v, want %v", a, b, got, want)
 	}
@@ -128,7 +128,7 @@ func TestDistance_SingleChannel(t *testing.T) {
 func TestDistance_Symmetry(t *testing.T) {
 	a := color.RGBA{10, 20, 30, 255}
 	b := color.RGBA{50, 80, 110, 255}
-	if d1, d2 := distance(a, b), distance(b, a); math.Abs(d1-d2) > 1e-9 {
+	if d1, d2 := distanceRGBAsq(a, b), distanceRGBAsq(b, a); math.Abs(d1-d2) > 1e-9 {
 		t.Errorf("distance not symmetric: d(a,b)=%v, d(b,a)=%v", d1, d2)
 	}
 }
@@ -138,7 +138,7 @@ func TestDistance_NonNegative(t *testing.T) {
 	for range 100 {
 		a := color.RGBA{uint8(rng.Intn(256)), uint8(rng.Intn(256)), uint8(rng.Intn(256)), 255}
 		b := color.RGBA{uint8(rng.Intn(256)), uint8(rng.Intn(256)), uint8(rng.Intn(256)), 255}
-		got := distance(a, b)
+		got := distanceRGBAsq(a, b)
 		if got < 0 {
 			t.Errorf("distance returned negative value %v for %v, %v", got, a, b)
 		}
@@ -150,7 +150,7 @@ func TestDistance_IgnoresAlpha(t *testing.T) {
 	a2 := color.RGBA{100, 150, 200, 255}
 	b := color.RGBA{50, 50, 50, 128}
 	// Alpha 不参与计算，结果应相同
-	if d1, d2 := distance(a1, b), distance(a2, b); math.Abs(d1-d2) > 1e-9 {
+	if d1, d2 := distanceRGBAsq(a1, b), distanceRGBAsq(a2, b); math.Abs(d1-d2) > 1e-9 {
 		t.Errorf("distance should ignore alpha: d(a1,b)=%v, d(a2,b)=%v", d1, d2)
 	}
 }
@@ -320,7 +320,7 @@ func BenchmarkDistance(b *testing.B) {
 	c := color.RGBA{50, 80, 30, 255}
 	b.ResetTimer()
 	for range b.N {
-		distance(a, c)
+		distanceRGBAsq(a, c)
 	}
 }
 

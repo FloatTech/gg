@@ -6,30 +6,8 @@ import (
 	"image"
 	"image/gif"
 	"image/jpeg"
-	"image/png"
 	"io"
-	"os"
 )
-
-// SaveGIF2Path 保存 gif 到 path
-func SaveGIF2Path(path string, g *gif.GIF) error {
-	f, err := os.Create(path) // 创建文件
-	if err == nil {
-		_ = gif.EncodeAll(f, g) // 写入
-		_ = f.Close()           // 关闭文件
-	}
-	return err
-}
-
-// SavePNG2Path 保存 png 到 path
-func SavePNG2Path(path string, im image.Image) error {
-	f, err := os.Create(path) // 创建文件
-	if err == nil {
-		err = png.Encode(f, im) // 写入
-		_ = f.Close()
-	}
-	return err
-}
 
 // ToBase64 img 内容转为base64
 func ToBase64(img image.Image) (base64Bytes []byte, err error) {
