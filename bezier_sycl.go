@@ -3,6 +3,7 @@ package gg
 import (
 	_ "embed"
 
+	"github.com/FloatTech/gg/internal/gpu"
 	"github.com/fumiama/gozel/ze"
 )
 
@@ -21,12 +22,12 @@ var (
 )
 
 func init() {
-	if !canUseGPU {
+	if !gpu.IsAvailable {
 		return
 	}
 
 	var err error
-	bezierModel, err = gpuCreateModWithKernels(bezierspv)
+	bezierModel, err = gpu.CreateModuleAndCheckKernels(bezierspv)
 	if err != nil {
 		return
 	}
@@ -35,13 +36,13 @@ func init() {
 }
 
 func quadraticBezeirGPU(x0, y0, x1, y1, x2, y2, ds float64, p []Point) error {
-	return gpuExec1DKernelWithArgs("__sycl_kernel_quadratic", p,
+	return gpu.Exec1D(bezierModel, "__sycl_kernel_quadratic", p,
 		x0, y0, x1, y1, x2, y2, ds,
 	)
 }
 
 func cubicBezeirGPU(x0, y0, x1, y1, x2, y2, x3, y3, ds float64, p []Point) error {
-	return gpuExec1DKernelWithArgs("__sycl_kernel_cubic", p,
+	return gpu.Exec1D(bezierModel, "__sycl_kernel_cubic", p,
 		x0, y0, x1, y1, x2, y2, x3, y3, ds,
 	)
 }
