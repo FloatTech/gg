@@ -1,3 +1,4 @@
+// Package gpu use gozel to run some heavy jobs on Intel GPUs.
 package gpu
 
 import (
