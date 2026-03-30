@@ -160,7 +160,7 @@ func TestDistance_IgnoresAlpha(t *testing.T) {
 func TestClustersEqual_Equal(t *testing.T) {
 	a := []color.RGBA{{255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}}
 	b := []color.RGBA{{255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}}
-	if !clustersEqual(a, b) {
+	if !isArrayRGBAEqual(a, b) {
 		t.Error("clustersEqual should return true for identical slices")
 	}
 }
@@ -168,7 +168,7 @@ func TestClustersEqual_Equal(t *testing.T) {
 func TestClustersEqual_NotEqual(t *testing.T) {
 	a := []color.RGBA{{255, 0, 0, 255}, {0, 255, 0, 255}}
 	b := []color.RGBA{{255, 0, 0, 255}, {0, 0, 255, 255}}
-	if clustersEqual(a, b) {
+	if isArrayRGBAEqual(a, b) {
 		t.Error("clustersEqual should return false for different slices")
 	}
 }
@@ -176,20 +176,20 @@ func TestClustersEqual_NotEqual(t *testing.T) {
 func TestClustersEqual_DifferentLength(t *testing.T) {
 	a := []color.RGBA{{255, 0, 0, 255}}
 	b := []color.RGBA{{255, 0, 0, 255}, {0, 255, 0, 255}}
-	if clustersEqual(a, b) {
+	if isArrayRGBAEqual(a, b) {
 		t.Error("clustersEqual should return false for slices of different lengths")
 	}
 }
 
 func TestClustersEqual_Empty(t *testing.T) {
-	if !clustersEqual([]color.RGBA{}, []color.RGBA{}) {
+	if !isArrayRGBAEqual([]color.RGBA{}, []color.RGBA{}) {
 		t.Error("clustersEqual should return true for two empty slices")
 	}
 }
 
 func TestClustersEqual_OneEmpty(t *testing.T) {
 	a := []color.RGBA{{255, 0, 0, 255}}
-	if clustersEqual(a, []color.RGBA{}) {
+	if isArrayRGBAEqual(a, []color.RGBA{}) {
 		t.Error("clustersEqual should return false when one slice is empty")
 	}
 }
@@ -197,7 +197,7 @@ func TestClustersEqual_OneEmpty(t *testing.T) {
 func TestClustersEqual_SingleElement(t *testing.T) {
 	a := []color.RGBA{{100, 100, 100, 255}}
 	b := []color.RGBA{{100, 100, 100, 255}}
-	if !clustersEqual(a, b) {
+	if !isArrayRGBAEqual(a, b) {
 		t.Error("clustersEqual should return true for identical single-element slices")
 	}
 }
@@ -206,7 +206,7 @@ func TestClustersEqual_DiffersOnlyInAlpha(t *testing.T) {
 	a := []color.RGBA{{100, 100, 100, 255}}
 	b := []color.RGBA{{100, 100, 100, 0}}
 	// RGBA 结构体逐字段比较，Alpha 也参与比较
-	if clustersEqual(a, b) {
+	if isArrayRGBAEqual(a, b) {
 		t.Error("clustersEqual should return false when alpha differs")
 	}
 }
@@ -216,7 +216,7 @@ func TestClustersEqual_DiffersOnlyInAlpha(t *testing.T) {
 func TestTakecolor_ReturnsKColors(t *testing.T) {
 	img := solidImage(10, 10, color.RGBA{128, 64, 32, 255})
 	for k := 1; k <= 5; k++ {
-		result := takeThemeColorsKMeans(img, k)
+		result := TakeThemeColorsKMeans(img, k)
 		if len(result) != k {
 			t.Errorf("takecolor with k=%d returned %d colors, want %d", k, len(result), k)
 		}
@@ -226,7 +226,7 @@ func TestTakecolor_ReturnsKColors(t *testing.T) {
 func TestTakecolor_SolidColorK1(t *testing.T) {
 	c := color.RGBA{200, 100, 50, 255}
 	img := solidImage(20, 20, c)
-	result := takeThemeColorsKMeans(img, 1)
+	result := TakeThemeColorsKMeans(img, 1)
 	if len(result) != 1 {
 		t.Fatalf("expected 1 color, got %d", len(result))
 	}
@@ -242,7 +242,7 @@ func TestTakecolor_SolidColorKGreaterThan1(t *testing.T) {
 	// 故只验证：返回 k 个颜色，且其中至少一个与原始颜色完全匹配。
 	c := color.RGBA{10, 200, 150, 255}
 	img := solidImage(15, 15, c)
-	result := takeThemeColorsKMeans(img, 3)
+	result := TakeThemeColorsKMeans(img, 3)
 	if len(result) != 3 {
 		t.Fatalf("expected 3 colors, got %d", len(result))
 	}
@@ -264,7 +264,7 @@ func TestTakecolor_TwoDistinctColors(t *testing.T) {
 	img := twoColorImage(20, 20, Red, Blue)
 	const maxAttempts = 30
 	for range maxAttempts {
-		result := takeThemeColorsKMeans(img, 2)
+		result := TakeThemeColorsKMeans(img, 2)
 		if len(result) == 2 && colorInSlice(Red, result, 5) && colorInSlice(Blue, result, 5) {
 			return // 成功分离，测试通过
 		}
@@ -276,9 +276,9 @@ func TestTakecolor_Deterministic_SolidImage(t *testing.T) {
 	// 纯色图像下，无论随机种子如何，结果应完全一致
 	c := color.RGBA{77, 88, 99, 255}
 	img := solidImage(10, 10, c)
-	r1 := takeThemeColorsKMeans(img, 2)
-	r2 := takeThemeColorsKMeans(img, 2)
-	if !clustersEqual(r1, r2) {
+	r1 := TakeThemeColorsKMeans(img, 2)
+	r2 := TakeThemeColorsKMeans(img, 2)
+	if !isArrayRGBAEqual(r1, r2) {
 		t.Errorf("takecolor on solid image should be deterministic: r1=%v, r2=%v", r1, r2)
 	}
 }
@@ -296,7 +296,7 @@ func TestTakecolor_AllClustersHaveValidRGB(t *testing.T) {
 			})
 		}
 	}
-	result := takeThemeColorsKMeans(img, 4)
+	result := TakeThemeColorsKMeans(img, 4)
 	if len(result) != 4 {
 		t.Fatalf("expected 4 clusters, got %d", len(result))
 	}
@@ -329,7 +329,7 @@ func BenchmarkClustersEqual_Equal(b *testing.B) {
 	c := []color.RGBA{{255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {128, 128, 128, 255}}
 	b.ResetTimer()
 	for range b.N {
-		clustersEqual(a, c)
+		isArrayRGBAEqual(a, c)
 	}
 }
 
@@ -338,7 +338,7 @@ func BenchmarkClustersEqual_NotEqual(b *testing.B) {
 	c := []color.RGBA{{255, 0, 0, 255}, {0, 255, 0, 255}, {0, 0, 255, 255}, {200, 200, 200, 255}}
 	b.ResetTimer()
 	for range b.N {
-		clustersEqual(a, c)
+		isArrayRGBAEqual(a, c)
 	}
 }
 
@@ -352,7 +352,7 @@ func BenchmarkTakecolor_16x16_K3(b *testing.B) {
 	}
 	b.ResetTimer()
 	for range b.N {
-		takeThemeColorsKMeans(img, 3)
+		TakeThemeColorsKMeans(img, 3)
 	}
 }
 
@@ -366,7 +366,7 @@ func BenchmarkTakecolor_64x64_K4(b *testing.B) {
 	}
 	b.ResetTimer()
 	for range b.N {
-		takeThemeColorsKMeans(img, 4)
+		TakeThemeColorsKMeans(img, 4)
 	}
 }
 
@@ -380,7 +380,7 @@ func BenchmarkTakecolor_128x128_K8(b *testing.B) {
 	}
 	b.ResetTimer()
 	for range b.N {
-		takeThemeColorsKMeans(img, 8)
+		TakeThemeColorsKMeans(img, 8)
 	}
 }
 
@@ -388,6 +388,6 @@ func BenchmarkTakecolor_SolidColor_K5(b *testing.B) {
 	img := solidImage(64, 64, color.RGBA{200, 100, 50, 255})
 	b.ResetTimer()
 	for range b.N {
-		takeThemeColorsKMeans(img, 5)
+		TakeThemeColorsKMeans(img, 5)
 	}
 }

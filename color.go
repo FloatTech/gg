@@ -26,8 +26,10 @@ var (
 	Opaque  = color.RGBA{0, 0, 0, 0}
 )
 
-// takeThemeColorsKMeans 实现基于k-means算法的图像取色算法
-func takeThemeColorsKMeans(img image.Image, k int) []color.RGBA {
+// TakeThemeColorsKMeans extracts the k dominant colors from an image using k-means.
+//
+// TakeThemeColorsKMeans 使用 k-means 算法从图像中提取 k 个主色。
+func TakeThemeColorsKMeans(img image.Image, k int) []color.RGBA {
 	rgbaimg := ImageToRGBA(img)
 	pixels := unsafe.Slice(
 		(*color.RGBA)(unsafe.Pointer(unsafe.SliceData(rgbaimg.Pix))),
@@ -57,11 +59,11 @@ func takeThemeColorsKMeans(img image.Image, k int) []color.RGBA {
 
 		// 计算每个聚类的新中心
 		newClusters := make([]color.RGBA, k)
-		for i := range k {
+		for currentCluster := range k {
 			var r, g, b uint32
 			n := 0
-			for j, cluster := range clusterAssignments {
-				if cluster == i {
+			for j, pixelCluster := range clusterAssignments {
+				if pixelCluster == currentCluster {
 					pixel := pixels[j]
 					r += uint32(pixel.R)
 					g += uint32(pixel.G)
@@ -70,18 +72,47 @@ func takeThemeColorsKMeans(img image.Image, k int) []color.RGBA {
 				}
 			}
 			if n != 0 {
-				newClusters[i] = color.RGBA{uint8(r / uint32(n)), uint8(g / uint32(n)), uint8(b / uint32(n)), 255}
+				newClusters[currentCluster] = color.RGBA{uint8(r / uint32(n)), uint8(g / uint32(n)), uint8(b / uint32(n)), 255}
 			}
 		}
 
 		// 如果聚类中心没有变化，则停止迭代
-		if clustersEqual(clusters, newClusters) {
+		if isArrayRGBAEqual(clusters, newClusters) {
 			break
 		}
 		clusters = newClusters
 	}
 
 	return clusters
+}
+
+// isArrayRGBAEqual compares two []color.RGBA is equal fastly.
+//
+// isArrayRGBAEqual 快速比较两个 []color.RGBA 是否相等。
+func isArrayRGBAEqual(a, b []color.RGBA) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	sz := len(a)
+	if sz%2 == 0 { // can compare by uint64
+		u64a := unsafe.Slice((*uint64)(unsafe.Pointer(unsafe.SliceData(a))), sz/2)
+		u64b := unsafe.Slice((*uint64)(unsafe.Pointer(unsafe.SliceData(b))), sz/2)
+		for i := range u64a {
+			if u64a[i] != u64b[i] {
+				return false
+			}
+		}
+		return true
+	}
+	// compare by uint32
+	u32a := unsafe.Slice((*uint32)(unsafe.Pointer(unsafe.SliceData(a))), sz)
+	u32b := unsafe.Slice((*uint32)(unsafe.Pointer(unsafe.SliceData(b))), sz)
+	for i := range u32a {
+		if u32a[i] != u32b[i] {
+			return false
+		}
+	}
+	return true
 }
 
 // 计算两个颜色之间的距离
@@ -92,17 +123,4 @@ func distance(a, b color.RGBA) float64 {
 // 计算平方
 func sq(n float64) float64 {
 	return n * n
-}
-
-// 比较两个聚类中心是否相等
-func clustersEqual(a, b []color.RGBA) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i := range a {
-		if a[i] != b[i] {
-			return false
-		}
-	}
-	return true
 }

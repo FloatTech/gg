@@ -1366,5 +1366,5 @@ func (dc *Context) String() string {
 //
 // TakeThemeColorsKMeans 使用 k-means 算法从已绘制图像中提取 k 个主色。
 func (dc *Context) TakeThemeColorsKMeans(k int) []color.RGBA {
-	return takeThemeColorsKMeans(dc.im, k)
+	return TakeThemeColorsKMeans(dc.im, k)
 }
