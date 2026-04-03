@@ -41,15 +41,14 @@ func (ki *kmeansImage) gpuInit() {
 	width := ki.bounds.Dx()
 	height := ki.bounds.Dy()
 	dstw, dsth := width, height
-	ratio := 0.
 	if dstw > 512 {
 		dstw = 512
-		ratio = float64(dstw) / float64(width)
+		ratio := float64(dstw) / float64(width)
 		dsth *= int(float64(height) * ratio)
 	}
 	if dsth > 512 {
 		dsth = 512
-		ratio = float64(dsth) / float64(height)
+		ratio := float64(dsth) / float64(height)
 		dstw = int(float64(width) * ratio)
 	}
 	ki.bounds = image.Rect(0, 0, dstw, dsth)
@@ -211,13 +210,13 @@ func (ki *kmeansImage) gpuInit() {
 		ki.gpuDestroy(true)
 		return
 	}
-	err = krn1st.SetGroupSize(uint32(gX), uint32(gY), 1)
+	err = krn1st.SetGroupSize(gX, gY, 1)
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
 		return
 	}
-	err = krnrem.SetGroupSize(uint32(gX), uint32(gY), 1)
+	err = krnrem.SetGroupSize(gX, gY, 1)
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
@@ -297,6 +296,9 @@ func (ki *kmeansImage) gpuAssign() error {
 		err = lst.AppendLaunchKernel(ki.krn1st, &gozel.ZeGroupCount{
 			Groupcountx: ki.gcx, Groupcounty: ki.gcy, Groupcountz: 1,
 		}, kev, inpcpev, cluscpev)
+		if err != nil {
+			return err
+		}
 
 		smpcpev, cl, err := gpu.EventCreate(gozel.ZE_EVENT_SCOPE_FLAG_HOST, 0)
 		if err != nil {

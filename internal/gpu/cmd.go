@@ -7,7 +7,7 @@ func CommandListCreate() (ze.CommandListHandle, error) {
 	return ctx.CommandListCreate(dev)
 }
 
-// ExecuteCommandLists submits the command list for execution on the command queue.
+// ExecCommandLists submits the command list for execution on the command queue.
 func ExecCommandLists(hCommandList ...ze.CommandListHandle) error {
 	return q.ExecuteCommandLists(hCommandList...)
 }

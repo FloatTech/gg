@@ -5,6 +5,8 @@ import (
 	"image/color"
 	"math"
 	"math/rand"
+	"runtime"
+	"sync"
 	"unsafe"
 
 	"github.com/disintegration/imaging"
@@ -61,15 +63,14 @@ func newKMeansImage(img image.Image, k uint16) kmeansImage {
 		width := img.Bounds().Dx()
 		height := img.Bounds().Dy()
 		dstw, dsth := width, height
-		ratio := 0.
 		if dstw > 512 {
 			dstw = 512
-			ratio = float64(dstw) / float64(width)
+			ratio := float64(dstw) / float64(width)
 			dsth *= int(float64(height) * ratio)
 		}
 		if dsth > 512 {
 			dsth = 512
-			ratio = float64(dsth) / float64(height)
+			ratio := float64(dsth) / float64(height)
 			dstw = int(float64(width) * ratio)
 		}
 		ki.bounds = image.Rect(0, 0, dstw, dsth)
@@ -94,7 +95,33 @@ func (ki *kmeansImage) assign() {
 		ki.gpuDestroy(true)
 	}
 
-	for i, pixel := range ki.pixels {
+	n := runtime.NumCPU()
+	batchcnt := len(ki.pixels) / n
+	rem := len(ki.pixels) % n
+	wg := sync.WaitGroup{}
+	wg.Add(n)
+	if rem < 0 {
+		wg.Add(1)
+	}
+	for batch := range n {
+		go func(batch int) {
+			base := batch * batchcnt
+			for i, pixel := range ki.pixels[base : base+batchcnt] {
+				minDistance := math.MaxFloat64
+				assign := uint16(math.MaxUint16)
+				for j, cluster := range ki.clusters {
+					distance := distanceRGBAsq(pixel, cluster)
+					if distance < minDistance {
+						minDistance = distance
+						assign = uint16(j)
+					}
+				}
+				ki.clusterAssignments[base+i] = assign
+			}
+		}(batch)
+	}
+	base := n * batchcnt
+	for i, pixel := range ki.pixels[n*batchcnt:] {
 		minDistance := math.MaxFloat64
 		assign := uint16(math.MaxUint16)
 		for j, cluster := range ki.clusters {
@@ -104,7 +131,7 @@ func (ki *kmeansImage) assign() {
 				assign = uint16(j)
 			}
 		}
-		ki.clusterAssignments[i] = assign
+		ki.clusterAssignments[base+i] = assign
 	}
 }
 
