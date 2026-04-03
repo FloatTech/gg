@@ -1365,6 +1365,6 @@ func (dc *Context) String() string {
 // TakeThemeColorsKMeans extracts the k dominant colors from the drawn image using k-means.
 //
 // TakeThemeColorsKMeans 使用 k-means 算法从已绘制图像中提取 k 个主色。
-func (dc *Context) TakeThemeColorsKMeans(k int) []color.RGBA {
+func (dc *Context) TakeThemeColorsKMeans(k uint16) []color.RGBA {
 	return TakeThemeColorsKMeans(dc.im, k)
 }

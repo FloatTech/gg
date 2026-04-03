@@ -10,7 +10,7 @@ import (
 //go:generate clang++ -fsycl -fsycl-device-only -fno-sycl-instrument-device-code -fsycl-targets=spirv64 -Xclang -emit-llvm-bc internal/build/bezier_sycl.cpp -o internal/build/device_bezier_kern.bc
 //go:generate sycl-post-link -symbols -split=auto -emit-param-info -properties -o internal/build/device_bezier_kern.table internal/build/device_bezier_kern.bc
 //go:generate llvm-spirv --sycl-opt -o internal/build/bezier_sycl.spv internal/build/device_bezier_kern_0.bc
-//go:generate clang++ -target spirv64-unknown-unknown -S -emit-llvm -x ir internal/build/device_bezier_kern_0.bc -o main.ll
+//go:generate clang++ -target spirv64-unknown-unknown -S -emit-llvm -x ir internal/build/device_bezier_kern_0.bc -o internal/build/bezier_sycl.ll
 //go:generate llvm-spirv -to-text internal/build/bezier_sycl.spv -o internal/build/bezier_sycl.spt
 
 //go:embed internal/build/bezier_sycl.spv
@@ -27,7 +27,7 @@ func init() {
 	}
 
 	var err error
-	bezierModel, err = gpu.CreateModuleAndCheckKernels(bezierspv)
+	bezierModel, err = gpu.ModuleCreateAndCheckKernels(bezierspv)
 	if err != nil {
 		return
 	}
@@ -36,13 +36,13 @@ func init() {
 }
 
 func quadraticBezeirGPU(x0, y0, x1, y1, x2, y2, ds float64, p []Point) error {
-	return gpu.Exec1D(bezierModel, "__sycl_kernel_quadratic", p,
+	return gpu.Exec1D1Buf(bezierModel, "__sycl_kernel_quadratic", p,
 		x0, y0, x1, y1, x2, y2, ds,
 	)
 }
 
 func cubicBezeirGPU(x0, y0, x1, y1, x2, y2, x3, y3, ds float64, p []Point) error {
-	return gpu.Exec1D(bezierModel, "__sycl_kernel_cubic", p,
+	return gpu.Exec1D1Buf(bezierModel, "__sycl_kernel_cubic", p,
 		x0, y0, x1, y1, x2, y2, x3, y3, ds,
 	)
 }

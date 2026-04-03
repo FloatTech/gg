@@ -1,0 +1,435 @@
+119734787 67072 393230 193 0 
+2 Capability Addresses 
+2 Capability Linkage 
+2 Capability Kernel 
+2 Capability Int64 
+2 Capability ImageBasic 
+2 Capability Int16 
+5 ExtInstImport 1 "OpenCL.std" 
+3 MemoryModel 2 2 
+9 EntryPoint 6 175 "assign_first_iter" 5 
+10 EntryPoint 6 183 "assign_remaining_iter" 5 
+23 String 189 "kernel_arg_type.assign_first_iter.image2d_t,sampler_t,image2d_t,ushort*,image2d_t," 
+14 String 190 "kernel_arg_type_qual.assign_first_iter.,,,,," 
+19 String 191 "kernel_arg_type.assign_remaining_iter.image2d_t,image2d_t,ushort*," 
+14 String 192 "kernel_arg_type_qual.assign_remaining_iter.,,," 
+3 Source 3 102000 
+11 Name 5 "__spirv_BuiltInGlobalInvocationId" 
+7 Name 13 "assign_first_iter" 
+5 Name 14 "inputImg" 
+3 Name 15 "smp" 
+5 Name 16 "clusters" 
+7 Name 17 "clusterAssignments" 
+6 Name 18 "sampleResult" 
+4 Name 19 "entry" 
+6 Name 20 "lor.lhs.false" 
+4 Name 21 "if.then" 
+4 Name 22 "if.end" 
+6 Name 23 "land.lhs.true" 
+5 Name 24 "if.then15" 
+4 Name 25 "if.else" 
+5 Name 26 "if.end27" 
+5 Name 27 "for.cond" 
+7 Name 28 "for.cond.cleanup" 
+5 Name 29 "for.body" 
+5 Name 30 "if.then40" 
+5 Name 31 "if.end42" 
+4 Name 32 "for.inc" 
+4 Name 33 "for.end" 
+4 Name 34 "cleanup" 
+6 Name 35 "cleanup.cont" 
+5 Name 36 "unreachable" 
+4 Name 42 "call" 
+4 Name 44 "conv" 
+4 Name 47 "call1" 
+4 Name 48 "conv2" 
+4 Name 51 "call31" 
+4 Name 52 "call3" 
+4 Name 53 "call42" 
+4 Name 54 "call4" 
+4 Name 55 "call53" 
+4 Name 56 "call5" 
+4 Name 57 "call64" 
+4 Name 58 "call6" 
+3 Name 59 "cmp" 
+4 Name 60 "cmp8" 
+4 Name 61 "call105" 
+4 Name 62 "call10" 
+4 Name 63 "cmp11" 
+4 Name 64 "cmp13" 
+4 Name 66 "vecinit" 
+5 Name 67 "vecinit16" 
+4 Name 70 "call17" 
+4 Name 71 "conv19" 
+4 Name 72 "conv20" 
+3 Name 73 "div" 
+5 Name 76 "vecinit21" 
+4 Name 77 "conv22" 
+4 Name 78 "conv23" 
+4 Name 79 "div24" 
+5 Name 80 "vecinit25" 
+7 Name 82 "TempSampledImage" 
+4 Name 84 "call26" 
+4 Name 85 "pixel.0" 
+5 Name 86 "vecinit29" 
+5 Name 87 "vecinit30" 
+6 Name 89 "minDistance.1" 
+6 Name 90 "minDistance.0" 
+5 Name 92 "assign.1" 
+5 Name 93 "assign.0" 
+3 Name 94 "inc" 
+3 Name 95 "i.0" 
+4 Name 96 "cmp31" 
+5 Name 97 "vecinit34" 
+5 Name 98 "vecinit35" 
+4 Name 99 "call36" 
+3 Name 100 "sub" 
+4 Name 102 "call37" 
+4 Name 103 "cmp38" 
+4 Name 104 "conv41" 
+3 Name 109 "mul" 
+3 Name 110 "add" 
+4 Name 111 "idxprom" 
+5 Name 112 "arrayidx" 
+7 Name 113 "cleanup.dest.slot.0" 
+8 Name 115 "assign_remaining_iter" 
+6 Name 116 "sampleResult" 
+5 Name 117 "clusters" 
+7 Name 118 "clusterAssignments" 
+4 Name 119 "entry" 
+6 Name 120 "lor.lhs.false" 
+4 Name 121 "if.then" 
+4 Name 122 "if.end" 
+5 Name 123 "for.cond" 
+7 Name 124 "for.cond.cleanup" 
+5 Name 125 "for.body" 
+5 Name 126 "if.then20" 
+5 Name 127 "if.end22" 
+4 Name 128 "for.inc" 
+4 Name 129 "for.end" 
+4 Name 130 "cleanup" 
+6 Name 131 "cleanup.cont" 
+5 Name 132 "unreachable" 
+4 Name 135 "call" 
+4 Name 136 "conv" 
+4 Name 139 "call1" 
+4 Name 140 "conv2" 
+4 Name 141 "call31" 
+4 Name 142 "call3" 
+4 Name 143 "call42" 
+4 Name 144 "call4" 
+3 Name 145 "cmp" 
+4 Name 146 "cmp6" 
+4 Name 147 "call83" 
+4 Name 148 "call8" 
+4 Name 149 "vecinit" 
+5 Name 150 "vecinit9" 
+4 Name 151 "call10" 
+6 Name 152 "minDistance.1" 
+6 Name 153 "minDistance.0" 
+5 Name 154 "assign.1" 
+5 Name 155 "assign.0" 
+3 Name 156 "inc" 
+3 Name 157 "i.0" 
+4 Name 158 "cmp11" 
+5 Name 159 "vecinit14" 
+5 Name 160 "vecinit15" 
+4 Name 161 "call16" 
+3 Name 162 "sub" 
+4 Name 164 "call17" 
+4 Name 165 "cmp18" 
+4 Name 166 "conv21" 
+3 Name 170 "mul" 
+3 Name 171 "add" 
+4 Name 172 "idxprom" 
+5 Name 173 "arrayidx" 
+7 Name 174 "cleanup.dest.slot.0" 
+5 Name 176 "inputImg" 
+3 Name 177 "smp" 
+5 Name 178 "clusters" 
+7 Name 179 "clusterAssignments" 
+6 Name 180 "sampleResult" 
+6 Name 184 "sampleResult" 
+5 Name 185 "clusters" 
+7 Name 186 "clusterAssignments" 
+
+13 Decorate 5 LinkageAttributes "__spirv_BuiltInGlobalInvocationId" Import 
+3 Decorate 5 Constant 
+4 Decorate 5 BuiltIn 28 
+9 Decorate 13 LinkageAttributes "assign_first_iter" Export 
+4 Decorate 73 FPFastMathMode 16 
+4 Decorate 79 FPFastMathMode 16 
+4 Decorate 100 FPFastMathMode 16 
+4 Decorate 103 FPFastMathMode 16 
+3 Decorate 94 NoSignedWrap 
+10 Decorate 115 LinkageAttributes "assign_remaining_iter" Export 
+4 Decorate 162 FPFastMathMode 16 
+4 Decorate 165 FPFastMathMode 16 
+3 Decorate 156 NoSignedWrap 
+4 TypeInt 2 64 0 
+4 TypeInt 9 16 0 
+4 TypeInt 43 32 0 
+5 Constant 2 39 0 0 
+4 Constant 43 50 0 
+4 Constant 9 91 65535 
+4 Constant 43 107 1 
+4 TypeVector 3 2 3 
+4 TypePointer 4 1 3 
+2 TypeVoid 6 
+10 TypeImage 7 6 1 0 0 0 0 0 0 
+2 TypeSampler 8 
+4 TypePointer 10 5 9 
+10 TypeImage 11 6 1 0 0 0 0 0 1 
+8 TypeFunction 12 6 7 8 7 10 11 
+2 TypeBool 40 
+4 TypeVector 49 43 2 
+3 TypeFloat 68 32 
+4 TypeVector 69 68 4 
+4 TypeVector 74 68 2 
+3 TypeSampledImage 81 7 
+6 TypeFunction 114 6 7 7 10 
+4 Variable 4 5 1 
+3 ConstantTrue 40 41 
+3 Undef 49 65 
+3 Undef 74 75 
+4 Constant 68 83 0 
+4 Constant 68 88 2139095039 
+
+
+
+5 Function 6 13 0 12 
+3 FunctionParameter 7 14 
+3 FunctionParameter 8 15 
+3 FunctionParameter 7 16 
+3 FunctionParameter 10 17 
+3 FunctionParameter 11 18 
+
+2 Label 19 
+6 Load 3 37 5 2 32 
+5 CompositeExtract 2 38 37 0 
+6 Select 2 42 41 38 39 
+4 UConvert 43 44 42 
+6 Load 3 45 5 2 32 
+5 CompositeExtract 2 46 45 1 
+6 Select 2 47 41 46 39 
+4 UConvert 43 48 47 
+5 ImageQuerySizeLod 49 51 14 50 
+5 CompositeExtract 43 52 51 0 
+5 ImageQuerySizeLod 49 53 14 50 
+5 CompositeExtract 43 54 53 1 
+5 ImageQuerySizeLod 49 55 18 50 
+5 CompositeExtract 43 56 55 0 
+5 ImageQuerySizeLod 49 57 18 50 
+5 CompositeExtract 43 58 57 1 
+5 UGreaterThanEqual 40 59 44 56 
+4 BranchConditional 59 21 20 
+
+2 Label 20 
+5 UGreaterThanEqual 40 60 48 58 
+4 BranchConditional 60 21 22 
+
+2 Label 21 
+2 Branch 34 
+
+2 Label 22 
+5 ImageQuerySizeLod 49 61 16 50 
+5 CompositeExtract 43 62 61 0 
+5 IEqual 40 63 52 56 
+4 BranchConditional 63 23 25 
+
+2 Label 23 
+5 IEqual 40 64 54 58 
+4 BranchConditional 64 24 25 
+
+2 Label 24 
+6 CompositeInsert 49 66 44 65 0 
+6 CompositeInsert 49 67 48 66 1 
+5 ImageRead 69 70 14 67 
+2 Branch 26 
+
+2 Label 25 
+4 ConvertUToF 68 71 44 
+4 ConvertUToF 68 72 56 
+5 FDiv 68 73 71 72 
+6 CompositeInsert 74 76 73 75 0 
+4 ConvertUToF 68 77 48 
+4 ConvertUToF 68 78 58 
+5 FDiv 68 79 77 78 
+6 CompositeInsert 74 80 79 76 1 
+5 SampledImage 81 82 14 15 
+7 ImageSampleExplicitLod 69 84 82 80 2 83 
+2 Branch 26 
+
+2 Label 26 
+7 Phi 69 85 70 24 84 25 
+6 CompositeInsert 49 86 44 65 0 
+6 CompositeInsert 49 87 48 86 1 
+4 ImageWrite 18 87 85 
+2 Branch 27 
+
+2 Label 27 
+7 Phi 68 90 88 26 89 32 
+7 Phi 9 93 91 26 92 32 
+7 Phi 43 95 50 26 94 32 
+5 ULessThan 40 96 95 62 
+4 BranchConditional 96 29 28 
+
+2 Label 28 
+2 Branch 33 
+
+2 Label 29 
+6 CompositeInsert 49 97 95 65 0 
+6 CompositeInsert 49 98 50 97 1 
+5 ImageRead 69 99 16 98 
+5 FSub 69 100 85 99 
+6 CompositeInsert 69 101 83 100 3 
+5 Dot 68 102 101 101 
+5 FOrdLessThan 40 103 102 90 
+4 BranchConditional 103 30 31 
+
+2 Label 30 
+4 UConvert 9 104 95 
+2 Branch 31 
+
+2 Label 31 
+7 Phi 68 89 102 30 90 29 
+7 Phi 9 92 104 30 93 29 
+2 Branch 32 
+
+2 Label 32 
+5 IAdd 43 94 95 107 
+2 Branch 27 
+
+2 Label 33 
+5 IMul 43 109 48 56 
+5 IAdd 43 110 44 109 
+4 UConvert 2 111 110 
+5 InBoundsPtrAccessChain 10 112 17 111 
+5 Store 112 93 2 2 
+2 Branch 34 
+
+2 Label 34 
+7 Phi 43 113 107 21 50 33 
+7 Switch 113 36 0 35 1 35 
+
+2 Label 35 
+1 Return 
+
+2 Label 36 
+1 Unreachable 
+
+1 FunctionEnd 
+
+5 Function 6 115 0 114 
+3 FunctionParameter 7 116 
+3 FunctionParameter 7 117 
+3 FunctionParameter 10 118 
+
+2 Label 119 
+6 Load 3 133 5 2 32 
+5 CompositeExtract 2 134 133 0 
+6 Select 2 135 41 134 39 
+4 UConvert 43 136 135 
+6 Load 3 137 5 2 32 
+5 CompositeExtract 2 138 137 1 
+6 Select 2 139 41 138 39 
+4 UConvert 43 140 139 
+5 ImageQuerySizeLod 49 141 116 50 
+5 CompositeExtract 43 142 141 0 
+5 ImageQuerySizeLod 49 143 116 50 
+5 CompositeExtract 43 144 143 1 
+5 UGreaterThanEqual 40 145 136 142 
+4 BranchConditional 145 121 120 
+
+2 Label 120 
+5 UGreaterThanEqual 40 146 140 144 
+4 BranchConditional 146 121 122 
+
+2 Label 121 
+2 Branch 130 
+
+2 Label 122 
+5 ImageQuerySizeLod 49 147 117 50 
+5 CompositeExtract 43 148 147 0 
+6 CompositeInsert 49 149 136 65 0 
+6 CompositeInsert 49 150 140 149 1 
+5 ImageRead 69 151 116 150 
+2 Branch 123 
+
+2 Label 123 
+7 Phi 68 153 88 122 152 128 
+7 Phi 9 155 91 122 154 128 
+7 Phi 43 157 50 122 156 128 
+5 ULessThan 40 158 157 148 
+4 BranchConditional 158 125 124 
+
+2 Label 124 
+2 Branch 129 
+
+2 Label 125 
+6 CompositeInsert 49 159 157 65 0 
+6 CompositeInsert 49 160 50 159 1 
+5 ImageRead 69 161 117 160 
+5 FSub 69 162 151 161 
+6 CompositeInsert 69 163 83 162 3 
+5 Dot 68 164 163 163 
+5 FOrdLessThan 40 165 164 153 
+4 BranchConditional 165 126 127 
+
+2 Label 126 
+4 UConvert 9 166 157 
+2 Branch 127 
+
+2 Label 127 
+7 Phi 68 152 164 126 153 125 
+7 Phi 9 154 166 126 155 125 
+2 Branch 128 
+
+2 Label 128 
+5 IAdd 43 156 157 107 
+2 Branch 123 
+
+2 Label 129 
+5 IMul 43 170 140 142 
+5 IAdd 43 171 136 170 
+4 UConvert 2 172 171 
+5 InBoundsPtrAccessChain 10 173 118 172 
+5 Store 173 155 2 2 
+2 Branch 130 
+
+2 Label 130 
+7 Phi 43 174 107 121 50 129 
+7 Switch 174 132 0 131 1 131 
+
+2 Label 131 
+1 Return 
+
+2 Label 132 
+1 Unreachable 
+
+1 FunctionEnd 
+
+5 Function 6 175 0 12 
+3 FunctionParameter 7 176 
+3 FunctionParameter 8 177 
+3 FunctionParameter 7 178 
+3 FunctionParameter 10 179 
+3 FunctionParameter 11 180 
+
+2 Label 181 
+9 FunctionCall 6 182 13 176 177 178 179 180 
+1 Return 
+
+1 FunctionEnd 
+
+5 Function 6 183 0 114 
+3 FunctionParameter 7 184 
+3 FunctionParameter 7 185 
+3 FunctionParameter 10 186 
+
+2 Label 187 
+7 FunctionCall 6 188 115 184 185 186 
+1 Return 
+
+1 FunctionEnd 
+

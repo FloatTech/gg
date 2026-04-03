@@ -216,7 +216,7 @@ func TestClustersEqual_DiffersOnlyInAlpha(t *testing.T) {
 func TestTakecolor_ReturnsKColors(t *testing.T) {
 	img := solidImage(10, 10, color.RGBA{128, 64, 32, 255})
 	for k := 1; k <= 5; k++ {
-		result := TakeThemeColorsKMeans(img, k)
+		result := TakeThemeColorsKMeans(img, uint16(k))
 		if len(result) != k {
 			t.Errorf("takecolor with k=%d returned %d colors, want %d", k, len(result), k)
 		}

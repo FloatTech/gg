@@ -27,8 +27,9 @@ var (
 // TakeThemeColorsKMeans extracts the k dominant colors from an image using k-means.
 //
 // TakeThemeColorsKMeans 使用 k-means 算法从图像中提取 k 个主色。
-func TakeThemeColorsKMeans(img image.Image, k int) []color.RGBA {
+func TakeThemeColorsKMeans(img image.Image, k uint16) []color.RGBA {
 	ki := newKMeansImage(img, k) // 初始化k个聚类中心
+	defer ki.destroy()
 	for {
 		ki.assign()
 		ki.update()
