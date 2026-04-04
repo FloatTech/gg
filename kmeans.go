@@ -60,20 +60,8 @@ func newKMeansImage(img image.Image, k uint16) kmeansImage {
 		ki.gpuInit()
 	}
 	if !ki.canUseGPU {
-		width := img.Bounds().Dx()
-		height := img.Bounds().Dy()
-		dstw, dsth := width, height
-		if dstw > 512 {
-			dstw = 512
-			ratio := float64(dstw) / float64(width)
-			dsth *= int(float64(height) * ratio)
-		}
-		if dsth > 512 {
-			dsth = 512
-			ratio := float64(dsth) / float64(height)
-			dstw = int(float64(width) * ratio)
-		}
-		ki.bounds = image.Rect(0, 0, dstw, dsth)
+		ki.bounds = ImageBoundsBelow(img.Bounds(), 512, 512)
+		dstw, dsth := ki.bounds.Dx(), ki.bounds.Dy()
 		rgbaimg = (*image.RGBA)(imaging.Resize(img, dstw, dsth, imaging.Lanczos))
 		pixels = unsafe.Slice(
 			(*color.RGBA)(unsafe.Pointer(unsafe.SliceData(rgbaimg.Pix))),

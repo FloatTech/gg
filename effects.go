@@ -1,47 +1,48 @@
 package gg
 
-// Brightness 调整亮度 范围：±100%
-func (dc *Context) Brightness(per int) {
-	if per == 0 {
+import (
+	"image"
+	"math"
+
+	"github.com/disintegration/imaging"
+)
+
+// AdjustBrightness 调整亮度 范围：±100%
+func (dc *Context) AdjustBrightness(s float64) {
+	if math.Abs(s) < 0.001 {
 		return
 	}
-	per = clamp(per, -100, 100)
-	gain := 255 * per / 100
-	for i, v := range dc.im.Pix {
-		if i%4 == 3 { // alpha
-			continue
-		}
-		dc.im.Pix[i] = uint8(clamp(int(v)+gain, 0, 255))
-	}
+	dc.im = (*image.RGBA)(imaging.AdjustBrightness(dc.im, s))
 }
 
-// Contrast 调整对比度 范围：±100%
-func (dc *Context) Contrast(per int) {
-	if per == 0 {
+// AdjustContrast 调整对比度 范围：±100%
+func (dc *Context) AdjustContrast(s float64) {
+	if math.Abs(s) < 0.001 {
 		return
 	}
-	per = clamp(per, -100, 100) + 100
-	switch {
-	case 0 <= per && per < 100: // 损益
-		gain := per
-		for i, v := range dc.im.Pix {
-			if i%4 == 3 { // alpha
-				continue
-			}
-			dc.im.Pix[i] = uint8(clamp(int(v)*gain/100, 0, 255))
-		}
-	case 100 < per && per <= 200: // 增益
-		gain := 200 - per
-		if gain == 0 {
-			gain = 1
-		}
-		for i, v := range dc.im.Pix {
-			if i%4 == 3 { // alpha
-				continue
-			}
-			dc.im.Pix[i] = uint8(clamp(int(v)*100/gain, 0, 255))
-		}
-	default:
-		panic("unreachable")
+	dc.im = (*image.RGBA)(imaging.AdjustContrast(dc.im, s))
+}
+
+// AdjustContrast 调整饱和度 范围：±100%
+func (dc *Context) AdjustSaturation(s float64) {
+	if math.Abs(s) < 0.001 {
+		return
 	}
+	dc.im = (*image.RGBA)(imaging.AdjustSaturation(dc.im, s))
+}
+
+// Sharpen 锐化 范围：±100%
+func (dc *Context) Sharpen(s float64) {
+	if math.Abs(s) < 0.001 {
+		return
+	}
+	dc.im = (*image.RGBA)(imaging.Sharpen(dc.im, s))
+}
+
+// Blur 模糊图像 正数
+func (dc *Context) Blur(s float64) {
+	if math.Abs(s) < 0.001 {
+		return
+	}
+	dc.im = (*image.RGBA)(imaging.Blur(dc.im, s))
 }

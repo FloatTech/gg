@@ -60,3 +60,23 @@ func GetImageWxH(path string) (int, int, error) {
 	sz, _, err := imgsz.DecodeSize(f)
 	return sz.Width, sz.Height, err
 }
+
+// LimitImageBounds returns resized image that newW < w and newH < h, while keeping the W/H ratio.
+//
+// LimitImageBounds 返回在保持宽高比的条件下，小于 w x h 的新 bound。
+func ImageBoundsBelow(b image.Rectangle, w, h int) image.Rectangle {
+	width := b.Dx()
+	height := b.Dy()
+	dstw, dsth := width, height
+	if dstw > w {
+		dstw = w
+		ratio := float64(dstw) / float64(width)
+		dsth *= int(float64(height) * ratio)
+	}
+	if dsth > h {
+		dsth = h
+		ratio := float64(dsth) / float64(height)
+		dstw = int(float64(width) * ratio)
+	}
+	return image.Rect(0, 0, dstw, dsth)
+}
