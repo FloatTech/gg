@@ -218,7 +218,6 @@ func (ki *kmeansImage) gpuInit() {
 }
 
 func (ki *kmeansImage) gpuAssign() error {
-
 	var (
 		srcN     = uintptr(len(ki.pixels))
 		srcbufsz = srcN * unsafe.Sizeof(color.RGBA{})
@@ -307,7 +306,6 @@ func (ki *kmeansImage) gpuAssign() error {
 		defer cl()
 
 		waitev = smpcpev
-
 	} else {
 		err = lst.AppendLaunchKernel(ki.krnrem, &gozel.ZeGroupCount{
 			Groupcountx: ki.gcx, Groupcounty: ki.gcy, Groupcountz: 1,

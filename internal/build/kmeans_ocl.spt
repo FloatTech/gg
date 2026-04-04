@@ -157,15 +157,19 @@
 3 Decorate 5 Constant 
 4 Decorate 5 BuiltIn 28 
 9 Decorate 13 LinkageAttributes "assign_first_iter" Export 
+4 Decorate 17 Alignment 2 
 4 Decorate 73 FPFastMathMode 16 
 4 Decorate 79 FPFastMathMode 16 
 4 Decorate 100 FPFastMathMode 16 
 4 Decorate 103 FPFastMathMode 16 
 3 Decorate 94 NoSignedWrap 
 10 Decorate 115 LinkageAttributes "assign_remaining_iter" Export 
+4 Decorate 118 Alignment 2 
 4 Decorate 162 FPFastMathMode 16 
 4 Decorate 165 FPFastMathMode 16 
 3 Decorate 156 NoSignedWrap 
+4 Decorate 179 Alignment 2 
+4 Decorate 186 Alignment 2 
 4 TypeInt 2 64 0 
 4 TypeInt 9 16 0 
 4 TypeInt 43 32 0 
