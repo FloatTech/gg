@@ -61,9 +61,9 @@ func GetImageWxH(path string) (int, int, error) {
 	return sz.Width, sz.Height, err
 }
 
-// LimitImageBounds returns resized image that newW < w and newH < h, while keeping the W/H ratio.
+// ImageBoundsBelow returns resized image that newW < w and newH < h, while keeping the W/H ratio.
 //
-// LimitImageBounds 返回在保持宽高比的条件下，小于 w x h 的新 bound。
+// ImageBoundsBelow 返回在保持宽高比的条件下，小于 w x h 的新 bound。
 func ImageBoundsBelow(b image.Rectangle, w, h int) image.Rectangle {
 	width := b.Dx()
 	height := b.Dy()

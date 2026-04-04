@@ -23,7 +23,7 @@ func (dc *Context) AdjustContrast(s float64) {
 	dc.im = (*image.RGBA)(imaging.AdjustContrast(dc.im, s))
 }
 
-// AdjustContrast 调整饱和度 范围：±100%
+// AdjustSaturation 调整饱和度 范围：±100%
 func (dc *Context) AdjustSaturation(s float64) {
 	if math.Abs(s) < 0.001 {
 		return

@@ -16,12 +16,12 @@ func TestBrightness(t *testing.T) {
 	if err := saveImage(dc, "TestBrightness-50"); err != nil {
 		t.Fatal(err)
 	}
-	checkHash(t, dc, "<gg.Context 30e0b039be47de836a9fb4c8b9825ce8>")
+	checkHash(t, dc, "<gg.Context e495391cc1349c0db98431a3f4ef21d8>")
 	dc.AdjustBrightness(70) // 70-50=20
 	if err := saveImage(dc, "TestBrightness+20"); err != nil {
 		t.Fatal(err)
 	}
-	checkHash(t, dc, "<gg.Context d8aaf7a3d0aeb11dce3adc72ae9fb464>")
+	checkHash(t, dc, "<gg.Context 2a1b5df094e1ffb6b8de120d922400bf>")
 }
 
 func TestContrast(t *testing.T) {
@@ -34,10 +34,10 @@ func TestContrast(t *testing.T) {
 	if err := saveImage(dc, "TestContrast-50"); err != nil {
 		t.Fatal(err)
 	}
-	checkHash(t, dc, "<gg.Context e6f161e094f0d95603aad891c51c0b6b>")
+	checkHash(t, dc, "<gg.Context 71bfdcec14fa18485e85c80b7a7c3fa3>")
 	dc.AdjustContrast(100)
 	if err := saveImage(dc, "TestContrast+100"); err != nil {
 		t.Fatal(err)
 	}
-	checkHash(t, dc, "<gg.Context e1608d9268930ac4f80bd5cb82af927a>")
+	checkHash(t, dc, "<gg.Context 4854d92c7e15539580349c6876f39070>")
 }
