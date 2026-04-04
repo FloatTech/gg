@@ -8,8 +8,8 @@ target triple = "spirv64-unknown-unknown"
 @__spirv_BuiltInGlobalInvocationId = external local_unnamed_addr addrspace(1) constant <3 x i64>, align 32
 
 ; Function Attrs: mustprogress nofree norecurse nosync nounwind willreturn memory(argmem: write, inaccessiblemem: write)
-define spir_kernel void @__sycl_kernel_quadratic(double noundef %0, double noundef %1, double noundef %2, double noundef %3, double noundef %4, double noundef %5, double noundef %6, ptr addrspace(1) noundef writeonly align 8 captures(none) %7) local_unnamed_addr #0 !kernel_arg_buffer_location !9 !sycl_used_aspects !10 !sycl_fixed_targets !12 !sycl_kernel_omit_args !13 {
-  %9 = load i64, ptr addrspace(1) @__spirv_BuiltInGlobalInvocationId, align 32, !noalias !14
+define spir_kernel void @__sycl_kernel_quadratic(double noundef %0, double noundef %1, double noundef %2, double noundef %3, double noundef %4, double noundef %5, double noundef %6, ptr addrspace(1) noundef writeonly align 8 captures(none) %7) local_unnamed_addr #0 !kernel_arg_buffer_location !7 !sycl_used_aspects !8 !sycl_fixed_targets !10 !sycl_kernel_omit_args !11 {
+  %9 = load i64, ptr addrspace(1) @__spirv_BuiltInGlobalInvocationId, align 32, !noalias !12
   %10 = icmp ult i64 %9, 2147483648
   tail call void @llvm.assume(i1 %10)
   %11 = uitofp nneg i64 %9 to double
@@ -23,31 +23,31 @@ define spir_kernel void @__sycl_kernel_quadratic(double noundef %0, double nound
   %19 = tail call double @llvm.fmuladd.f64(double %14, double %0, double %18)
   %20 = tail call double @llvm.fmuladd.f64(double %17, double %4, double %19)
   %21 = getelementptr inbounds %struct.point, ptr addrspace(1) %7, i64 %9
-  store double %20, ptr addrspace(1) %21, align 8
+  store double %20, ptr addrspace(1) %21, align 8, !tbaa !19
   %22 = fmul double %16, %3
   %23 = tail call double @llvm.fmuladd.f64(double %14, double %1, double %22)
   %24 = tail call double @llvm.fmuladd.f64(double %17, double %5, double %23)
   %25 = getelementptr inbounds i8, ptr addrspace(1) %21, i64 8
-  store double %24, ptr addrspace(1) %25, align 8
+  store double %24, ptr addrspace(1) %25, align 8, !tbaa !24
   ret void
 }
 
 ; Function Attrs: nocallback nofree nosync nounwind speculatable willreturn memory(none)
-declare !sycl_used_aspects !10 double @llvm.fmuladd.f64(double, double, double) #1
+declare !sycl_used_aspects !8 double @llvm.fmuladd.f64(double, double, double) #1
 
 ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(inaccessiblemem: write)
 declare void @llvm.assume(i1 noundef) #2
 
 ; Function Attrs: mustprogress norecurse nounwind
-define spir_kernel void @__sycl_kernel_cubic(double noundef %0, double noundef %1, double noundef %2, double noundef %3, double noundef %4, double noundef %5, double noundef %6, double noundef %7, double noundef %8, ptr addrspace(1) noundef align 8 %9) local_unnamed_addr #3 !kernel_arg_buffer_location !21 !sycl_used_aspects !10 !sycl_fixed_targets !12 !sycl_kernel_omit_args !22 {
+define spir_kernel void @__sycl_kernel_cubic(double noundef %0, double noundef %1, double noundef %2, double noundef %3, double noundef %4, double noundef %5, double noundef %6, double noundef %7, double noundef %8, ptr addrspace(1) noundef align 8 %9) local_unnamed_addr #3 !kernel_arg_buffer_location !25 !sycl_used_aspects !8 !sycl_fixed_targets !10 !sycl_kernel_omit_args !26 {
   %11 = addrspacecast ptr addrspace(1) %9 to ptr addrspace(4)
   tail call spir_func void @cubic(double noundef %0, double noundef %1, double noundef %2, double noundef %3, double noundef %4, double noundef %5, double noundef %6, double noundef %7, double noundef %8, ptr addrspace(4) noundef %11) #5
   ret void
 }
 
 ; Function Attrs: mustprogress norecurse nounwind
-define internal spir_func void @cubic(double noundef %0, double noundef %1, double noundef %2, double noundef %3, double noundef %4, double noundef %5, double noundef %6, double noundef %7, double noundef %8, ptr addrspace(4) noundef %9) local_unnamed_addr #4 !sycl_used_aspects !10 {
-  %11 = load i64, ptr addrspace(1) @__spirv_BuiltInGlobalInvocationId, align 32, !noalias !23
+define internal spir_func void @cubic(double noundef %0, double noundef %1, double noundef %2, double noundef %3, double noundef %4, double noundef %5, double noundef %6, double noundef %7, double noundef %8, ptr addrspace(4) noundef %9) local_unnamed_addr #4 !sycl_used_aspects !8 {
+  %11 = load i64, ptr addrspace(1) @__spirv_BuiltInGlobalInvocationId, align 32, !noalias !27
   %12 = icmp ult i64 %11, 2147483648
   tail call void @llvm.assume(i1 %12)
   %13 = uitofp nneg i64 %11 to double
@@ -67,13 +67,13 @@ define internal spir_func void @cubic(double noundef %0, double noundef %1, doub
   %27 = tail call double @llvm.fmuladd.f64(double %22, double %4, double %26)
   %28 = tail call double @llvm.fmuladd.f64(double %24, double %6, double %27)
   %29 = getelementptr inbounds nuw %struct.point, ptr addrspace(4) %9, i64 %11
-  store double %28, ptr addrspace(4) %29, align 8
+  store double %28, ptr addrspace(4) %29, align 8, !tbaa !19
   %30 = fmul double %20, %3
   %31 = tail call double @llvm.fmuladd.f64(double %17, double %1, double %30)
   %32 = tail call double @llvm.fmuladd.f64(double %22, double %5, double %31)
   %33 = tail call double @llvm.fmuladd.f64(double %24, double %7, double %32)
   %34 = getelementptr inbounds nuw i8, ptr addrspace(4) %29, i64 8
-  store double %33, ptr addrspace(4) %34, align 8
+  store double %33, ptr addrspace(4) %34, align 8, !tbaa !24
   ret void
 }
 
@@ -84,40 +84,43 @@ attributes #3 = { mustprogress norecurse nounwind "frame-pointer"="all" "no-trap
 attributes #4 = { mustprogress norecurse nounwind "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "sycl-nd-range-kernel"="1" "sycl-optlevel"="2" }
 attributes #5 = { nounwind }
 
-!llvm.linker.options = !{!0, !1}
-!llvm.module.flags = !{!2, !3, !4}
-!opencl.spir.version = !{!5}
-!spirv.Source = !{!6}
-!llvm.ident = !{!7}
-!sycl-esimd-split-status = !{!8}
+!llvm.module.flags = !{!0, !1, !2}
+!opencl.spir.version = !{!3}
+!spirv.Source = !{!4}
+!llvm.ident = !{!5}
+!sycl-esimd-split-status = !{!6}
 
-!0 = !{!"-llibcpmt"}
-!1 = !{!"/alternatename:_Avx2WmemEnabled=_Avx2WmemEnabledWeakValue"}
-!2 = !{i32 1, !"wchar_size", i32 2}
-!3 = !{i32 1, !"sycl-device", i32 1}
-!4 = !{i32 7, !"frame-pointer", i32 2}
-!5 = !{i32 1, i32 2}
-!6 = !{i32 4, i32 100000}
-!7 = !{!"clang version 21.0.0git (https://github.com/intel/llvm d5f649b706f63b5c74e1929bc95db8de91085560)"}
-!8 = !{i8 0}
-!9 = !{i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1}
-!10 = !{!11}
-!11 = !{!"fp64", i32 6}
-!12 = !{}
-!13 = !{i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false}
-!14 = !{!15, !17, !19}
-!15 = distinct !{!15, !16, !"_ZN7__spirv29InitSizesSTGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEE8initSizeEv: argument 0"}
-!16 = distinct !{!16, !"_ZN7__spirv29InitSizesSTGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEE8initSizeEv"}
-!17 = distinct !{!17, !18, !"_ZN7__spirv22initGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEEET0_v: argument 0"}
-!18 = distinct !{!18, !"_ZN7__spirv22initGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEEET0_v"}
-!19 = distinct !{!19, !20, !"_ZNK4sycl3_V17nd_itemILi1EE13get_global_idEv: argument 0"}
-!20 = distinct !{!20, !"_ZNK4sycl3_V17nd_itemILi1EE13get_global_idEv"}
-!21 = !{i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1}
-!22 = !{i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false}
-!23 = !{!24, !26, !28}
-!24 = distinct !{!24, !25, !"_ZN7__spirv29InitSizesSTGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEE8initSizeEv: argument 0"}
-!25 = distinct !{!25, !"_ZN7__spirv29InitSizesSTGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEE8initSizeEv"}
-!26 = distinct !{!26, !27, !"_ZN7__spirv22initGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEEET0_v: argument 0"}
-!27 = distinct !{!27, !"_ZN7__spirv22initGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEEET0_v"}
-!28 = distinct !{!28, !29, !"_ZNK4sycl3_V17nd_itemILi1EE13get_global_idEv: argument 0"}
-!29 = distinct !{!29, !"_ZNK4sycl3_V17nd_itemILi1EE13get_global_idEv"}
+!0 = !{i32 1, !"wchar_size", i32 4}
+!1 = !{i32 1, !"sycl-device", i32 1}
+!2 = !{i32 7, !"frame-pointer", i32 2}
+!3 = !{i32 1, i32 2}
+!4 = !{i32 4, i32 100000}
+!5 = !{!"clang version 21.0.0git (https://github.com/intel/llvm d5f649b706f63b5c74e1929bc95db8de91085560)"}
+!6 = !{i8 0}
+!7 = !{i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1}
+!8 = !{!9}
+!9 = !{!"fp64", i32 6}
+!10 = !{}
+!11 = !{i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false}
+!12 = !{!13, !15, !17}
+!13 = distinct !{!13, !14, !"_ZN7__spirv29InitSizesSTGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEE8initSizeEv: argument 0"}
+!14 = distinct !{!14, !"_ZN7__spirv29InitSizesSTGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEE8initSizeEv"}
+!15 = distinct !{!15, !16, !"_ZN7__spirv22initGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEEET0_v: argument 0"}
+!16 = distinct !{!16, !"_ZN7__spirv22initGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEEET0_v"}
+!17 = distinct !{!17, !18, !"_ZNK4sycl3_V17nd_itemILi1EE13get_global_idEv: argument 0"}
+!18 = distinct !{!18, !"_ZNK4sycl3_V17nd_itemILi1EE13get_global_idEv"}
+!19 = !{!20, !21, i64 0}
+!20 = !{!"_ZTS5point", !21, i64 0, !21, i64 8}
+!21 = !{!"double", !22, i64 0}
+!22 = !{!"omnipotent char", !23, i64 0}
+!23 = !{!"Simple C++ TBAA"}
+!24 = !{!20, !21, i64 8}
+!25 = !{i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1}
+!26 = !{i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false, i1 false}
+!27 = !{!28, !30, !32}
+!28 = distinct !{!28, !29, !"_ZN7__spirv29InitSizesSTGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEE8initSizeEv: argument 0"}
+!29 = distinct !{!29, !"_ZN7__spirv29InitSizesSTGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEE8initSizeEv"}
+!30 = distinct !{!30, !31, !"_ZN7__spirv22initGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEEET0_v: argument 0"}
+!31 = distinct !{!31, !"_ZN7__spirv22initGlobalInvocationIdILi1EN4sycl3_V12idILi1EEEEET0_v"}
+!32 = distinct !{!32, !33, !"_ZNK4sycl3_V17nd_itemILi1EE13get_global_idEv: argument 0"}
+!33 = distinct !{!33, !"_ZNK4sycl3_V17nd_itemILi1EE13get_global_idEv"}
