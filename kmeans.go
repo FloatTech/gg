@@ -38,7 +38,7 @@ type kmeansImage struct {
 	sampleResult             ze.ImageHandle
 }
 
-func newKMeansImage(img image.Image, k uint16) kmeansImage {
+func newKMeansImage(img image.Image, k uint16) (kmeansImage, error) {
 	rgbaimg := ImageToRGBA(img)
 	pixels := unsafe.Slice(
 		(*color.RGBA)(unsafe.Pointer(unsafe.SliceData(rgbaimg.Pix))),
@@ -57,7 +57,9 @@ func newKMeansImage(img image.Image, k uint16) kmeansImage {
 		bounds: img.Bounds(),
 	}
 	if canUseKmeansKernel {
-		ki.gpuInit()
+		if err := ki.gpuInit(); err != nil && ReturnErrOnGPUFailed {
+			return ki, err
+		}
 	}
 	if !ki.canUseGPU {
 		ki.bounds = ImageBoundsBelow(img.Bounds(), 512, 512)
@@ -70,17 +72,20 @@ func newKMeansImage(img image.Image, k uint16) kmeansImage {
 		ki.pixels = pixels
 		ki.clusterAssignments = ki.clusterAssignments[:len(pixels)]
 	}
-	return ki
+	return ki, nil
 }
 
 // assign 将每个像素点分配到最近的聚类中心
-func (ki *kmeansImage) assign() {
+func (ki *kmeansImage) assign() error {
 	if ki.canUseGPU {
 		err := ki.gpuAssign()
 		if err == nil {
-			return
+			return nil
 		}
 		ki.gpuDestroy(true)
+		if ReturnErrOnGPUFailed {
+			return err
+		}
 	}
 
 	n := runtime.NumCPU()
@@ -121,6 +126,7 @@ func (ki *kmeansImage) assign() {
 		}
 		ki.clusterAssignments[base+i] = assign
 	}
+	return nil
 }
 
 // update 计算每个聚类的新中心

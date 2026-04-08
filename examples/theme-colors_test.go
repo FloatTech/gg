@@ -28,7 +28,11 @@ func TestThemeColorsGopher(t *testing.T) {
 	var result []color.RGBA
 	found := false
 	for range maxAttempts {
-		result = gg.TakeThemeColorsKMeans(im, k)
+		var err error
+		result, err = gg.TakeThemeColorsKMeans(im, k)
+		if err != nil {
+			t.Fatal(err)
+		}
 		if len(result) != k {
 			t.Fatalf("expected %d colors, got %d", k, len(result))
 		}

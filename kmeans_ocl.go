@@ -36,7 +36,7 @@ func init() {
 	canUseKmeansKernel = true
 }
 
-func (ki *kmeansImage) gpuInit() {
+func (ki *kmeansImage) gpuInit() error {
 	width := ki.bounds.Dx()
 	height := ki.bounds.Dy()
 	ki.bounds = ImageBoundsBelow(ki.bounds, 512, 512)
@@ -45,13 +45,13 @@ func (ki *kmeansImage) gpuInit() {
 	krn1st, err := kmeansModel.KernelCreate("assign_first_iter")
 	if err != nil {
 		canUseKmeansKernel = false
-		return
+		return err
 	}
 	krnrem, err := kmeansModel.KernelCreate("assign_remaining_iter")
 	if err != nil {
 		canUseKmeansKernel = false
 		_ = krn1st.Destroy()
-		return
+		return err
 	}
 	ki.krn1st = krn1st
 	ki.krnrem = krnrem
@@ -63,7 +63,7 @@ func (ki *kmeansImage) gpuInit() {
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	_ = gpu.MemCopyGo2Host(inputImgHost, ki.pixels)
 	ki.inputImgHost = inputImgHost
@@ -73,7 +73,7 @@ func (ki *kmeansImage) gpuInit() {
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	ki.inputImgHandle = inputImgHandle
 
@@ -81,7 +81,7 @@ func (ki *kmeansImage) gpuInit() {
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	ki.smp = smp
 
@@ -92,7 +92,7 @@ func (ki *kmeansImage) gpuInit() {
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	ki.clusters = gpu.MemCopyGo2Host(clustersHost, ki.clusters)
 	ki.clustersHost = clustersHost
@@ -104,7 +104,7 @@ func (ki *kmeansImage) gpuInit() {
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	ki.clustersImgHandle = clustersImgHandle
 
@@ -115,7 +115,7 @@ func (ki *kmeansImage) gpuInit() {
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	ki.clusterAssignments = unsafe.Slice((*uint16)(clusterAssignmentsHost), dstw*dsth)
 	ki.clusterAssignmentsHost = clusterAssignmentsHost
@@ -128,7 +128,7 @@ func (ki *kmeansImage) gpuInit() {
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	ki.sampleResultHost = sampleResultHost
 	ki.sampleResultDevice = sampleResultDevice
@@ -139,7 +139,7 @@ func (ki *kmeansImage) gpuInit() {
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	ki.sampleResult = sampleResult
 
@@ -147,74 +147,75 @@ func (ki *kmeansImage) gpuInit() {
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	err = krn1st.SetArgumentValue(1, ki.smp)
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	err = krn1st.SetArgumentValue(2, ki.clustersImgHandle)
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	err = krn1st.SetArgumentValue(3, &ki.clusterAssignmentsDevice)
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	err = krn1st.SetArgumentValue(4, ki.sampleResult)
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 
 	err = krnrem.SetArgumentValue(0, ki.sampleResult)
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	err = krnrem.SetArgumentValue(1, ki.clustersImgHandle)
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	err = krnrem.SetArgumentValue(2, &ki.clusterAssignmentsDevice)
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 
 	gX, gY, _, err := krn1st.SuggestGroupSize(uint32(dstw), uint32(dsth), 1)
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	err = krn1st.SetGroupSize(gX, gY, 1)
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	err = krnrem.SetGroupSize(gX, gY, 1)
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)
-		return
+		return err
 	}
 	ki.gcx = uint32(math.Ceil(float64(dstw) / float64(gX)))
 	ki.gcy = uint32(math.Ceil(float64(dsth) / float64(gY)))
 
 	ki.canUseGPU = true
+	return nil
 }
 
 func (ki *kmeansImage) gpuAssign() error {

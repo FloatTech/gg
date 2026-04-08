@@ -27,17 +27,22 @@ var (
 // TakeThemeColorsKMeans extracts the k dominant colors from an image using k-means.
 //
 // TakeThemeColorsKMeans 使用 k-means 算法从图像中提取 k 个主色。
-func TakeThemeColorsKMeans(img image.Image, k uint16) []color.RGBA {
-	ki := newKMeansImage(img, k) // 初始化k个聚类中心
+func TakeThemeColorsKMeans(img image.Image, k uint16) ([]color.RGBA, error) {
+	ki, err := newKMeansImage(img, k) // 初始化k个聚类中心
+	if err != nil {
+		return nil, err
+	}
 	defer ki.destroy()
 	for {
-		ki.assign()
+		if err := ki.assign(); err != nil {
+			return nil, err
+		}
 		ki.update()
 		if ki.epilogue() {
 			break
 		}
 	}
-	return ki.result()
+	return ki.result(), nil
 }
 
 // isArrayRGBAEqual compares two []color.RGBA is equal fastly.

@@ -586,7 +586,7 @@ func (dc *Context) QuadraticTo(x1, y1, x2, y2 float64) {
 // 当前点。 如果没有当前点，则首先执行
 // MoveTo(x1, y1) 因为 freetype/raster 不支持三次贝塞尔曲线，
 // 这是用许多小线段模拟的。
-func (dc *Context) CubicTo(x1, y1, x2, y2, x3, y3 float64) {
+func (dc *Context) CubicTo(x1, y1, x2, y2, x3, y3 float64) error {
 	if !dc.hasCurrent {
 		dc.MoveTo(x1, y1)
 	}
@@ -594,7 +594,10 @@ func (dc *Context) CubicTo(x1, y1, x2, y2, x3, y3 float64) {
 	x1, y1 = dc.TransformPoint(x1, y1)
 	x2, y2 = dc.TransformPoint(x2, y2)
 	x3, y3 = dc.TransformPoint(x3, y3)
-	points := CubicBezier(x0, y0, x1, y1, x2, y2, x3, y3)
+	points, err := CubicBezier(x0, y0, x1, y1, x2, y2, x3, y3)
+	if err != nil {
+		return err
+	}
 	previous := dc.current.Fixed()
 	for _, p := range points[1:] {
 		f := p.Fixed()
@@ -607,6 +610,7 @@ func (dc *Context) CubicTo(x1, y1, x2, y2, x3, y3 float64) {
 		dc.fillPath.Add1(f)
 		dc.current = p
 	}
+	return nil
 }
 
 // ClosePath adds a line segment from the current point to the beginning
@@ -668,22 +672,31 @@ func (dc *Context) joiner() raster.Joiner {
 	return nil
 }
 
-func (dc *Context) stroke(painter raster.Painter) {
+func (dc *Context) stroke(painter raster.Painter) error {
 	path := dc.strokePath
 	if len(dc.dashes) > 0 {
-		path = dashed(path, dc.dashes, dc.dashOffset)
+		var err error
+		path, err = dashed(path, dc.dashes, dc.dashOffset)
+		if err != nil {
+			return err
+		}
 	} else {
 		// TODO: this is a temporary workaround to remove tiny segments
 		// that result in rendering issues
 		// TODO:这是一个临时解决方案，用于删除微小的片段
 		// 这会导致渲染问题
-		path = rasterPath(flattenPath(path))
+		fp, err := flattenPath(path)
+		if err != nil {
+			return err
+		}
+		path = rasterPath(fp)
 	}
 	r := dc.rasterizer
 	r.UseNonZeroWinding = true
 	r.Clear()
 	r.AddStroke(path, fix(dc.lineWidth), dc.capper(), dc.joiner())
 	r.Rasterize(painter)
+	return nil
 }
 
 // 填充
@@ -707,7 +720,7 @@ func (dc *Context) fill(painter raster.Painter) {
 //
 // 使用当前颜色、线宽、线帽、线连接和虚线设置描边当前路径。
 // 此操作后将保留路径。
-func (dc *Context) StrokePreserve() {
+func (dc *Context) StrokePreserve() error {
 	var painter raster.Painter
 	if dc.mask == nil {
 		if pattern, ok := dc.strokePattern.(*solidPattern); ok {
@@ -721,7 +734,7 @@ func (dc *Context) StrokePreserve() {
 	if painter == nil {
 		painter = newPatternPainter(dc.im, dc.mask, dc.strokePattern)
 	}
-	dc.stroke(painter)
+	return dc.stroke(painter)
 }
 
 // Stroke strokes the current path with the current color, line width,
@@ -729,9 +742,10 @@ func (dc *Context) StrokePreserve() {
 // operation.
 //
 // 使用当前颜色、线宽、线帽、线连接和虚线设置描边当前路径。 此操作后路径被清除。
-func (dc *Context) Stroke() {
-	dc.StrokePreserve()
+func (dc *Context) Stroke() error {
+	err := dc.StrokePreserve()
 	dc.ClearPath()
+	return err
 }
 
 // FillPreserve fills the current path with the current color. Open subpaths
@@ -1365,6 +1379,6 @@ func (dc *Context) String() string {
 // TakeThemeColorsKMeans extracts the k dominant colors from the drawn image using k-means.
 //
 // TakeThemeColorsKMeans 使用 k-means 算法从已绘制图像中提取 k 个主色。
-func (dc *Context) TakeThemeColorsKMeans(k uint16) []color.RGBA {
+func (dc *Context) TakeThemeColorsKMeans(k uint16) ([]color.RGBA, error) {
 	return TakeThemeColorsKMeans(dc.im, k)
 }

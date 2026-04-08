@@ -1,13 +1,14 @@
 package gg
 
 import (
+	"errors"
 	"math"
 
 	"github.com/golang/freetype/raster"
 	"golang.org/x/image/math/fixed"
 )
 
-func flattenPath(p raster.Path) [][]Point {
+func flattenPath(p raster.Path) ([][]Point, error) {
 	var result = make([][]Point, len(p)*2)
 	var path = make([]Point, 0, len(p)*2)
 	var cx, cy float64
@@ -37,7 +38,9 @@ func flattenPath(p raster.Path) [][]Point {
 			n := quadraticBezierLen(cx, cy, x1, y1, x2, y2)
 			a := len(path)
 			path = append(path, make([]Point, n)...)
-			quadraticBezier(cx, cy, x1, y1, x2, y2, float64(n)-1, path[a:])
+			if err := quadraticBezier(cx, cy, x1, y1, x2, y2, float64(n)-1, path[a:]); err != nil {
+				return nil, err
+			}
 			cx, cy = x2, y2
 			i += 6
 		case 3:
@@ -50,17 +53,19 @@ func flattenPath(p raster.Path) [][]Point {
 			n := cubicBezierLen(cx, cy, x1, y1, x2, y2, x3, y3)
 			a := len(path)
 			path = append(path, make([]Point, n)...)
-			cubicBezier(cx, cy, x1, y1, x2, y2, x3, y3, float64(n)-1, path[a:])
+			if err := cubicBezier(cx, cy, x1, y1, x2, y2, x3, y3, float64(n)-1, path[a:]); err != nil {
+				return nil, err
+			}
 			cx, cy = x3, y3
 			i += 8
 		default:
-			panic("bad path")
+			return nil, errors.New("bad path")
 		}
 	}
 	if len(path) > 0 {
 		result = append(result, path)
 	}
-	return result
+	return result, nil
 }
 
 func dashPath(paths [][]Point, dashes []float64, offset float64) [][]Point {
@@ -162,6 +167,10 @@ func rasterPath(paths [][]Point) raster.Path {
 	return result
 }
 
-func dashed(path raster.Path, dashes []float64, offset float64) raster.Path {
-	return rasterPath(dashPath(flattenPath(path), dashes, offset))
+func dashed(path raster.Path, dashes []float64, offset float64) (raster.Path, error) {
+	fp, err := flattenPath(path)
+	if err != nil {
+		return nil, err
+	}
+	return rasterPath(dashPath(fp, dashes, offset)), nil
 }
