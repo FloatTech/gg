@@ -90,14 +90,11 @@ func (ki *kmeansImage) assign() error {
 
 	n := runtime.NumCPU()
 	batchcnt := len(ki.pixels) / n
-	rem := len(ki.pixels) % n
 	wg := sync.WaitGroup{}
 	wg.Add(n)
-	if rem < 0 {
-		wg.Add(1)
-	}
 	for batch := range n {
 		go func(batch int) {
+			defer wg.Done()
 			base := batch * batchcnt
 			for i, pixel := range ki.pixels[base : base+batchcnt] {
 				minDistance := math.MaxFloat64
@@ -126,6 +123,7 @@ func (ki *kmeansImage) assign() error {
 		}
 		ki.clusterAssignments[base+i] = assign
 	}
+	wg.Wait()
 	return nil
 }
 
