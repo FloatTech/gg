@@ -80,7 +80,7 @@ func (ki *kmeansImage) gpuInit() error {
 	}
 	ki.inputImgHandle = inputImgHandle
 
-	smp, err := gpu.SamplerCreateNormalizedLinearClamp()
+	smp, err := gpu.SamplerCreateNormalizedClamp(gozel.ZE_SAMPLER_FILTER_MODE_LINEAR)
 	if err != nil {
 		canUseKmeansKernel = false
 		ki.gpuDestroy(true)

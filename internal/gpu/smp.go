@@ -5,10 +5,11 @@ import (
 	"github.com/fumiama/gozel/ze"
 )
 
-// SamplerCreateNormalizedLinearClamp is the most commonly used sampler.
-func SamplerCreateNormalizedLinearClamp() (ze.SamplerHandle, error) {
+// SamplerCreateNormalizedClamp creates a sampler with normalized coordinates,
+// clamp address mode and the specified filter mode.
+func SamplerCreateNormalizedClamp(filtermode gozel.ZeSamplerFilterMode) (ze.SamplerHandle, error) {
 	return g().ctx.SamplerCreate(
 		g().dev, gozel.ZE_SAMPLER_ADDRESS_MODE_CLAMP,
-		gozel.ZE_SAMPLER_FILTER_MODE_LINEAR, 1,
+		filtermode, 1,
 	)
 }

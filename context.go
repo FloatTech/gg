@@ -594,10 +594,7 @@ func (dc *Context) CubicTo(x1, y1, x2, y2, x3, y3 float64) error {
 	x1, y1 = dc.TransformPoint(x1, y1)
 	x2, y2 = dc.TransformPoint(x2, y2)
 	x3, y3 = dc.TransformPoint(x3, y3)
-	points, err := CubicBezier(x0, y0, x1, y1, x2, y2, x3, y3)
-	if err != nil {
-		return err
-	}
+	points := CubicBezier(x0, y0, x1, y1, x2, y2, x3, y3)
 	previous := dc.current.Fixed()
 	for _, p := range points[1:] {
 		f := p.Fixed()
