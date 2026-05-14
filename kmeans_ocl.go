@@ -2,8 +2,10 @@ package gg
 
 import (
 	_ "embed"
+	"fmt"
 	"image/color"
 	"math"
+	"os"
 	"unsafe"
 
 	"github.com/FloatTech/gg/internal/gpu"
@@ -23,13 +25,14 @@ var (
 )
 
 func init() {
-	if !gpu.IsAvailable {
+	if !gpu.IsAvailable() {
 		return
 	}
 
 	var err error
 	kmeansModel, err = gpu.ModuleCreateAndCheckKernels(kmeansspv)
 	if err != nil {
+		fmt.Fprintln(os.Stderr, "[gg.kmeans_ocl] gpu init err:", err)
 		return
 	}
 

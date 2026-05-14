@@ -2,6 +2,8 @@ package gg
 
 import (
 	_ "embed"
+	"fmt"
+	"os"
 
 	"github.com/FloatTech/gg/internal/gpu"
 	"github.com/fumiama/gozel/ze"
@@ -22,13 +24,14 @@ var (
 )
 
 func init() {
-	if !gpu.IsAvailable {
+	if !gpu.IsAvailable() {
 		return
 	}
 
 	var err error
 	bezierModel, err = gpu.ModuleCreateAndCheckKernels(bezierspv)
 	if err != nil {
+		fmt.Fprintln(os.Stderr, "[gg.bezier_sycl] gpu init err:", err)
 		return
 	}
 

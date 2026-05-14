@@ -23,7 +23,7 @@ func Exec1D1Buf[T any](mod ze.ModuleHandle, name string, p []T, args ...any) err
 
 	n := uintptr(len(p))
 	sz := n * unsafe.Sizeof(p[0])
-	gsz := min(dcp.Maxgroupsizex, dcp.Maxtotalgroupsize)
+	gsz := min(g().dcp.Maxgroupsizex, g().dcp.Maxtotalgroupsize)
 	gc := sz / uintptr(gsz)
 	if sz%uintptr(gsz) != 0 {
 		gc++
@@ -33,8 +33,8 @@ func Exec1D1Buf[T any](mod ze.ModuleHandle, name string, p []T, args ...any) err
 	if err != nil {
 		return err
 	}
-	defer ctx.MemFree(hbuf)
-	defer ctx.MemFree(dbuf)
+	defer g().ctx.MemFree(hbuf)
+	defer g().ctx.MemFree(dbuf)
 
 	hp := MemCopyGo2Host(hbuf, p)
 
@@ -81,7 +81,7 @@ func Exec1D1Buf[T any](mod ze.ModuleHandle, name string, p []T, args ...any) err
 	defer cl()
 	defer evcpd2h.Destroy()
 
-	lst, err := ctx.CommandListCreate(dev)
+	lst, err := g().ctx.CommandListCreate(g().dev)
 	if err != nil {
 		return err
 	}
@@ -105,7 +105,7 @@ func Exec1D1Buf[T any](mod ze.ModuleHandle, name string, p []T, args ...any) err
 		return err
 	}
 
-	err = q.ExecuteCommandLists(lst)
+	err = g().q.ExecuteCommandLists(lst)
 	if err != nil {
 		return err
 	}

@@ -4,7 +4,7 @@ import "github.com/fumiama/gozel/ze"
 
 // ModuleCreateAndCheckKernels loads module from spv and check kernel names' exisitance.
 func ModuleCreateAndCheckKernels(spv []byte, names ...string) (ze.ModuleHandle, error) {
-	mod, err := ctx.ModuleCreate(dev, spv)
+	mod, err := g().ctx.ModuleCreate(g().dev, spv)
 	if err != nil {
 		return 0, err
 	}

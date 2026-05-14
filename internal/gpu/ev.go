@@ -9,14 +9,14 @@ const gpuEventSize = 1024
 
 // EventCreate automatically get an empty event id and create event.
 func EventCreate(signal gozel.ZeEventScopeFlags, wait gozel.ZeEventScopeFlags) (ze.EventHandle, func(), error) {
-	eid, err := evids.get()
+	eid, err := g().evids.get()
 	if err != nil {
 		return 0, nil, err
 	}
-	ev, err := evph.EventCreate(eid, signal, wait)
+	ev, err := g().evph.EventCreate(eid, signal, wait)
 	if err != nil {
-		evids.put(eid)
+		g().evids.put(eid)
 		return 0, nil, err
 	}
-	return ev, func() { evids.put(eid) }, nil
+	return ev, func() { g().evids.put(eid) }, nil
 }

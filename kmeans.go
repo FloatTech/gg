@@ -1,10 +1,12 @@
 package gg
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"math"
 	"math/rand"
+	"os"
 	"runtime"
 	"sync"
 	"unsafe"
@@ -57,8 +59,8 @@ func newKMeansImage(img image.Image, k uint16) (kmeansImage, error) {
 		bounds: img.Bounds(),
 	}
 	if canUseKmeansKernel {
-		if err := ki.gpuInit(); err != nil && ReturnErrOnGPUFailed {
-			return ki, err
+		if err := ki.gpuInit(); err != nil {
+			fmt.Fprintln(os.Stderr, "[gg.kmeans] gpuInit err:", err, "fallback to cpu")
 		}
 	}
 	if !ki.canUseGPU {
@@ -82,10 +84,8 @@ func (ki *kmeansImage) assign() error {
 		if err == nil {
 			return nil
 		}
+		fmt.Fprintln(os.Stderr, "[gg.kmeans] gpuAssign err:", err, "fallback to cpu")
 		ki.gpuDestroy(true)
-		if ReturnErrOnGPUFailed {
-			return err
-		}
 	}
 
 	n := runtime.NumCPU()

@@ -10,7 +10,7 @@ import (
 // ImageCreateUnorm create image that can load from go image.RGBA.Pix and is
 // able to be used in linear interpolation.
 func ImageCreateUnorm(flags gozel.ZeImageFlags, width uint64, height uint32) (ze.ImageHandle, error) {
-	return ctx.ImageCreate(dev, flags, gozel.ZeImageFormat{
+	return g().ctx.ImageCreate(g().dev, flags, gozel.ZeImageFormat{
 		Layout: gozel.ZE_IMAGE_FORMAT_LAYOUT_8_8_8_8,
 		Type:   gozel.ZE_IMAGE_FORMAT_TYPE_UNORM, // UNORM: bilinear sampling returns float [0,1]
 		X:      gozel.ZE_IMAGE_FORMAT_SWIZZLE_R,
@@ -26,30 +26,30 @@ func ImageCopyFromHostBuffer(
 	hDstImage ze.ImageHandle, hSignalEvent ze.EventHandle,
 	waitEvents ...ze.EventHandle,
 ) (cl func(), err error) {
-	evcph2did, err := evids.get()
+	evcph2did, err := g().evids.get()
 	if err != nil {
 		return
 	}
-	evcph2d, err := evph.EventCreate(evcph2did, gozel.ZE_EVENT_SCOPE_FLAG_HOST, 0)
+	evcph2d, err := g().evph.EventCreate(evcph2did, gozel.ZE_EVENT_SCOPE_FLAG_HOST, 0)
 	if err != nil {
-		evids.put(evcph2did)
+		g().evids.put(evcph2did)
 		return
 	}
 	err = lst.AppendMemoryCopy(dbuf, hbuf, sz, evcph2d, waitEvents...)
 	if err != nil {
 		_ = evcph2d.Destroy()
-		evids.put(evcph2did)
+		g().evids.put(evcph2did)
 		return
 	}
 	err = lst.AppendImageCopyFromMemory(hDstImage, dbuf, nil, hSignalEvent, evcph2d)
 	if err != nil {
 		_ = evcph2d.Destroy()
-		evids.put(evcph2did)
+		g().evids.put(evcph2did)
 		return
 	}
 	return func() {
 		_ = evcph2d.Destroy()
-		evids.put(evcph2did)
+		g().evids.put(evcph2did)
 	}, nil
 }
 
@@ -59,29 +59,29 @@ func ImageCopyToHostBuffer(
 	hSrcImage ze.ImageHandle, hSignalEvent ze.EventHandle,
 	waitEvents ...ze.EventHandle,
 ) (cl func(), err error) {
-	eid, err := evids.get()
+	eid, err := g().evids.get()
 	if err != nil {
 		return
 	}
-	evcpim2d, err := evph.EventCreate(eid, gozel.ZE_EVENT_SCOPE_FLAG_HOST, 0)
+	evcpim2d, err := g().evph.EventCreate(eid, gozel.ZE_EVENT_SCOPE_FLAG_HOST, 0)
 	if err != nil {
-		evids.put(eid)
+		g().evids.put(eid)
 		return
 	}
 	err = lst.AppendImageCopyToMemory(dbuf, hSrcImage, nil, evcpim2d, waitEvents...)
 	if err != nil {
 		_ = evcpim2d.Destroy()
-		evids.put(eid)
+		g().evids.put(eid)
 		return
 	}
 	err = lst.AppendMemoryCopy(hbuf, dbuf, sz, hSignalEvent, evcpim2d)
 	if err != nil {
 		_ = evcpim2d.Destroy()
-		evids.put(eid)
+		g().evids.put(eid)
 		return
 	}
 	return func() {
 		_ = evcpim2d.Destroy()
-		evids.put(eid)
+		g().evids.put(eid)
 	}, nil
 }

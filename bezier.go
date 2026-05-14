@@ -1,7 +1,9 @@
 package gg
 
 import (
+	"fmt"
 	"math"
+	"os"
 )
 
 func quadraticBezier(x0, y0, x1, y1, x2, y2, ds float64, p []Point) error {
@@ -10,10 +12,8 @@ func quadraticBezier(x0, y0, x1, y1, x2, y2, ds float64, p []Point) error {
 		if err == nil {
 			return nil
 		}
+		fmt.Fprintln(os.Stderr, "[gg.bezier] quadraticBezeirGPU err:", err)
 		canUseBezierKernel = false
-		if ReturnErrOnGPUFailed {
-			return err
-		}
 	}
 	quadraticBezierPlatform(x0, y0, x1, y1, x2, y2, ds, p)
 	return nil
@@ -25,10 +25,8 @@ func cubicBezier(x0, y0, x1, y1, x2, y2, x3, y3, ds float64, p []Point) error {
 		if err == nil {
 			return nil
 		}
+		fmt.Fprintln(os.Stderr, "[gg.bezier] cubicBezeirGPU err:", err)
 		canUseBezierKernel = false
-		if ReturnErrOnGPUFailed {
-			return err
-		}
 	}
 	cubicBezierPlatform(x0, y0, x1, y1, x2, y2, x3, y3, ds, p)
 	return nil
