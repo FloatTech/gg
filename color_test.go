@@ -268,20 +268,32 @@ func TestTakecolor_SolidColorKGreaterThan1(t *testing.T) {
 }
 
 func TestTakecolor_TwoDistinctColors(t *testing.T) {
-	// k-means 的初始中心随机选取，可能两次都落到同一颜色区域导致不收敛。
-	// 多次运行，验证算法至少能在 30 次尝试中有一次正确分离两种颜色。
+	// 用偏离正确答案的初始中心，验证 k-means 能通过迭代收敛并正确分离两种颜色。
 	img := twoColorImage(20, 20, Red, Blue)
-	const maxAttempts = 30
-	for range maxAttempts {
-		result, err := TakeThemeColorsKMeans(img, 2)
-		if err != nil {
+	ki, err := newKMeansImage(img, 2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer ki.destroy()
+	// 初始中心偏离真实颜色，迫使算法迭代收敛
+	ki.clusters[0] = color.RGBA{200, 50, 50, 255} // 偏红
+	ki.clusters[1] = color.RGBA{50, 50, 200, 255} // 偏蓝
+	for {
+		if err := ki.assign(); err != nil {
 			t.Fatal(err)
 		}
-		if len(result) == 2 && colorInSlice(Red, result, 5) && colorInSlice(Blue, result, 5) {
-			return // 成功分离，测试通过
+		ki.update()
+		if ki.epilogue() {
+			break
 		}
 	}
-	t.Errorf("takecolor failed to separate red and blue colors in %d attempts", maxAttempts)
+	result := ki.result()
+	if len(result) != 2 {
+		t.Fatalf("expected 2 colors, got %d", len(result))
+	}
+	if !colorInSlice(Red, result, 5) || !colorInSlice(Blue, result, 5) {
+		t.Errorf("k-means failed to separate red and blue: got %v", result)
+	}
 }
 
 func TestTakecolor_Deterministic_SolidImage(t *testing.T) {
