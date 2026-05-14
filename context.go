@@ -586,7 +586,7 @@ func (dc *Context) QuadraticTo(x1, y1, x2, y2 float64) {
 // 当前点。 如果没有当前点，则首先执行
 // MoveTo(x1, y1) 因为 freetype/raster 不支持三次贝塞尔曲线，
 // 这是用许多小线段模拟的。
-func (dc *Context) CubicTo(x1, y1, x2, y2, x3, y3 float64) error {
+func (dc *Context) CubicTo(x1, y1, x2, y2, x3, y3 float64) {
 	if !dc.hasCurrent {
 		dc.MoveTo(x1, y1)
 	}
@@ -607,7 +607,6 @@ func (dc *Context) CubicTo(x1, y1, x2, y2, x3, y3 float64) error {
 		dc.fillPath.Add1(f)
 		dc.current = p
 	}
-	return nil
 }
 
 // ClosePath adds a line segment from the current point to the beginning
@@ -669,31 +668,22 @@ func (dc *Context) joiner() raster.Joiner {
 	return nil
 }
 
-func (dc *Context) stroke(painter raster.Painter) error {
+func (dc *Context) stroke(painter raster.Painter) {
 	path := dc.strokePath
 	if len(dc.dashes) > 0 {
-		var err error
-		path, err = dashed(path, dc.dashes, dc.dashOffset)
-		if err != nil {
-			return err
-		}
+		path = dashed(path, dc.dashes, dc.dashOffset)
 	} else {
 		// TODO: this is a temporary workaround to remove tiny segments
 		// that result in rendering issues
 		// TODO:这是一个临时解决方案，用于删除微小的片段
 		// 这会导致渲染问题
-		fp, err := flattenPath(path)
-		if err != nil {
-			return err
-		}
-		path = rasterPath(fp)
+		path = rasterPath(flattenPath(path))
 	}
 	r := dc.rasterizer
 	r.UseNonZeroWinding = true
 	r.Clear()
 	r.AddStroke(path, fix(dc.lineWidth), dc.capper(), dc.joiner())
 	r.Rasterize(painter)
-	return nil
 }
 
 // 填充
@@ -717,7 +707,7 @@ func (dc *Context) fill(painter raster.Painter) {
 //
 // 使用当前颜色、线宽、线帽、线连接和虚线设置描边当前路径。
 // 此操作后将保留路径。
-func (dc *Context) StrokePreserve() error {
+func (dc *Context) StrokePreserve() {
 	var painter raster.Painter
 	if dc.mask == nil {
 		if pattern, ok := dc.strokePattern.(*solidPattern); ok {
@@ -731,7 +721,7 @@ func (dc *Context) StrokePreserve() error {
 	if painter == nil {
 		painter = newPatternPainter(dc.im, dc.mask, dc.strokePattern)
 	}
-	return dc.stroke(painter)
+	dc.stroke(painter)
 }
 
 // Stroke strokes the current path with the current color, line width,
@@ -739,10 +729,9 @@ func (dc *Context) StrokePreserve() error {
 // operation.
 //
 // 使用当前颜色、线宽、线帽、线连接和虚线设置描边当前路径。 此操作后路径被清除。
-func (dc *Context) Stroke() error {
-	err := dc.StrokePreserve()
+func (dc *Context) Stroke() {
+	dc.StrokePreserve()
 	dc.ClearPath()
-	return err
 }
 
 // FillPreserve fills the current path with the current color. Open subpaths

@@ -385,7 +385,7 @@ func BenchmarkTakecolor_16x16_K3(b *testing.B) {
 	}
 	b.ResetTimer()
 	for range b.N {
-		TakeThemeColorsKMeans(img, 3)
+		_, _ = TakeThemeColorsKMeans(img, 3)
 	}
 }
 
@@ -399,7 +399,7 @@ func BenchmarkTakecolor_64x64_K4(b *testing.B) {
 	}
 	b.ResetTimer()
 	for range b.N {
-		TakeThemeColorsKMeans(img, 4)
+		_, _ = TakeThemeColorsKMeans(img, 4)
 	}
 }
 
@@ -413,7 +413,7 @@ func BenchmarkTakecolor_128x128_K8(b *testing.B) {
 	}
 	b.ResetTimer()
 	for range b.N {
-		TakeThemeColorsKMeans(img, 8)
+		_, _ = TakeThemeColorsKMeans(img, 8)
 	}
 }
 
@@ -421,6 +421,6 @@ func BenchmarkTakecolor_SolidColor_K5(b *testing.B) {
 	img := solidImage(64, 64, color.RGBA{200, 100, 50, 255})
 	b.ResetTimer()
 	for range b.N {
-		TakeThemeColorsKMeans(img, 5)
+		_, _ = TakeThemeColorsKMeans(img, 5)
 	}
 }

@@ -1,14 +1,13 @@
 package gg
 
 import (
-	"errors"
 	"math"
 
 	"github.com/golang/freetype/raster"
 	"golang.org/x/image/math/fixed"
 )
 
-func flattenPath(p raster.Path) ([][]Point, error) {
+func flattenPath(p raster.Path) [][]Point {
 	var result = make([][]Point, len(p)*2)
 	var path = make([]Point, 0, len(p)*2)
 	var cx, cy float64
@@ -55,13 +54,13 @@ func flattenPath(p raster.Path) ([][]Point, error) {
 			cx, cy = x3, y3
 			i += 8
 		default:
-			return nil, errors.New("bad path")
+			panic("bad path")
 		}
 	}
 	if len(path) > 0 {
 		result = append(result, path)
 	}
-	return result, nil
+	return result
 }
 
 func dashPath(paths [][]Point, dashes []float64, offset float64) [][]Point {
@@ -163,10 +162,6 @@ func rasterPath(paths [][]Point) raster.Path {
 	return result
 }
 
-func dashed(path raster.Path, dashes []float64, offset float64) (raster.Path, error) {
-	fp, err := flattenPath(path)
-	if err != nil {
-		return nil, err
-	}
-	return rasterPath(dashPath(fp, dashes, offset)), nil
+func dashed(path raster.Path, dashes []float64, offset float64) raster.Path {
+	return rasterPath(dashPath(flattenPath(path), dashes, offset))
 }

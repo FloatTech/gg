@@ -33,12 +33,13 @@ func Resize(img image.Image, width, height int, filter ResampleFilter) *image.NR
 	srcW := bounds.Dx()
 	srcH := bounds.Dy()
 
-	if width <= 0 && height <= 0 {
+	switch {
+	case width <= 0 && height <= 0:
 		width = srcW
 		height = srcH
-	} else if width <= 0 {
+	case width <= 0:
 		width = int(math.Round(float64(height) * float64(srcW) / float64(srcH)))
-	} else if height <= 0 {
+	case height <= 0:
 		height = int(math.Round(float64(width) * float64(srcH) / float64(srcW)))
 	}
 
