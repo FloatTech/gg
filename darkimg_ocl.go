@@ -106,7 +106,7 @@ func gpuIsDarkimg(img image.Image, scale float32) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	err = krn.SetArgumentValue(4, outputImgDevice)
+	err = krn.SetArgumentValue(4, &outputImgDevice)
 	if err != nil {
 		return false, err
 	}
