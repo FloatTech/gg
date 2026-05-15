@@ -1,0 +1,189 @@
+119734787 67072 393230 89 0 
+2 Capability Addresses 
+2 Capability Linkage 
+2 Capability Kernel 
+2 Capability Int64 
+2 Capability ImageBasic 
+2 Capability Int8 
+5 ExtInstImport 1 "OpenCL.std" 
+3 MemoryModel 2 2 
+6 EntryPoint 6 79 "isdark" 5 
+17 String 87 "kernel_arg_type.isdark.image2d_t,sampler_t,uint,uint,char*," 
+11 String 88 "kernel_arg_type_qual.isdark.,,,,," 
+3 Source 3 102000 
+11 Name 5 "__spirv_BuiltInGlobalInvocationId" 
+4 Name 13 "isdark" 
+5 Name 14 "inputImg" 
+3 Name 15 "smp" 
+4 Name 16 "outW" 
+4 Name 17 "outH" 
+4 Name 18 "output" 
+4 Name 19 "entry" 
+6 Name 20 "lor.lhs.false" 
+4 Name 21 "if.then" 
+4 Name 22 "if.end" 
+4 Name 23 "cleanup" 
+6 Name 24 "cleanup.cont" 
+5 Name 25 "unreachable" 
+4 Name 31 "call" 
+4 Name 32 "conv" 
+4 Name 35 "call1" 
+4 Name 36 "conv2" 
+3 Name 37 "cmp" 
+4 Name 38 "cmp4" 
+4 Name 40 "conv6" 
+4 Name 41 "conv7" 
+3 Name 42 "div" 
+4 Name 45 "vecinit" 
+4 Name 46 "conv8" 
+4 Name 47 "conv9" 
+4 Name 48 "div10" 
+5 Name 49 "vecinit11" 
+7 Name 51 "TempSampledImage" 
+4 Name 54 "call12" 
+3 Name 57 "mul" 
+4 Name 60 "mul13" 
+3 Name 61 "add" 
+4 Name 64 "mul14" 
+4 Name 65 "add15" 
+4 Name 67 "div16" 
+4 Name 69 "cmp17" 
+4 Name 72 "conv18" 
+4 Name 73 "conv19" 
+4 Name 74 "mul20" 
+4 Name 75 "add21" 
+4 Name 76 "idxprom" 
+5 Name 77 "arrayidx" 
+7 Name 78 "cleanup.dest.slot.0" 
+5 Name 80 "inputImg" 
+3 Name 81 "smp" 
+4 Name 82 "outW" 
+4 Name 83 "outH" 
+4 Name 84 "output" 
+
+13 Decorate 5 LinkageAttributes "__spirv_BuiltInGlobalInvocationId" Import 
+3 Decorate 5 Constant 
+4 Decorate 5 BuiltIn 28 
+6 Decorate 13 LinkageAttributes "isdark" Export 
+4 Decorate 18 Alignment 1 
+4 Decorate 42 FPFastMathMode 16 
+4 Decorate 48 FPFastMathMode 16 
+4 Decorate 57 FPFastMathMode 16 
+4 Decorate 60 FPFastMathMode 16 
+4 Decorate 61 FPFastMathMode 16 
+4 Decorate 64 FPFastMathMode 16 
+4 Decorate 65 FPFastMathMode 16 
+4 Decorate 67 FPFastMathMode 16 
+4 Decorate 69 FPFastMathMode 16 
+4 Decorate 84 Alignment 1 
+4 TypeInt 2 64 0 
+4 TypeInt 9 32 0 
+4 TypeInt 10 8 0 
+5 Constant 2 28 0 0 
+4 Constant 9 70 0 
+4 Constant 9 71 1 
+4 TypeVector 3 2 3 
+4 TypePointer 4 1 3 
+2 TypeVoid 6 
+10 TypeImage 7 6 1 0 0 0 0 0 0 
+2 TypeSampler 8 
+4 TypePointer 11 5 10 
+8 TypeFunction 12 6 7 8 9 9 11 
+2 TypeBool 29 
+3 TypeFloat 39 32 
+4 TypeVector 43 39 2 
+3 TypeSampledImage 50 7 
+4 TypeVector 52 39 4 
+4 Variable 4 5 1 
+3 ConstantTrue 29 30 
+3 Undef 43 44 
+4 Constant 39 53 0 
+4 Constant 39 56 1133871104 
+4 Constant 39 59 1142079488 
+4 Constant 39 63 1122238464 
+4 Constant 39 66 1148846080 
+4 Constant 39 68 1097859072 
+
+
+
+5 Function 6 13 0 12 
+3 FunctionParameter 7 14 
+3 FunctionParameter 8 15 
+3 FunctionParameter 9 16 
+3 FunctionParameter 9 17 
+3 FunctionParameter 11 18 
+
+2 Label 19 
+6 Load 3 26 5 2 32 
+5 CompositeExtract 2 27 26 0 
+6 Select 2 31 30 27 28 
+4 UConvert 9 32 31 
+6 Load 3 33 5 2 32 
+5 CompositeExtract 2 34 33 1 
+6 Select 2 35 30 34 28 
+4 UConvert 9 36 35 
+5 UGreaterThanEqual 29 37 32 16 
+4 BranchConditional 37 21 20 
+
+2 Label 20 
+5 UGreaterThanEqual 29 38 36 17 
+4 BranchConditional 38 21 22 
+
+2 Label 21 
+2 Branch 23 
+
+2 Label 22 
+4 ConvertUToF 39 40 32 
+4 ConvertUToF 39 41 16 
+5 FDiv 39 42 40 41 
+6 CompositeInsert 43 45 42 44 0 
+4 ConvertUToF 39 46 36 
+4 ConvertUToF 39 47 17 
+5 FDiv 39 48 46 47 
+6 CompositeInsert 43 49 48 45 1 
+5 SampledImage 50 51 14 15 
+7 ImageSampleExplicitLod 52 54 51 49 2 53 
+5 CompositeExtract 39 55 54 0 
+5 FMul 39 57 56 55 
+5 CompositeExtract 39 58 54 1 
+5 FMul 39 60 59 58 
+5 FAdd 39 61 57 60 
+5 CompositeExtract 39 62 54 2 
+5 FMul 39 64 63 62 
+5 FAdd 39 65 61 64 
+5 FDiv 39 67 65 66 
+5 FOrdGreaterThan 29 69 67 68 
+6 Select 9 72 69 71 70 
+4 UConvert 10 73 72 
+5 IMul 9 74 36 16 
+5 IAdd 9 75 74 32 
+4 UConvert 2 76 75 
+5 InBoundsPtrAccessChain 11 77 18 76 
+5 Store 77 73 2 1 
+2 Branch 23 
+
+2 Label 23 
+7 Phi 9 78 71 21 70 22 
+7 Switch 78 25 0 24 1 24 
+
+2 Label 24 
+1 Return 
+
+2 Label 25 
+1 Unreachable 
+
+1 FunctionEnd 
+
+5 Function 6 79 0 12 
+3 FunctionParameter 7 80 
+3 FunctionParameter 8 81 
+3 FunctionParameter 9 82 
+3 FunctionParameter 9 83 
+3 FunctionParameter 11 84 
+
+2 Label 85 
+9 FunctionCall 6 86 13 80 81 82 83 84 
+1 Return 
+
+1 FunctionEnd 
+
