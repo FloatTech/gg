@@ -45,12 +45,15 @@ func cpuIsDarkimg(im image.Image, scale float32) bool {
 //
 // IsDarkimg 判断图片是否为全黑或几乎全黑，以至于人眼不可辨识。
 func IsDarkimg(im image.Image, scale float32) bool {
-	v, err := gpuIsDarkimg(im, scale)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "[gg.darkimg_ocl] gpuIsDarkimg err:", err, "fallback to cpu")
-		canUseDarkimgKernel = false
-	} else {
-		return v
+	if canUseDarkimgKernel {
+		v, err := gpuIsDarkimg(im, scale)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "[gg.darkimg_ocl] gpuIsDarkimg err:", err, "fallback to cpu")
+			canUseDarkimgKernel = false
+		} else {
+			return v
+		}
 	}
+
 	return cpuIsDarkimg(im, scale)
 }

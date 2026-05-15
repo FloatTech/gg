@@ -112,7 +112,7 @@ func gpuIsDarkimg(img image.Image, scale float32) (bool, error) {
 	}
 
 	// Determine group size
-	gX, gY, _, err := krn.SuggestGroupSize(uint32(dstW), uint32(dstH), 1)
+	gX, gY, _, err := krn.SuggestGroupSize(dstW, dstH, 1)
 	if err != nil {
 		return false, err
 	}
