@@ -373,6 +373,15 @@ func BenchmarkCpuIsDarkimg_500x500(b *testing.B) {
 	}
 }
 
+func BenchmarkCpuIsDarkimg_4096x4096(b *testing.B) {
+	img := darkimgTestImage(4096, 4096, color.RGBA{10, 10, 10, 255})
+	b.ResetTimer()
+	canUseResizeKernel = false
+	for range b.N {
+		cpuIsDarkimg(img, 0.1)
+	}
+}
+
 func BenchmarkIsDarkimg_100x100(b *testing.B) {
 	img := darkimgTestImage(100, 100, color.RGBA{10, 10, 10, 255})
 	b.ResetTimer()
@@ -386,5 +395,13 @@ func BenchmarkIsDarkimg_500x500(b *testing.B) {
 	b.ResetTimer()
 	for range b.N {
 		IsDarkimg(img, 1.0)
+	}
+}
+
+func BenchmarkIsDarkimg_4096x4096(b *testing.B) {
+	img := darkimgTestImage(4096, 4096, color.RGBA{10, 10, 10, 255})
+	b.ResetTimer()
+	for range b.N {
+		IsDarkimg(img, 0.1)
 	}
 }
