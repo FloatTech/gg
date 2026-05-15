@@ -47,7 +47,7 @@ func gpuIsDarkimg(img image.Image, scale float32) (bool, error) {
 	srcW, srcH := img.Bounds().Dx(), img.Bounds().Dy()
 	dstW, dstH := uint32(float32(srcW)*scale), uint32(float32(srcH)*scale)
 
-	krn, err := darkimgModel.KernelCreate("scale")
+	krn, err := darkimgModel.KernelCreate("isdark")
 	if err != nil {
 		return false, err
 	}
