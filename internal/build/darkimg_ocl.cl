@@ -4,7 +4,7 @@ kernel void isdark(
     uint outW, uint outH,
     global char* output)
 {
-    const float visibleThreshold = 15;
+    const float visibleThreshold = 15.0f / 255.0f;
 
     uint x = get_global_id(0);
     uint y = get_global_id(1);
