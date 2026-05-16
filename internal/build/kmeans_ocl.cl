@@ -25,8 +25,8 @@ kernel void assign_first_iter(
         pixel = read_imagef(inputImg, (int2)(x, y));
     } else {
         float2 normCoord = (float2)(
-            (float)x / (float)dstW,
-            (float)y / (float)dstH
+            ((float)x + 0.5f) / (float)dstW,
+            ((float)y + 0.5f) / (float)dstH
         );
         pixel = read_imagef(inputImg, smp, normCoord);
     }

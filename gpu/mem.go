@@ -16,6 +16,16 @@ func MemAllocHostDevicePair(size uintptr, alignment uintptr) (h, d unsafe.Pointe
 	return
 }
 
+// MemAllocHost allocs host mem.
+func MemAllocHost(size uintptr, alignment uintptr) (unsafe.Pointer, error) {
+	return g().ctx.MemAllocHost(size, alignment)
+}
+
+// MemAllocDevice allocs device mem.
+func MemAllocDevice(size uintptr, alignment uintptr) (unsafe.Pointer, error) {
+	return g().ctx.MemAllocDevice(g().dev, size, alignment)
+}
+
 // MemCopyGo2Host copies go array to host mem and returns the go array repr of dst.
 func MemCopyGo2Host[T any](dst unsafe.Pointer, src []T) []T {
 	dstSlice := unsafe.Slice((*T)(dst), len(src))

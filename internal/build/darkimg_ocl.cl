@@ -19,8 +19,8 @@ kernel void isdark(
 
     if (x < outW && y < outH) {
         float2 normCoord = (float2)(
-            (float)x / (float)outW,
-            (float)y / (float)outH
+            ((float)x + 0.5f) / (float)outW,
+            ((float)y + 0.5f) / (float)outH
         );
 
         float4 pixel = read_imagef(inputImg, smp, normCoord);
