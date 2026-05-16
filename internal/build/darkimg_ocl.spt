@@ -65,6 +65,7 @@
 3 Decorate 5 Constant 
 4 Decorate 5 BuiltIn 28 
 6 Decorate 12 LinkageAttributes "isdark" Export 
+4 Decorate 17 Alignment 4 
 4 Decorate 43 FPFastMathMode 16 
 4 Decorate 49 FPFastMathMode 16 
 4 Decorate 58 FPFastMathMode 16 
@@ -74,6 +75,7 @@
 4 Decorate 66 FPFastMathMode 16 
 4 Decorate 68 FPFastMathMode 16 
 4 Decorate 70 FPFastMathMode 16 
+4 Decorate 88 Alignment 4 
 4 TypeInt 2 64 0 
 4 TypeInt 9 32 0 
 5 Constant 2 29 0 0 
