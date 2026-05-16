@@ -12,7 +12,7 @@ import (
 	"github.com/fumiama/gozel/gozel"
 	"github.com/fumiama/gozel/ze"
 
-	"github.com/FloatTech/gg/internal/gpu"
+	"github.com/FloatTech/gg/gpu"
 )
 
 //go:generate ocloc compile -file internal/build/darkimg_ocl.cl -spv_only -options "-cl-mad-enable -cl-fast-relaxed-math -cl-finite-math-only -cl-single-precision-constant" -internal_options "-O3" -output internal/build/darkimg_ocl

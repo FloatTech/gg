@@ -8,7 +8,7 @@ import (
 	"os"
 	"unsafe"
 
-	"github.com/FloatTech/gg/internal/gpu"
+	"github.com/FloatTech/gg/gpu"
 	"github.com/fumiama/gozel/gozel"
 	"github.com/fumiama/gozel/ze"
 )

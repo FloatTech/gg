@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/FloatTech/gg/internal/gpu"
+	"github.com/FloatTech/gg/gpu"
 	"github.com/fumiama/gozel/ze"
 )
 
