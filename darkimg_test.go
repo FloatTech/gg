@@ -212,13 +212,13 @@ func TestIsDarkimg_AllBlack(t *testing.T) {
 	img := darkimgTestImage(100, 100, color.RGBA{0, 0, 0, 255})
 	if !canUseDarkimgKernel {
 		t.Skip("no gpu available")
-		defer func() {
-			if !canUseDarkimgKernel {
-				panic("unexpected")
-			}
-		}()
 		return
 	}
+	defer func() {
+		if !canUseDarkimgKernel {
+			panic("unexpected")
+		}
+	}()
 	result := IsDarkimg(img, 1.0)
 	expected := cpuIsDarkimg(img, 1.0)
 	if result != expected {
@@ -233,13 +233,13 @@ func TestIsDarkimg_AllWhite(t *testing.T) {
 	img := darkimgTestImage(100, 100, color.RGBA{255, 255, 255, 255})
 	if !canUseDarkimgKernel {
 		t.Skip("no gpu available")
-		defer func() {
-			if !canUseDarkimgKernel {
-				panic("unexpected")
-			}
-		}()
 		return
 	}
+	defer func() {
+		if !canUseDarkimgKernel {
+			panic("unexpected")
+		}
+	}()
 	result := IsDarkimg(img, 1.0)
 	expected := cpuIsDarkimg(img, 1.0)
 	if result != expected {
@@ -254,13 +254,13 @@ func TestIsDarkimg_BelowThreshold(t *testing.T) {
 	img := darkimgTestImage(100, 100, color.RGBA{14, 14, 14, 255})
 	if !canUseDarkimgKernel {
 		t.Skip("no gpu available")
-		defer func() {
-			if !canUseDarkimgKernel {
-				panic("unexpected")
-			}
-		}()
 		return
 	}
+	defer func() {
+		if !canUseDarkimgKernel {
+			panic("unexpected")
+		}
+	}()
 	result := IsDarkimg(img, 1.0)
 	expected := cpuIsDarkimg(img, 1.0)
 	if result != expected {
@@ -272,13 +272,13 @@ func TestIsDarkimg_AboveThreshold(t *testing.T) {
 	img := darkimgTestImage(100, 100, color.RGBA{17, 17, 17, 255})
 	if !canUseDarkimgKernel {
 		t.Skip("no gpu available")
-		defer func() {
-			if !canUseDarkimgKernel {
-				panic("unexpected")
-			}
-		}()
 		return
 	}
+	defer func() {
+		if !canUseDarkimgKernel {
+			panic("unexpected")
+		}
+	}()
 	result := IsDarkimg(img, 1.0)
 	expected := cpuIsDarkimg(img, 1.0)
 	if result != expected {
@@ -290,13 +290,13 @@ func TestIsDarkimg_Gradient(t *testing.T) {
 	img := darkimgGradientImage(256, 100)
 	if !canUseDarkimgKernel {
 		t.Skip("no gpu available")
-		defer func() {
-			if !canUseDarkimgKernel {
-				panic("unexpected")
-			}
-		}()
 		return
 	}
+	defer func() {
+		if !canUseDarkimgKernel {
+			panic("unexpected")
+		}
+	}()
 	result := IsDarkimg(img, 1.0)
 	expected := cpuIsDarkimg(img, 1.0)
 	if result != expected {
@@ -308,13 +308,13 @@ func TestIsDarkimg_3PercentBright(t *testing.T) {
 	img := darkimgPartialBrightImage(100, 100, 3)
 	if !canUseDarkimgKernel {
 		t.Skip("no gpu available")
-		defer func() {
-			if !canUseDarkimgKernel {
-				panic("unexpected")
-			}
-		}()
 		return
 	}
+	defer func() {
+		if !canUseDarkimgKernel {
+			panic("unexpected")
+		}
+	}()
 	result := IsDarkimg(img, 1.0)
 	expected := cpuIsDarkimg(img, 1.0)
 	if result != expected {
@@ -326,13 +326,13 @@ func TestIsDarkimg_6PercentBright(t *testing.T) {
 	img := darkimgPartialBrightImage(100, 100, 6)
 	if !canUseDarkimgKernel {
 		t.Skip("no gpu available")
-		defer func() {
-			if !canUseDarkimgKernel {
-				panic("unexpected")
-			}
-		}()
 		return
 	}
+	defer func() {
+		if !canUseDarkimgKernel {
+			panic("unexpected")
+		}
+	}()
 	result := IsDarkimg(img, 1.0)
 	expected := cpuIsDarkimg(img, 1.0)
 	if result != expected {
@@ -344,13 +344,13 @@ func TestIsDarkimg_ScaleDown(t *testing.T) {
 	img := darkimgTestImage(500, 500, color.RGBA{100, 100, 100, 255})
 	if !canUseDarkimgKernel {
 		t.Skip("no gpu available")
-		defer func() {
-			if !canUseDarkimgKernel {
-				panic("unexpected")
-			}
-		}()
 		return
 	}
+	defer func() {
+		if !canUseDarkimgKernel {
+			panic("unexpected")
+		}
+	}()
 	result := IsDarkimg(img, 0.2)
 	expected := cpuIsDarkimg(img, 0.2)
 	if result != expected {
@@ -362,13 +362,13 @@ func TestIsDarkimg_Red(t *testing.T) {
 	img := darkimgTestImage(100, 100, color.RGBA{255, 0, 0, 255})
 	if !canUseDarkimgKernel {
 		t.Skip("no gpu available")
-		defer func() {
-			if !canUseDarkimgKernel {
-				panic("unexpected")
-			}
-		}()
 		return
 	}
+	defer func() {
+		if !canUseDarkimgKernel {
+			panic("unexpected")
+		}
+	}()
 	result := IsDarkimg(img, 1.0)
 	expected := cpuIsDarkimg(img, 1.0)
 	if result != expected {
@@ -380,13 +380,13 @@ func TestIsDarkimg_Green(t *testing.T) {
 	img := darkimgTestImage(100, 100, color.RGBA{0, 255, 0, 255})
 	if !canUseDarkimgKernel {
 		t.Skip("no gpu available")
-		defer func() {
-			if !canUseDarkimgKernel {
-				panic("unexpected")
-			}
-		}()
 		return
 	}
+	defer func() {
+		if !canUseDarkimgKernel {
+			panic("unexpected")
+		}
+	}()
 	result := IsDarkimg(img, 1.0)
 	expected := cpuIsDarkimg(img, 1.0)
 	if result != expected {
@@ -398,13 +398,13 @@ func TestIsDarkimg_Blue(t *testing.T) {
 	img := darkimgTestImage(100, 100, color.RGBA{0, 0, 255, 255})
 	if !canUseDarkimgKernel {
 		t.Skip("no gpu available")
-		defer func() {
-			if !canUseDarkimgKernel {
-				panic("unexpected")
-			}
-		}()
 		return
 	}
+	defer func() {
+		if !canUseDarkimgKernel {
+			panic("unexpected")
+		}
+	}()
 	result := IsDarkimg(img, 1.0)
 	expected := cpuIsDarkimg(img, 1.0)
 	if result != expected {
@@ -416,13 +416,13 @@ func TestIsDarkimg_VeryDarkBlue(t *testing.T) {
 	img := darkimgTestImage(100, 100, color.RGBA{0, 0, 10, 255})
 	if !canUseDarkimgKernel {
 		t.Skip("no gpu available")
-		defer func() {
-			if !canUseDarkimgKernel {
-				panic("unexpected")
-			}
-		}()
 		return
 	}
+	defer func() {
+		if !canUseDarkimgKernel {
+			panic("unexpected")
+		}
+	}()
 	result := IsDarkimg(img, 1.0)
 	expected := cpuIsDarkimg(img, 1.0)
 	if result != expected {
@@ -434,13 +434,13 @@ func TestIsDarkimg_NonSquare(t *testing.T) {
 	img := darkimgTestImage(300, 50, color.RGBA{200, 200, 200, 255})
 	if !canUseDarkimgKernel {
 		t.Skip("no gpu available")
-		defer func() {
-			if !canUseDarkimgKernel {
-				panic("unexpected")
-			}
-		}()
 		return
 	}
+	defer func() {
+		if !canUseDarkimgKernel {
+			panic("unexpected")
+		}
+	}()
 	result := IsDarkimg(img, 0.5)
 	expected := cpuIsDarkimg(img, 0.5)
 	if result != expected {
@@ -451,13 +451,13 @@ func TestIsDarkimg_NonSquare(t *testing.T) {
 func TestIsDarkimg_MixedScales(t *testing.T) {
 	if !canUseDarkimgKernel {
 		t.Skip("no gpu available")
-		defer func() {
-			if !canUseDarkimgKernel {
-				panic("unexpected")
-			}
-		}()
 		return
 	}
+	defer func() {
+		if !canUseDarkimgKernel {
+			panic("unexpected")
+		}
+	}()
 	img := darkimgPartialBrightImage(200, 200, 10)
 	scales := []float32{0.1, 0.25, 0.5, 0.75, 1.0}
 	for _, s := range scales {
