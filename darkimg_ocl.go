@@ -53,17 +53,19 @@ func gpuIsDarkimg(img image.Image, scale float32) (bool, error) {
 	}
 	defer krn.Destroy()
 
-	// Allocate input image buffer (host + device)
+	// Allocate input image buffer and output uint (host + device)
 	srcSize := uintptr(srcW*srcH) * unsafe.Sizeof(color.RGBA{})
-	inputImgHost, inputImgDevice, err := gpu.MemAllocHostDevicePair(srcSize, unsafe.Sizeof(color.RGBA{}))
+	bufHost, bufDevice, err := gpu.MemAllocHostDevicePair(srcSize+unsafe.Sizeof(uint32(0)), unsafe.Sizeof(color.RGBA{}))
 	if err != nil {
 		return false, err
 	}
-	defer gpu.MemFree(inputImgHost)
-	defer gpu.MemFree(inputImgDevice)
+	defer gpu.MemFree(bufHost)
+	defer gpu.MemFree(bufDevice)
+
+	bufVisibleCountHost, bufVisibleCountDevice := unsafe.Add(bufHost, srcSize), unsafe.Add(bufDevice, srcSize)
 
 	// Copy source pixels to host buffer
-	himg := unsafe.Slice((*uint8)(inputImgHost), len(pixels))
+	himg := unsafe.Slice((*uint8)(bufHost), len(pixels))
 	copy(himg, pixels)
 
 	// Create input image handle
@@ -79,15 +81,6 @@ func gpuIsDarkimg(img image.Image, scale float32) (bool, error) {
 		return false, err
 	}
 	defer smp.Destroy()
-
-	// Allocate output buffer (host + device)
-	dstSize := uintptr(dstW*dstH) * unsafe.Sizeof(uint8(0))
-	outputImgHost, outputImgDevice, err := gpu.MemAllocHostDevicePair(dstSize, unsafe.Sizeof(uint8(0)))
-	if err != nil {
-		return false, err
-	}
-	defer gpu.MemFree(outputImgHost)
-	defer gpu.MemFree(outputImgDevice)
 
 	// Set kernel arguments
 	err = krn.SetArgumentValue(0, inputImgHandle)
@@ -106,7 +99,7 @@ func gpuIsDarkimg(img image.Image, scale float32) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	err = krn.SetArgumentValue(4, &outputImgDevice)
+	err = krn.SetArgumentValue(4, &bufVisibleCountDevice)
 	if err != nil {
 		return false, err
 	}
@@ -140,7 +133,7 @@ func gpuIsDarkimg(img image.Image, scale float32) (bool, error) {
 
 	// Copy input image: host -> device -> image
 	cl2, err := gpu.ImageCopyFromHostBuffer(
-		lst, inputImgHost, inputImgDevice, srcSize,
+		lst, bufHost, bufDevice, srcSize,
 		inputImgHandle, inpcpev,
 	)
 	if err != nil {
@@ -173,7 +166,7 @@ func gpuIsDarkimg(img image.Image, scale float32) (bool, error) {
 	defer outcpev.Destroy()
 
 	// Copy output data: image -> device -> host (wait for kernel)
-	err = lst.AppendMemoryCopy(outputImgHost, outputImgDevice, dstSize, outcpev, kev)
+	err = lst.AppendMemoryCopy(bufVisibleCountHost, bufVisibleCountDevice, unsafe.Sizeof(uint32(0)), outcpev, kev)
 	if err != nil {
 		return false, err
 	}
@@ -195,12 +188,8 @@ func gpuIsDarkimg(img image.Image, scale float32) (bool, error) {
 		return false, err
 	}
 
-	// Build result from output buffer
-	output := unsafe.Slice((*uint8)(outputImgHost), dstSize)
-	visibleCount := 0
-	for _, vis := range output {
-		visibleCount += int(vis)
-	}
+	dstSize := dstW * dstH
+	visibleCount := int(*(*uint32)(bufVisibleCountHost))
 
 	// 若不到 5% 的像素有肉眼可见细节，则认为几乎全黑
 	return visibleCount*100/int(dstSize) < 5, nil

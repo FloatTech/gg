@@ -147,11 +147,11 @@ func Size(im image.Image, w, h int) *Factory {
 	// 修改尺寸
 	switch {
 	case w > 0 && h > 0:
-		return NewFactory(imaging.Resize(im, w, h, imaging.Lanczos))
+		return NewFactory(gg.Resize(im, w, h, gg.ResampleFilterLinear))
 	case w == 0 && h > 0:
-		return NewFactory(imaging.Resize(im, h*sz.X/sz.Y, h, imaging.Lanczos))
+		return NewFactory(gg.Resize(im, h*sz.X/sz.Y, h, gg.ResampleFilterLinear))
 	case h == 0 && w > 0:
-		return NewFactory(imaging.Resize(im, w, w*sz.Y/sz.X, imaging.Lanczos))
+		return NewFactory(gg.Resize(im, w, w*sz.Y/sz.X, gg.ResampleFilterLinear))
 	default:
 		nim := image.NewNRGBA(image.Rect(0, 0, sz.X, sz.Y))
 		draw.Over.Draw(nim, nim.Bounds(), im, im.Bounds().Min)

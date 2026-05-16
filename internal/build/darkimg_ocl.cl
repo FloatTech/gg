@@ -2,9 +2,9 @@ kernel void isdark(
     read_only image2d_t inputImg,
     sampler_t smp,
     uint outW, uint outH,
-    global char* output)
+    global int* visibleCount)
 {
-    const float visibleThreshold = 15.0f / 255.0f;
+    const uint visibleThreshold = 15;
 
     uint x = get_global_id(0);
     uint y = get_global_id(1);
@@ -19,8 +19,10 @@ kernel void isdark(
     );
 
     float4 pixel = read_imagef(inputImg, smp, normCoord);
-    float lum = (299*pixel.r + 587*pixel.g + 114*pixel.b) / 1000;
-    char is_visible = lum > visibleThreshold;
+    uint lum = ((uint)(299*pixel.x + 587*pixel.y + 114*pixel.z)<<8) / 1000; // *256, convert to u8
 
-    output[y*outW+x] = is_visible;
+    int is_visible = (lum > visibleThreshold)?1:0;
+    if (is_visible) {
+        atomic_add((volatile __global int*)visibleCount, is_visible);
+    }
 }
