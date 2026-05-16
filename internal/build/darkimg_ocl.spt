@@ -21,8 +21,8 @@
 6 Name 19 "lor.lhs.false" 
 4 Name 20 "if.then" 
 4 Name 21 "if.end" 
-5 Name 22 "if.then20" 
-5 Name 23 "if.end22" 
+5 Name 22 "if.then21" 
+5 Name 23 "if.end23" 
 4 Name 24 "cleanup" 
 6 Name 25 "cleanup.cont" 
 5 Name 26 "unreachable" 
@@ -47,13 +47,13 @@
 3 Name 62 "add" 
 4 Name 65 "mul14" 
 4 Name 66 "add15" 
-4 Name 67 "conv16" 
-3 Name 69 "shl" 
-4 Name 71 "div17" 
-4 Name 73 "cmp18" 
+4 Name 68 "mul16" 
+4 Name 70 "div17" 
+4 Name 71 "conv18" 
+4 Name 73 "cmp19" 
 4 Name 78 "cond" 
 4 Name 79 "tobool" 
-4 Name 81 "call21" 
+4 Name 81 "call22" 
 7 Name 82 "cleanup.dest.slot.0" 
 5 Name 84 "inputImg" 
 3 Name 85 "smp" 
@@ -65,7 +65,6 @@
 3 Decorate 5 Constant 
 4 Decorate 5 BuiltIn 28 
 6 Decorate 12 LinkageAttributes "isdark" Export 
-4 Decorate 17 Alignment 4 
 4 Decorate 43 FPFastMathMode 16 
 4 Decorate 49 FPFastMathMode 16 
 4 Decorate 58 FPFastMathMode 16 
@@ -73,12 +72,11 @@
 4 Decorate 62 FPFastMathMode 16 
 4 Decorate 65 FPFastMathMode 16 
 4 Decorate 66 FPFastMathMode 16 
-4 Decorate 88 Alignment 4 
+4 Decorate 68 FPFastMathMode 16 
+4 Decorate 70 FPFastMathMode 16 
 4 TypeInt 2 64 0 
 4 TypeInt 9 32 0 
 5 Constant 2 29 0 0 
-4 Constant 9 68 8 
-4 Constant 9 70 1000 
 4 Constant 9 72 15 
 5 Constant 2 74 1 0 
 4 Constant 9 76 0 
@@ -103,6 +101,8 @@
 4 Constant 40 57 1133871104 
 4 Constant 40 60 1142079488 
 4 Constant 40 64 1122238464 
+4 Constant 40 67 1132462080 
+4 Constant 40 69 1148846080 
 
 
 
@@ -151,9 +151,9 @@
 5 CompositeExtract 40 63 55 2 
 5 FMul 40 65 64 63 
 5 FAdd 40 66 62 65 
-4 ConvertFToU 9 67 66 
-5 ShiftLeftLogical 9 69 67 68 
-5 UDiv 9 71 69 70 
+5 FMul 40 68 66 67 
+5 FDiv 40 70 68 69 
+4 ConvertFToU 9 71 70 
 5 UGreaterThan 30 73 71 72 
 6 Select 2 75 73 74 29 
 6 Select 9 78 73 77 76 

@@ -19,7 +19,7 @@ kernel void isdark(
     );
 
     float4 pixel = read_imagef(inputImg, smp, normCoord);
-    uint lum = ((uint)(299*pixel.x + 587*pixel.y + 114*pixel.z)<<8) / 1000; // *256, convert to u8
+    uint lum = (299*pixel.x + 587*pixel.y + 114*pixel.z) *256 / 1000;
 
     int is_visible = (lum > visibleThreshold)?1:0;
     if (is_visible) {
