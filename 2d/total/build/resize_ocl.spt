@@ -1,4 +1,4 @@
-119734787 65536 393230 71 0 
+119734787 65536 393230 74 0 
 2 Capability Addresses 
 2 Capability Linkage 
 2 Capability Kernel 
@@ -6,9 +6,9 @@
 2 Capability ImageBasic 
 5 ExtInstImport 1 "OpenCL.std" 
 3 MemoryModel 2 2 
-6 EntryPoint 6 63 "scale" 5 
-16 String 69 "kernel_arg_type.scale.image2d_t,sampler_t,image2d_t," 
-10 String 70 "kernel_arg_type_qual.scale.,,," 
+6 EntryPoint 6 66 "scale" 5 
+16 String 72 "kernel_arg_type.scale.image2d_t,sampler_t,image2d_t," 
+10 String 73 "kernel_arg_type_qual.scale.,,," 
 3 Source 3 102000 
 11 Name 5 "__spirv_BuiltInGlobalInvocationId" 
 4 Name 11 "scale" 
@@ -33,33 +33,37 @@
 3 Name 40 "cmp" 
 4 Name 41 "cmp6" 
 4 Name 43 "conv8" 
-4 Name 44 "conv9" 
-3 Name 45 "div" 
-4 Name 48 "vecinit" 
-4 Name 49 "conv10" 
-4 Name 50 "conv11" 
-4 Name 51 "div12" 
-5 Name 52 "vecinit13" 
-7 Name 54 "TempSampledImage" 
-4 Name 57 "call14" 
-5 Name 59 "vecinit16" 
-5 Name 60 "vecinit17" 
-7 Name 62 "cleanup.dest.slot.0" 
-5 Name 64 "inputImg" 
-3 Name 65 "smp" 
-5 Name 66 "outputImg" 
+3 Name 45 "add" 
+4 Name 46 "conv9" 
+3 Name 47 "div" 
+4 Name 50 "vecinit" 
+4 Name 51 "conv10" 
+4 Name 52 "add11" 
+4 Name 53 "conv12" 
+4 Name 54 "div13" 
+5 Name 55 "vecinit14" 
+7 Name 57 "TempSampledImage" 
+4 Name 60 "call15" 
+5 Name 62 "vecinit17" 
+5 Name 63 "vecinit18" 
+7 Name 65 "cleanup.dest.slot.0" 
+5 Name 67 "inputImg" 
+3 Name 68 "smp" 
+5 Name 69 "outputImg" 
 
 13 Decorate 5 LinkageAttributes "__spirv_BuiltInGlobalInvocationId" Import 
 3 Decorate 5 Constant 
 4 Decorate 5 BuiltIn 28 
 6 Decorate 11 LinkageAttributes "scale" Export 
 4 Decorate 45 FPFastMathMode 16 
-4 Decorate 51 FPFastMathMode 16 
+4 Decorate 47 FPFastMathMode 16 
+4 Decorate 52 FPFastMathMode 16 
+4 Decorate 54 FPFastMathMode 16 
 4 TypeInt 2 64 0 
 4 TypeInt 28 32 0 
 5 Constant 2 24 0 0 
 4 Constant 28 35 0 
-4 Constant 28 61 1 
+4 Constant 28 64 1 
 4 TypeVector 3 2 3 
 4 TypePointer 4 1 3 
 2 TypeVoid 6 
@@ -70,14 +74,15 @@
 2 TypeBool 25 
 4 TypeVector 34 28 2 
 3 TypeFloat 42 32 
-4 TypeVector 46 42 2 
-3 TypeSampledImage 53 7 
-4 TypeVector 55 42 4 
+4 TypeVector 48 42 2 
+3 TypeSampledImage 56 7 
+4 TypeVector 58 42 4 
 4 Variable 4 5 1 
 3 ConstantTrue 25 26 
-3 Undef 46 47 
-4 Constant 42 56 0 
-3 Undef 34 58 
+4 Constant 42 44 1056964608 
+3 Undef 48 49 
+4 Constant 42 59 0 
+3 Undef 34 61 
 
 
 
@@ -111,23 +116,25 @@
 
 2 Label 18 
 4 ConvertUToF 42 43 29 
-4 ConvertUToF 42 44 37 
-5 FDiv 42 45 43 44 
-6 CompositeInsert 46 48 45 47 0 
-4 ConvertUToF 42 49 33 
-4 ConvertUToF 42 50 39 
-5 FDiv 42 51 49 50 
-6 CompositeInsert 46 52 51 48 1 
-5 SampledImage 53 54 12 13 
-7 ImageSampleExplicitLod 55 57 54 52 2 56 
-6 CompositeInsert 34 59 29 58 0 
-6 CompositeInsert 34 60 33 59 1 
-4 ImageWrite 14 60 57 
+5 FAdd 42 45 43 44 
+4 ConvertUToF 42 46 37 
+5 FDiv 42 47 45 46 
+6 CompositeInsert 48 50 47 49 0 
+4 ConvertUToF 42 51 33 
+5 FAdd 42 52 51 44 
+4 ConvertUToF 42 53 39 
+5 FDiv 42 54 52 53 
+6 CompositeInsert 48 55 54 50 1 
+5 SampledImage 56 57 12 13 
+7 ImageSampleExplicitLod 58 60 57 55 2 59 
+6 CompositeInsert 34 62 29 61 0 
+6 CompositeInsert 34 63 33 62 1 
+4 ImageWrite 14 63 60 
 2 Branch 19 
 
 2 Label 19 
-7 Phi 28 62 61 17 35 18 
-7 Switch 62 21 0 20 1 20 
+7 Phi 28 65 64 17 35 18 
+7 Switch 65 21 0 20 1 20 
 
 2 Label 20 
 1 Return 
@@ -137,13 +144,13 @@
 
 1 FunctionEnd 
 
-5 Function 6 63 0 10 
-3 FunctionParameter 7 64 
-3 FunctionParameter 8 65 
-3 FunctionParameter 9 66 
+5 Function 6 66 0 10 
+3 FunctionParameter 7 67 
+3 FunctionParameter 8 68 
+3 FunctionParameter 9 69 
 
-2 Label 67 
-7 FunctionCall 6 68 11 64 65 66 
+2 Label 70 
+7 FunctionCall 6 71 11 67 68 69 
 1 Return 
 
 1 FunctionEnd 
