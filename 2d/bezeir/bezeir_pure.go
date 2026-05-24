@@ -1,6 +1,8 @@
-package gg
+package bezeir
 
-func quadraticBezierPure(x0, y0, x1, y1, x2, y2, ds float64, p []Point) {
+import "github.com/FloatTech/gg/2d/point"
+
+func quadraticBezierPure(x0, y0, x1, y1, x2, y2, ds float64, p []point.Point) {
 	var u, a, b, c, t float64
 	for i := range p {
 		t = float64(i) / ds
@@ -12,7 +14,7 @@ func quadraticBezierPure(x0, y0, x1, y1, x2, y2, ds float64, p []Point) {
 	}
 }
 
-func cubicBezierPure(x0, y0, x1, y1, x2, y2, x3, y3, ds float64, p []Point) {
+func cubicBezierPure(x0, y0, x1, y1, x2, y2, x3, y3, ds float64, p []point.Point) {
 	var u, a, b, c, d, t float64
 	for i := range p {
 		t = float64(i) / ds

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/2d/unit"
 	"golang.org/x/image/font/gofont/goregular"
 	"golang.org/x/image/font/opentype"
 )
@@ -19,7 +20,8 @@ func TestRTXT(*testing.T) {
 		panic(err)
 	}
 	face, err := opentype.NewFace(font, &opentype.FaceOptions{
-		Size: 40,
+		Size: 48,
+		DPI:  72,
 	})
 	if err != nil {
 		panic(err)
@@ -27,7 +29,7 @@ func TestRTXT(*testing.T) {
 	dc.SetFontFace(face)
 	text := "Hello, world!"
 	w, h := dc.MeasureString(text)
-	dc.Rotate(gg.Radians(10))
+	dc.Rotate(unit.Radians(10))
 	dc.DrawRectangle(100, 180, w, h)
 	dc.Stroke()
 	dc.DrawStringAnchored(text, 100, 180, 0.0, 0.0)

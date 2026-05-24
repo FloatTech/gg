@@ -5,13 +5,14 @@ import (
 	"testing"
 
 	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/2d/point"
 )
 
-func Polygon4(n int, x, y, r float64) []gg.Point {
-	result := make([]gg.Point, n)
+func Polygon4(n int, x, y, r float64) []point.Point {
+	result := make([]point.Point, n)
 	for i := range n {
 		a := float64(i)*2*math.Pi/float64(n) - math.Pi/2
-		result[i] = gg.Point{X: x + r*math.Cos(a), Y: y + r*math.Sin(a)}
+		result[i] = point.Point{X: x + r*math.Cos(a), Y: y + r*math.Sin(a)}
 	}
 	return result
 }

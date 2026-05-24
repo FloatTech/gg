@@ -1,4 +1,5 @@
-package gg
+// Package total contains operations to the whole image.
+package total
 
 import (
 	"image"

@@ -1,6 +1,11 @@
-package gg
+// Package matrix is previously in gg main package.
+package matrix
 
-import "math"
+import (
+	"math"
+
+	"golang.org/x/image/math/f64"
+)
 
 // Matrix represents a 3x2 affine transformation matrix.
 //
@@ -64,6 +69,11 @@ func Shear(x, y float64) Matrix {
 		x, 1,
 		0, 0,
 	}
+}
+
+// Aff3 get the 3x3 affine transformation matrix repr from Matrix.
+func (a Matrix) Aff3() f64.Aff3 {
+	return f64.Aff3{a.XX, a.XY, a.X0, a.YX, a.YY, a.Y0}
 }
 
 // Multiply multiplies two matrices and returns the result.

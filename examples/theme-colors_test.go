@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/2d/total"
 	"github.com/FloatTech/gg/fio"
 )
 
@@ -29,7 +30,7 @@ func TestThemeColorsGopher(t *testing.T) {
 	found := false
 	for range maxAttempts {
 		var err error
-		result, err = gg.TakeThemeColorsKMeans(im, k)
+		result, err = total.TakeThemeColorsKMeans(im, k)
 		if err != nil {
 			t.Fatal(err)
 		}

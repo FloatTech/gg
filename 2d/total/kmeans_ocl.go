@@ -1,4 +1,4 @@
-package gg
+package total
 
 import (
 	_ "embed"
@@ -13,10 +13,10 @@ import (
 	"github.com/fumiama/gozel/ze"
 )
 
-//go:generate ocloc compile -file internal/build/kmeans_ocl.cl -spv_only -options "-cl-mad-enable -cl-fast-relaxed-math -cl-finite-math-only -cl-single-precision-constant" -internal_options "-O3" -output internal/build/kmeans_ocl
-//go:generate llvm-spirv -to-text internal/build/kmeans_ocl_.spv -o internal/build/kmeans_ocl.spt
+//go:generate ocloc compile -file build/kmeans_ocl.cl -spv_only -options "-cl-mad-enable -cl-fast-relaxed-math -cl-finite-math-only -cl-single-precision-constant" -internal_options "-O3" -output build/kmeans_ocl
+//go:generate llvm-spirv -to-text build/kmeans_ocl_.spv -o build/kmeans_ocl.spt
 
-//go:embed internal/build/kmeans_ocl_.spv
+//go:embed build/kmeans_ocl_.spv
 var kmeansspv []byte
 
 var (

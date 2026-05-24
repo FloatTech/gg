@@ -5,14 +5,15 @@ import (
 	"testing"
 
 	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/2d/point"
 )
 
-func CreatePoints(n int) []gg.Point {
-	points := make([]gg.Point, n)
+func CreatePoints(n int) []point.Point {
+	points := make([]point.Point, n)
 	for i := range n {
 		x := 0.5 + rand.NormFloat64()*0.1
 		y := x + rand.NormFloat64()*0.1
-		points[i] = gg.Point{X: x, Y: y}
+		points[i] = point.Point{X: x, Y: y}
 	}
 	return points
 }

@@ -16,12 +16,17 @@ import (
 	"strings"
 	"unsafe"
 
+	"github.com/FloatTech/gg/2d/bezeir"
+	"github.com/FloatTech/gg/2d/matrix"
+	"github.com/FloatTech/gg/2d/path"
+	"github.com/FloatTech/gg/2d/point"
+	"github.com/FloatTech/gg/2d/total"
+	"github.com/FloatTech/gg/2d/unit"
 	"github.com/FloatTech/gg/fio"
 	"github.com/golang/freetype/raster"
 	"golang.org/x/image/draw"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/basicfont"
-	"golang.org/x/image/math/f64"
 )
 
 // LineCap defines the shape at the end of a stroked path.
@@ -98,8 +103,8 @@ type Context struct {
 	strokePattern Pattern
 	strokePath    raster.Path
 	fillPath      raster.Path
-	start         Point
-	current       Point
+	start         point.Point
+	current       point.Point
 	hasCurrent    bool
 	dashes        []float64
 	dashOffset    float64
@@ -109,7 +114,7 @@ type Context struct {
 	fillRule      FillRule
 	fontFace      font.Face
 	fontHeight    float64
-	matrix        Matrix
+	matrix        matrix.Matrix
 	stack         []*Context
 	scaleStyle    ScaleStyle
 }
@@ -129,7 +134,7 @@ func NewContext(width, height int) *Context {
 // 将指定图像复制到一个新的 image.RGBA
 // 并准备渲染到该图像上的上下文。
 func NewContextForImage(im image.Image) *Context {
-	return NewContextForRGBA(ImageToRGBA(im))
+	return NewContextForRGBA(total.ImageToRGBA(im))
 }
 
 // NewContextForRGBA prepares a context for rendering onto the specified image.
@@ -151,7 +156,7 @@ func NewContextForRGBA(im *image.RGBA) *Context {
 		fillRule:      FillRuleWinding,
 		fontFace:      basicfont.Face7x13,
 		fontHeight:    13,
-		matrix:        Identity(),
+		matrix:        matrix.Identity(),
 	}
 }
 
@@ -267,11 +272,11 @@ func (dc *Context) SetScaleCatmullRom() {
 //
 // 返回当前点，如果存在当前点。
 // 该点将通过上下文的变换矩阵进行变换。
-func (dc *Context) GetCurrentPoint() (Point, bool) {
+func (dc *Context) GetCurrentPoint() (point.Point, bool) {
 	if dc.hasCurrent {
 		return dc.current, true
 	}
-	return Point{}, false
+	return point.Point{}, false
 }
 
 // Image returns the image that has been drawn by this context.
@@ -476,7 +481,7 @@ func (dc *Context) SetColor(c color.Color) {
 // 符号（#）是可选的。支持3位数和6位数的变体。8位数字
 // 也可以提供设置 alpha 值。
 func (dc *Context) SetHexColor(x string) {
-	dc.SetRGBA255(ParseHexColor(x))
+	dc.SetRGBA255(unit.ParseHexColor(x))
 }
 
 // SetRGBA255 sets the current color. r, g, b, a values should be between 0 and
@@ -533,7 +538,7 @@ func (dc *Context) MoveTo(x, y float64) {
 		dc.fillPath.Add1(dc.start.Fixed())
 	}
 	x, y = dc.TransformPoint(x, y)
-	p := Point{x, y}
+	p := point.Point{X: x, Y: y}
 	dc.strokePath.Start(p.Fixed())
 	dc.fillPath.Start(p.Fixed())
 	dc.start = p
@@ -551,7 +556,7 @@ func (dc *Context) LineTo(x, y float64) {
 		dc.MoveTo(x, y)
 	} else {
 		x, y = dc.TransformPoint(x, y)
-		p := Point{x, y}
+		p := point.Point{X: x, Y: y}
 		dc.strokePath.Add1(p.Fixed())
 		dc.fillPath.Add1(p.Fixed())
 		dc.current = p
@@ -570,8 +575,8 @@ func (dc *Context) QuadraticTo(x1, y1, x2, y2 float64) {
 	}
 	x1, y1 = dc.TransformPoint(x1, y1)
 	x2, y2 = dc.TransformPoint(x2, y2)
-	p1 := Point{x1, y1}
-	p2 := Point{x2, y2}
+	p1 := point.Point{X: x1, Y: y1}
+	p2 := point.Point{X: x2, Y: y2}
 	dc.strokePath.Add2(p1.Fixed(), p2.Fixed())
 	dc.fillPath.Add2(p1.Fixed(), p2.Fixed())
 	dc.current = p2
@@ -594,7 +599,7 @@ func (dc *Context) CubicTo(x1, y1, x2, y2, x3, y3 float64) {
 	x1, y1 = dc.TransformPoint(x1, y1)
 	x2, y2 = dc.TransformPoint(x2, y2)
 	x3, y3 = dc.TransformPoint(x3, y3)
-	points := CubicBezier(x0, y0, x1, y1, x2, y2, x3, y3)
+	points := bezeir.CubicBezier(x0, y0, x1, y1, x2, y2, x3, y3)
 	previous := dc.current.Fixed()
 	for _, p := range points[1:] {
 		f := p.Fixed()
@@ -669,20 +674,20 @@ func (dc *Context) joiner() raster.Joiner {
 }
 
 func (dc *Context) stroke(painter raster.Painter) {
-	path := dc.strokePath
+	p := dc.strokePath
 	if len(dc.dashes) > 0 {
-		path = dashed(path, dc.dashes, dc.dashOffset)
+		p = path.Dashed(p, dc.dashes, dc.dashOffset)
 	} else {
 		// TODO: this is a temporary workaround to remove tiny segments
 		// that result in rendering issues
 		// TODO:这是一个临时解决方案，用于删除微小的片段
 		// 这会导致渲染问题
-		path = rasterPath(flattenPath(path))
+		p = path.Raster(path.Flatten(p))
 	}
 	r := dc.rasterizer
 	r.UseNonZeroWinding = true
 	r.Clear()
-	r.AddStroke(path, fix(dc.lineWidth), dc.capper(), dc.joiner())
+	r.AddStroke(p, point.Fixed(dc.lineWidth), dc.capper(), dc.joiner())
 	r.Rasterize(painter)
 }
 
@@ -913,13 +918,13 @@ func (dc *Context) DrawRoundedRectangle(x, y, w, h, r float64) {
 	dc.NewSubPath()
 	dc.MoveTo(x1, y0)
 	dc.LineTo(x2, y0)
-	dc.DrawArc(x2, y1, r, Radians(270), Radians(360))
+	dc.DrawArc(x2, y1, r, unit.Radians(270), unit.Radians(360))
 	dc.LineTo(x3, y2)
-	dc.DrawArc(x2, y2, r, Radians(0), Radians(90))
+	dc.DrawArc(x2, y2, r, unit.Radians(0), unit.Radians(90))
 	dc.LineTo(x1, y3)
-	dc.DrawArc(x1, y2, r, Radians(90), Radians(180))
+	dc.DrawArc(x1, y2, r, unit.Radians(90), unit.Radians(180))
 	dc.LineTo(x0, y1)
-	dc.DrawArc(x1, y1, r, Radians(180), Radians(270))
+	dc.DrawArc(x1, y1, r, unit.Radians(180), unit.Radians(270))
 	dc.ClosePath()
 }
 
@@ -1026,8 +1031,7 @@ func (dc *Context) DrawImageAnchored(im image.Image, x, y int, ax, ay float64) {
 	y -= int(ay * float64(s.Y))
 	transformer := dc.scaleStyle.transformer()
 	fx, fy := float64(x), float64(y)
-	m := dc.matrix.Translate(fx, fy)
-	s2d := f64.Aff3{m.XX, m.XY, m.X0, m.YX, m.YY, m.Y0}
+	s2d := dc.matrix.Translate(fx, fy).Aff3()
 	if dc.mask == nil {
 		transformer.Transform(dc.im, s2d, im, im.Bounds(), draw.Over, nil)
 	} else {
@@ -1052,8 +1056,16 @@ func (dc *Context) SetFontFace(fontFace font.Face) {
 // LoadFontFace loads a font from the specified path with the given point size.
 //
 // LoadFontFace 从指定路径加载指定字号的字体。
-func (dc *Context) LoadFontFace(path string, points float64) error {
-	face, err := LoadFontFace(path, points)
+func (dc *Context) LoadFontFace(path string, pointsdpi ...float64) error {
+	if len(pointsdpi) == 0 {
+		panic("must specify points")
+	}
+	points := pointsdpi[0]
+	dpi := float64(72)
+	if len(pointsdpi) > 1 {
+		dpi = pointsdpi[1]
+	}
+	face, err := LoadFontFace(path, points, dpi)
 	if err == nil {
 		dc.fontFace = face
 		dc.fontHeight = points * 72 / 96
@@ -1086,7 +1098,7 @@ func (dc *Context) drawString(im *image.RGBA, s string, x, y float64) {
 		Dst:  im,
 		Src:  image.NewUniform(dc.color),
 		Face: dc.fontFace,
-		Dot:  fixp(x, y),
+		Dot:  point.FixedPoint(x, y),
 	}
 	// based on Drawer.DrawString() in golang.org/x/image/font/font.go
 	prevC := rune(-1)
@@ -1104,8 +1116,7 @@ func (dc *Context) drawString(im *image.RGBA, s string, x, y float64) {
 		sr := dr.Sub(dr.Min)
 		transformer := draw.BiLinear
 		fx, fy := float64(dr.Min.X), float64(dr.Min.Y)
-		m := dc.matrix.Translate(fx, fy)
-		s2d := f64.Aff3{m.XX, m.XY, m.X0, m.YX, m.YY, m.Y0}
+		s2d := dc.matrix.Translate(fx, fy).Aff3()
 		transformer.Transform(d.Dst, s2d, d.Src, sr, draw.Over, &draw.Options{
 			SrcMask:  mask,
 			SrcMaskP: maskp,
@@ -1231,7 +1242,7 @@ func (dc *Context) WordWrap(s string, w float64) []string {
 // 将当前变换矩阵重置为单位矩阵。
 // 这不会导致平移、缩放、旋转或剪切。
 func (dc *Context) Identity() {
-	dc.matrix = Identity()
+	dc.matrix = matrix.Identity()
 }
 
 // Translate updates the current matrix with a translation.
@@ -1366,5 +1377,5 @@ func (dc *Context) String() string {
 //
 // TakeThemeColorsKMeans 使用 k-means 算法从已绘制图像中提取 k 个主色。
 func (dc *Context) TakeThemeColorsKMeans(k uint16) ([]color.RGBA, error) {
-	return TakeThemeColorsKMeans(dc.im, k)
+	return total.TakeThemeColorsKMeans(dc.im, k)
 }

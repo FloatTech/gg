@@ -1,4 +1,4 @@
-package gg
+package total
 
 import (
 	_ "embed"
@@ -15,10 +15,10 @@ import (
 	"github.com/FloatTech/gg/gpu"
 )
 
-//go:generate ocloc compile -file internal/build/resize_ocl.cl -spv_only -options "-cl-mad-enable -cl-fast-relaxed-math -cl-finite-math-only -cl-single-precision-constant" -internal_options "-O3" -output internal/build/resize_ocl
-//go:generate llvm-spirv -to-text internal/build/resize_ocl_.spv -o internal/build/resize_ocl.spt
+//go:generate ocloc compile -file build/resize_ocl.cl -spv_only -options "-cl-mad-enable -cl-fast-relaxed-math -cl-finite-math-only -cl-single-precision-constant" -internal_options "-O3" -output build/resize_ocl
+//go:generate llvm-spirv -to-text build/resize_ocl_.spv -o build/resize_ocl.spt
 
-//go:embed internal/build/resize_ocl_.spv
+//go:embed build/resize_ocl_.spv
 var resizespv []byte
 
 // ResampleFilter is a GPU-supported resampling filter for image resizing.

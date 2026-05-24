@@ -4,6 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
+	"github.com/FloatTech/gg/2d/total"
+	"github.com/FloatTech/gg/2d/unit"
 	"github.com/FloatTech/gg/fio"
 )
 
@@ -229,7 +231,7 @@ func TestPushPop(t *testing.T) {
 	dc.SetRGBA(0, 0, 0, 0.1)
 	for i := 0; i < 360; i += 15 {
 		dc.Push()
-		dc.RotateAbout(Radians(float64(i)), S/2, S/2)
+		dc.RotateAbout(unit.Radians(float64(i)), S/2, S/2)
 		dc.DrawEllipse(S/2, S/2, S*7/16, S/8)
 		dc.Fill()
 		dc.Pop()
@@ -315,9 +317,9 @@ func TestDrawPoint(t *testing.T) {
 func TestLinearGradient(t *testing.T) {
 	dc := NewContext(100, 100)
 	g := NewLinearGradient(0, 0, 100, 100)
-	g.AddColorStop(0, Green)
-	g.AddColorStop(1, Blue)
-	g.AddColorStop(0.5, Red)
+	g.AddColorStop(0, total.Green)
+	g.AddColorStop(1, total.Blue)
+	g.AddColorStop(0.5, total.Red)
 	dc.SetFillStyle(g)
 	dc.DrawRectangle(0, 0, 100, 100)
 	dc.Fill()
@@ -330,9 +332,9 @@ func TestLinearGradient(t *testing.T) {
 func TestRadialGradient(t *testing.T) {
 	dc := NewContext(100, 100)
 	g := NewRadialGradient(30, 50, 0, 70, 50, 50)
-	g.AddColorStop(0, Green)
-	g.AddColorStop(1, Blue)
-	g.AddColorStop(0.5, Red)
+	g.AddColorStop(0, total.Green)
+	g.AddColorStop(1, total.Blue)
+	g.AddColorStop(0.5, total.Red)
 	dc.SetFillStyle(g)
 	dc.DrawRectangle(0, 0, 100, 100)
 	dc.Fill()

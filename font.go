@@ -16,7 +16,7 @@ import (
 // LoadFontFace 是一个辅助函数，用于加载指定点大小的指定字体文件。
 // 请注意，返回的 `font.Face` 对象不是线程安全的，不能跨 goroutine 并行使用。
 // 您通常可以只使用 Context.LoadFontFace 函数而不是这个包级函数。
-func LoadFontFace(path string, points float64) (face font.Face, err error) {
+func LoadFontFace(path string, points, dpi float64) (face font.Face, err error) {
 	fontBytes, err := os.ReadFile(path)
 	if err != nil {
 		return
@@ -31,7 +31,7 @@ func LoadFontFace(path string, points float64) (face font.Face, err error) {
 	}
 	face, err = opentype.NewFace(fnf, &opentype.FaceOptions{
 		Size: points,
-		DPI:  72,
+		DPI:  dpi,
 		// Hinting: font.HintingFull,
 	})
 	return

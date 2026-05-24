@@ -1,17 +1,19 @@
-package gg
+package bezeir
 
 import (
 	"math"
 	"math/rand"
 	"testing"
+
+	"github.com/FloatTech/gg/2d/point"
 )
 
 func TestQuadraticBezeirCalc(t *testing.T) {
-	p1 := make([]Point, 4096)
-	p2 := make([]Point, 4096)
+	p1 := make([]point.Point, 4096)
+	p2 := make([]point.Point, 4096)
 	for range 4096 {
 		x0, y0, x1, y1, x2, y2, ds := rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64()
-		quadraticBezier(x0, y0, x1, y1, x2, y2, ds, p1)
+		QuadraticBezierInplace(x0, y0, x1, y1, x2, y2, ds, p1)
 		quadraticBezierPure(x0, y0, x1, y1, x2, y2, ds, p2)
 		for j := range 4096 {
 			tolX := 0.00001 * (1 + math.Abs(p2[j].X))
@@ -72,16 +74,16 @@ func BenchmarkQuadraticBezeirPureCalc(b *testing.B) {
 }
 
 func benchmarkQuadraticBezeir(b *testing.B, plen int) {
-	p := make([]Point, plen)
+	p := make([]point.Point, plen)
 	x0, y0, x1, y1, x2, y2, ds := rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64()
 	b.ResetTimer()
 	for range b.N {
-		quadraticBezier(x0, y0, x1, y1, x2, y2, ds, p)
+		QuadraticBezierInplace(x0, y0, x1, y1, x2, y2, ds, p)
 	}
 }
 
 func benchmarkQuadraticBezeirPure(b *testing.B, plen int) {
-	p := make([]Point, plen)
+	p := make([]point.Point, plen)
 	x0, y0, x1, y1, x2, y2, ds := rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64()
 	b.ResetTimer()
 	for range b.N {
@@ -90,11 +92,11 @@ func benchmarkQuadraticBezeirPure(b *testing.B, plen int) {
 }
 
 func TestCubicBezeirCalc(t *testing.T) {
-	p1 := make([]Point, 4096)
-	p2 := make([]Point, 4096)
+	p1 := make([]point.Point, 4096)
+	p2 := make([]point.Point, 4096)
 	for range 4096 {
 		x0, y0, x1, y1, x2, y2, x3, y3, ds := rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64()
-		cubicBezier(x0, y0, x1, y1, x2, y2, x3, y3, ds, p1)
+		CubicBezierInplace(x0, y0, x1, y1, x2, y2, x3, y3, ds, p1)
 		cubicBezierPure(x0, y0, x1, y1, x2, y2, x3, y3, ds, p2)
 		for j := range 4096 {
 			tolX := 0.00001 * (1 + math.Abs(p2[j].X))
@@ -155,16 +157,16 @@ func BenchmarkCubicBezeirPureCalc(b *testing.B) {
 }
 
 func benchmarkCubicBezeir(b *testing.B, plen int) {
-	p := make([]Point, plen)
+	p := make([]point.Point, plen)
 	x0, y0, x1, y1, x2, y2, x3, y3, ds := rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64()
 	b.ResetTimer()
 	for range b.N {
-		cubicBezier(x0, y0, x1, y1, x2, y2, x3, y3, ds, p)
+		CubicBezierInplace(x0, y0, x1, y1, x2, y2, x3, y3, ds, p)
 	}
 }
 
 func benchmarkCubicBezeirPure(b *testing.B, plen int) {
-	p := make([]Point, plen)
+	p := make([]point.Point, plen)
 	x0, y0, x1, y1, x2, y2, x3, y3, ds := rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64(), rand.Float64()
 	b.ResetTimer()
 	for range b.N {

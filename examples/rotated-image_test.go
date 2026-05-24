@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/2d/unit"
 	"github.com/FloatTech/gg/fio"
 )
 
@@ -30,7 +31,7 @@ func TestRIM(*testing.T) {
 	// draw image with current matrix applied
 	dc.SetHexColor("#0000ff")
 	dc.SetLineWidth(2)
-	dc.Rotate(gg.Radians(10))
+	dc.Rotate(unit.Radians(10))
 	dc.DrawRectangle(100, 0, float64(iw), float64(ih)/2+20.0)
 	dc.StrokePreserve()
 	dc.Clip()

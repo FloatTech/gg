@@ -1,4 +1,5 @@
-package gg
+// Package point is previously in gg main package.
+package point
 
 import (
 	"math"
@@ -17,7 +18,7 @@ type Point struct {
 //
 // Fixed 将点转换为定点数表示。
 func (a Point) Fixed() fixed.Point26_6 {
-	return fixp(a.X, a.Y)
+	return FixedPoint(a.X, a.Y)
 }
 
 // Distance returns the Euclidean distance between two points.

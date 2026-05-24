@@ -6,13 +6,14 @@ import (
 	"testing"
 
 	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/2d/point"
 )
 
-func Polygon(n int) []gg.Point {
-	result := make([]gg.Point, n)
+func Polygon(n int) []point.Point {
+	result := make([]point.Point, n)
 	for i := range n {
 		a := float64(i)*2*math.Pi/float64(n) - math.Pi/2
-		result[i] = gg.Point{X: math.Cos(a), Y: math.Sin(a)}
+		result[i] = point.Point{X: math.Cos(a), Y: math.Sin(a)}
 	}
 	return result
 }

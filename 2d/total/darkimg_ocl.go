@@ -1,4 +1,4 @@
-package gg
+package total
 
 import (
 	_ "embed"
@@ -15,10 +15,10 @@ import (
 	"github.com/FloatTech/gg/gpu"
 )
 
-//go:generate ocloc compile -file internal/build/darkimg_ocl.cl -spv_only -options "-cl-mad-enable -cl-fast-relaxed-math -cl-finite-math-only -cl-single-precision-constant" -internal_options "-O3" -output internal/build/darkimg_ocl
-//go:generate llvm-spirv -to-text internal/build/darkimg_ocl_.spv -o internal/build/darkimg_ocl.spt
+//go:generate ocloc compile -file build/darkimg_ocl.cl -spv_only -options "-cl-mad-enable -cl-fast-relaxed-math -cl-finite-math-only -cl-single-precision-constant" -internal_options "-O3" -output build/darkimg_ocl
+//go:generate llvm-spirv -to-text build/darkimg_ocl_.spv -o build/darkimg_ocl.spt
 
-//go:embed internal/build/darkimg_ocl_.spv
+//go:embed build/darkimg_ocl_.spv
 var darkimgspv []byte
 
 var (

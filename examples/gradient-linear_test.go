@@ -5,15 +5,16 @@ import (
 	"testing"
 
 	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/2d/total"
 )
 
 func TestGL(*testing.T) {
 	dc := gg.NewContext(500, 400)
 
 	grad := gg.NewLinearGradient(20, 320, 400, 20)
-	grad.AddColorStop(0, gg.Green)
-	grad.AddColorStop(1, gg.Blue)
-	grad.AddColorStop(0.5, gg.Red)
+	grad.AddColorStop(0, total.Green)
+	grad.AddColorStop(1, total.Blue)
+	grad.AddColorStop(0.5, total.Red)
 
 	dc.SetColor(color.White)
 	dc.DrawRectangle(20, 20, 400-20, 300)

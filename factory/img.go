@@ -1,4 +1,4 @@
-// Package factory provides image manipulation utilities built on top of gg.
+// Package factory provides image manipulation utilities built on top of total.
 //
 // factory 包提供基于 gg 的图像操作工具库。
 package factory
@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/2d/total"
 	"github.com/FloatTech/gg/fio"
 	"github.com/disintegration/imaging"
 )
@@ -147,11 +148,11 @@ func Size(im image.Image, w, h int) *Factory {
 	// 修改尺寸
 	switch {
 	case w > 0 && h > 0:
-		return NewFactory(gg.Resize(im, w, h, gg.ResampleFilterLinear))
+		return NewFactory(total.Resize(im, w, h, total.ResampleFilterLinear))
 	case w == 0 && h > 0:
-		return NewFactory(gg.Resize(im, h*sz.X/sz.Y, h, gg.ResampleFilterLinear))
+		return NewFactory(total.Resize(im, h*sz.X/sz.Y, h, total.ResampleFilterLinear))
 	case h == 0 && w > 0:
-		return NewFactory(gg.Resize(im, w, w*sz.Y/sz.X, gg.ResampleFilterLinear))
+		return NewFactory(total.Resize(im, w, w*sz.Y/sz.X, total.ResampleFilterLinear))
 	default:
 		nim := image.NewNRGBA(image.Rect(0, 0, sz.X, sz.Y))
 		draw.Over.Draw(nim, nim.Bounds(), im, im.Bounds().Min)

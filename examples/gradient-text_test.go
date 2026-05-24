@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/2d/total"
 )
 
 const (
@@ -30,8 +31,8 @@ func TestGT(*testing.T) {
 
 	// set a gradient
 	g := gg.NewLinearGradient(0, 0, W, H)
-	g.AddColorStop(0, gg.Red)
-	g.AddColorStop(1, gg.Blue)
+	g.AddColorStop(0, total.Red)
+	g.AddColorStop(1, total.Blue)
 	dc.SetFillStyle(g)
 
 	// using the mask, fill the context with the gradient

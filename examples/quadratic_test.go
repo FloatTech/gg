@@ -50,11 +50,12 @@ func TestQuadratic(*testing.T) {
 	dc.SetLineWidth(4)
 	dc.Stroke()
 
-	if err := dc.LoadFontFace(fontPath("Arial"), 200); err != nil {
+	dc.Scale(0.1, 0.1)
+	if err := dc.LoadFontFace(fontPath("Arial"), 24); err != nil {
 		panic(err)
 	}
-	dc.DrawStringAnchored("g", -5, 5, 0.5, 0.5)
-	dc.DrawStringAnchored("G", 5, -5, 0.5, 0.5)
+	dc.DrawStringAnchored("g", -50, 50, 0.5, 0.5)
+	dc.DrawStringAnchored("G", 50, -50, 0.5, 0.5)
 
 	if err := dc.SavePNG(GetFileName() + ".png"); err != nil {
 		panic(err)

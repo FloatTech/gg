@@ -15,7 +15,7 @@ func TestGoFont(*testing.T) {
 		log.Fatal(err)
 	}
 
-	face, err := opentype.NewFace(font, &opentype.FaceOptions{Size: 48})
+	face, err := opentype.NewFace(font, &opentype.FaceOptions{Size: 48, DPI: 144})
 	if err != nil {
 		log.Fatal(err)
 	}

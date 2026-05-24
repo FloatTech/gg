@@ -26,7 +26,7 @@ func random() float64 {
 	return rand.Float64()*2 - 1
 }
 
-func point() (x, y float64) {
+func rpoint() (x, y float64) {
 	return random(), random()
 }
 
@@ -45,9 +45,9 @@ func drawPoints(dc *gg.Context) {
 }
 
 func randomQuadratic(dc *gg.Context) {
-	x0, y0 := point()
-	x1, y1 := point()
-	x2, y2 := point()
+	x0, y0 := rpoint()
+	x1, y1 := rpoint()
+	x2, y2 := rpoint()
 	dc.MoveTo(x0, y0)
 	dc.QuadraticTo(x1, y1, x2, y2)
 	drawCurve(dc)
@@ -58,10 +58,10 @@ func randomQuadratic(dc *gg.Context) {
 }
 
 func randomCubic(dc *gg.Context) {
-	x0, y0 := point()
-	x1, y1 := point()
-	x2, y2 := point()
-	x3, y3 := point()
+	x0, y0 := rpoint()
+	x1, y1 := rpoint()
+	x2, y2 := rpoint()
+	x3, y3 := rpoint()
 	dc.MoveTo(x0, y0)
 	dc.CubicTo(x1, y1, x2, y2, x3, y3)
 	drawCurve(dc)

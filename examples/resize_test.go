@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	"github.com/FloatTech/gg"
+	"github.com/FloatTech/gg/2d/total"
 	"github.com/FloatTech/gg/fio"
 )
 
@@ -12,7 +12,7 @@ func TestResize(*testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	small := gg.Resize(img, img.Bounds().Dx()/4, img.Bounds().Dy()/4, gg.ResampleFilterLinear)
+	small := total.Resize(img, img.Bounds().Dx()/4, img.Bounds().Dy()/4, total.ResampleFilterLinear)
 	if err := fio.SavePNG(GetFileName()+".png", small); err != nil {
 		panic(err)
 	}
